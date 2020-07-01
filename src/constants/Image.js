@@ -5,6 +5,11 @@ export default {
   // logo: require("../images/logo.png"),
 
   //brand images
-  brandImages :require('../images/brand_images.png'),
+  farm :require('../images/farm.png'),
+  premium :require('../images/premium.png'),
+  organic :require('../images/organic.png'),
+  fssai :require('../images/fssai.png'),
+  indiaOrganic :require('../images/indiaOrganic.png'),
+  brand1:require('../images/rsz_1row2brand.png'),
 };
  
