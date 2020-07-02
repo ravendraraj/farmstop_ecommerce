@@ -5,9 +5,11 @@ import {
     TextInput,
     Platform,
     StyleSheet,
+    Dimensions,
 } from 'react-native';
 import constants from "../constants";
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
+const width = Dimensions.get('window').width;
 export const PrimaryTextInput = (props) => {
     return (
         <View>
@@ -20,6 +22,19 @@ export const PrimaryTextInput = (props) => {
                 />
             </View>
         </View>
+    );
+}
+
+export const SearchBox = (props) => {
+    return (
+            <View style={styles.inputSearchBox}>
+                <AntDesign name="search1" size={25} color={constants.Colors.color_BLACK} style={{paddingTop:20,paddingLeft:20}}/>
+                <TextInput
+                    {...props}
+                    selectionColor={constants.Colors.color_BLACK}
+                    style={[{ fontFamily: constants.fonts.Futura_Std_Book,width:width-60 }, styles.text]}
+                />
+            </View>
     );
 }
 
@@ -64,6 +79,12 @@ const styles = StyleSheet.create({
         height: 50,
         borderColor: constants.Colors.color_e6e5e5
     },
+    inputSearchBox:{
+        flex:1,
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        width:width
+    },
     textInput: {
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
@@ -74,5 +95,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: constants.vh(15),
         paddingTop: constants.vh(28),
         fontSize: 14
-    }
+    },
 });

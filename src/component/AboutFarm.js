@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
-import { Searchbar, shadow, TextInput } from 'react-native-paper';
 import CustomStyles from "../constants/CustomStyles";
-import { SearchBox, TextHeading } from '../customElement/Input'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-class HomeScreen extends Component {
+class AboutFarm extends Component {
     
     renederItemType () {
         return(
@@ -48,4 +46,4 @@ const mapDispatchToProps = dispatch => ({
     // verify: data => dispatch(getLotDetails(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AboutFarm);

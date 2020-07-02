@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, Image, TouchableHighlight, Dimensions, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, Alert, Dimensions, ScrollView } from 'react-native'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import SellerInfoScreen from './SellerInfoScreen'
 import image from "../constants/Image";
 import { navigate } from '../lib/RootNavigation'
 import CustomStyles from "../constants/CustomStyles";
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -29,12 +32,12 @@ const slides = [
 		image: image.appIntro3,
 		backgroundColor: '#F7BB64',
 	},
-	{
-		key: 'sellbuyopt',
-		text: 'Are you a consumer and want to Buy anything "Organic"',
-		image: require('../images/slider3.png'),
-		backgroundColor: '#F7BB64',
-	},
+	// {
+	// 	key: 'sellbuyopt',
+	// 	text: 'Are you a consumer and want to Buy anything "Organic"',
+	// 	image: require('../images/slider3.png'),
+	// 	backgroundColor: '#F7BB64',
+	// },
 ];
 
 class WelcomeScreen extends Component {
@@ -45,44 +48,59 @@ class WelcomeScreen extends Component {
 			seller: false,
 			buyer: false,
 		};
+		
 	}
+	
 
-	_seller = () => {
+	_onDone = () => {
+		Alert.alert("Async function call");
+		AsyncStorage.setItem('introHadDone', 'introHadDone');
 		console.log("seller");
-		this.setState({ seller: true });
 		navigate('Home');
 	}
 
-	_buyer = () => {
-		console.log("buyer");
-		this.setState({ buyer: true });
-		// navigate('SellerInfo', { userName: 'Lucy' });
-	}
+	_renderNextButton = () => {
+		return (
+		  <View style={styles.buttonCircle}>
+			<AntDesign name="right" size={23}  color="rgba(255, 255, 255, .9)" />
+		  </View>
+		);
+	  };
+
+	  _renderDoneButton = () => {
+		return (
+		  <View style={styles.buttonCircle}>
+			<TouchableOpacity onPress={this._onDone}>
+				<AntDesign name="check" size={23}  color="rgba(255, 255, 255, .9)"/>
+			</TouchableOpacity>
+		  </View>
+		);
+	  };
 
 	_renderItem = ({ item }) => {
-		if (item.key == 'sellbuyopt') {
-			return (
-				<View style={CustomStyles.slide}>
-					<ScrollView>
-						<View style={{ paddingHorizontal: 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: height / 3.5 }} >
-							<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginRight: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} activeOpacity={0} onPress={this._seller}>
-								<Text style={{ fontSize: 30 }}> Sell </Text>
-							</TouchableHighlight>
-							<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginLeft: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} onPress={this._buyer}>
-								<Text style={{ fontSize: 30 }}> Buy </Text>
-							</TouchableHighlight>
-						</View>
+		// if (item.key == 'sellbuyopt1') {
+		// 	return (
+		// 		<View style={CustomStyles.slide}>
+		// 			<ScrollView>
+		// 				<View style={{ paddingHorizontal: 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: height / 3.5 }} >
+		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginRight: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} activeOpacity={0} onPress={this._seller}>
+		// 						<Text style={{ fontSize: 30 }}> Sell </Text>
+		// 					</TouchableHighlight>
+		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginLeft: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} onPress={this._buyer}>
+		// 						<Text style={{ fontSize: 30 }}> Buy </Text>
+		// 					</TouchableHighlight>
+		// 				</View>
 
-						<View style={{ alignItems: 'center', marginTop: 150 }}>
-							<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ alignItems: "center", }} onPress={this._buyer}>
-								<Text style={{ fontSize: 20, color: 'green' }}> Explore More </Text>
-							</TouchableHighlight>
-						</View>
-					</ScrollView>
+		// 				<View style={{ alignItems: 'center', marginTop: 150 }}>
+		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ alignItems: "center", }} onPress={this._buyer}>
+		// 						<Text style={{ fontSize: 20, color: 'green' }}> Explore More </Text>
+		// 					</TouchableHighlight>
+		// 				</View>
+		// 			</ScrollView>
 
-				</View>
-			);
-		} else {
+		// 		</View>
+		// 	);
+		// } else {
 			if (item.key === 'one') {
 				return (
 					<View style={CustomStyles.slide}>
@@ -113,7 +131,7 @@ class WelcomeScreen extends Component {
 					</View>
 				);
 			}
-		}
+		// }
 	};
 
 	render() {
@@ -128,6 +146,8 @@ class WelcomeScreen extends Component {
 					data={slides}
 					dotStyle={{ backgroundColor: 'black' }}
 					activeDotStyle={{ backgroundColor: '#7F462C' }}
+					renderDoneButton={this._renderDoneButton}
+        			renderNextButton={this._renderNextButton}
 				/>
 			);
 		}
@@ -161,12 +181,13 @@ const styles = StyleSheet.create({
 		resizeMode: 'contain',
 	},
 	buttonCircle: {
-		width: 50,
+		width: 40,
 		height: 40,
-		borderRadius: 10,
+		backgroundColor: 'rgba(0, 0, 0, .2)',
+		borderRadius: 20,
 		justifyContent: 'center',
 		alignItems: 'center',
-	},
+	  },
 });
 
 

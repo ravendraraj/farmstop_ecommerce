@@ -5,12 +5,16 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import constants from '../constants'
 
-export default function header(){
+export default function header({navigation}){
     // onPress={() => {navigation.openDrawer()}}
+    const openMenue =()=>{
+        navigation.openDrawer()
+    }
+
     return(
         <View style = {styles.head}>
             <TouchableOpacity style={{marginLeft:4}} >
-                <Icon name="menu" size={30} color={constants.Colors.color_BLACK}/>
+                <Icon name="menu" size={30} onPress={openMenue} color={constants.Colors.color_BLACK}/>
             </TouchableOpacity>
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'90%'}}>
                 <TouchableOpacity style={{marginRight:20}}>
