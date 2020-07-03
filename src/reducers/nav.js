@@ -1,4 +1,4 @@
-import {navigate} from '../lib/RootNavigation'
+import {navigate} from '../appnavigation/RootNavigation'
 const initialDataState = { productData: null, remeasureProd : null };
 
 const nav = (state = initialDataState, action) => {

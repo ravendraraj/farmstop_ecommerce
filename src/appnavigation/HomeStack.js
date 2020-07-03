@@ -9,21 +9,16 @@ import HomeScreen from '../component/HomeScreen';
 import SellerInfoScreen from '../component/SellerInfoScreen';
 import Header from '../headerComponent/header';
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
-// import DrawerScreen from './DrawerScreen';
 
 const RootStack = createStackNavigator();
 
-
-// onPress={() => {navigation.openDrawer()}}
-
 const HomeStack = ({navigation}) => (
     <RootStack.Navigator initialRouteName="MainHome">
-        {/* <RootStack.Screen options={{headerShown: false}} name="Welcome" component={WelcomeScreen}/> */}
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerTransparent:true,
+                headerTransparent:false,
             })}
             
             name="MainHome" component={HomeScreen}/>

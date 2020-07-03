@@ -4,11 +4,12 @@ import { View, Text, StyleSheet, Image, Alert, Dimensions, ScrollView } from 're
 import AppIntroSlider from 'react-native-app-intro-slider'
 import SellerInfoScreen from './SellerInfoScreen'
 import image from "../constants/Image";
-import { navigate } from '../lib/RootNavigation'
+import { navigate } from '../appnavigation/RootNavigation'
 import CustomStyles from "../constants/CustomStyles";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import constants from '../constants'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -53,54 +54,25 @@ class WelcomeScreen extends Component {
 	
 	
 	_onDone = () => {
+		this.props.introDone("introDone");
 		Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
 		console.log("seller");
-		navigate('DrawerScreen');
+		navigate('Drawer');
 	}
 
-	_renderNextButton = () => {
-		return (
-		  <View style={styles.buttonCircle}>
-			<AntDesign name="right" size={23}  color="rgba(255, 255, 255, .9)" />
-		  </View>
-		);
+	_renderExploreMore(key){
+		if(key === 'three'){
+			return (
+				<TouchableOpacity style={{marginTop:10}} onPress={this._onDone}>
+					<Text style={{fontSize:20,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo}}>Explore More</Text>
+				</TouchableOpacity>
+			);
+		}
 	  };
 
-	  _renderDoneButton = () => {
-		return (
-		  <View style={styles.buttonCircle}>
-			<TouchableOpacity onPress={this._onDone}>
-				<AntDesign name="check" size={23}  color="rgba(255, 255, 255, .9)"/>
-			</TouchableOpacity>
-		  </View>
-		);
-	  };
 
 	_renderItem = ({ item }) => {
-		// if (item.key == 'sellbuyopt1') {
-		// 	return (
-		// 		<View style={CustomStyles.slide}>
-		// 			<ScrollView>
-		// 				<View style={{ paddingHorizontal: 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: height / 3.5 }} >
-		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginRight: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} activeOpacity={0} onPress={this._seller}>
-		// 						<Text style={{ fontSize: 30 }}> Sell </Text>
-		// 					</TouchableHighlight>
-		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ marginLeft: 25, alignItems: "center", height: 100, width: 100, borderColor: 'red', borderWidth: 2, paddingTop: 30, borderRadius: 50 }} onPress={this._buyer}>
-		// 						<Text style={{ fontSize: 30 }}> Buy </Text>
-		// 					</TouchableHighlight>
-		// 				</View>
-
-		// 				<View style={{ alignItems: 'center', marginTop: 150 }}>
-		// 					<TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" style={{ alignItems: "center", }} onPress={this._buyer}>
-		// 						<Text style={{ fontSize: 20, color: 'green' }}> Explore More </Text>
-		// 					</TouchableHighlight>
-		// 				</View>
-		// 			</ScrollView>
-
-		// 		</View>
-		// 	);
-		// } else {
 			if (item.key === 'one') {
 				return (
 					<View style={CustomStyles.slide}>
@@ -108,27 +80,32 @@ class WelcomeScreen extends Component {
 							<View style={{ alignItems: 'center' }}>
 								<Image source={item.image} stye={{ paddingTop: 10 }} />
 								<Text style={styles.text}>{item.text}</Text>
-								<View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
-									<Image source={image.brand1} style={{ width:300, height: 70 }} />
-								</View>
-								<View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
-									<Image source={image.fssai} style={{ width: 90, height: 90 }} />
-									<Image source={image.indiaOrganic} style={{ width: 90, height: 90 }} />
-								</View>
+									{/* <View style={{marginBottom:40,padding:20}}> */}
+										<View style={{ marginBottom:5,paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
+											<Image source={image.brand1} style={{ width:300, height: 70 }} />
+										</View>
+										<View style={{ marginBottom:20,paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
+											<Image source={image.fssai} style={{ width: 90, height: 90 }} />
+											<Image source={image.indiaOrganic} style={{ width: 90, height: 90 }} />
+										</View>
+									{/* </View> */}
 							</View>
 						</ScrollView>
 					</View>
 				);
 			} else {
 				return (
-					<View style={CustomStyles.slide}>
-						<ScrollView >
-							<View style={{ alignItems: 'center' }}>
-								<Image source={item.image} />
-								<Text style={styles.text}>{item.text}</Text>
-							</View>
-						</ScrollView>
-					</View>
+					<View style={styles.container}>
+
+						<Image source={item.image} style={styles.image}/>
+						<View style={{marginTop:20,alignItems:'center'}}>
+
+							<Text style={styles.paragraph}>
+								{item.text}
+							</Text>
+							{this._renderExploreMore(item.key)}
+						</View>
+					</View >
 				);
 			}
 		// }
@@ -146,8 +123,6 @@ class WelcomeScreen extends Component {
 					data={slides}
 					dotStyle={{ backgroundColor: 'black' }}
 					activeDotStyle={{ backgroundColor: '#7F462C' }}
-					renderDoneButton={this._renderDoneButton}
-        			renderNextButton={this._renderNextButton}
 				/>
 			);
 		}
@@ -155,39 +130,29 @@ class WelcomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-	MainContainer: {
-		flex: 1,
-		paddingTop: 20,
-		alignItems: 'center',
-		justifyContent: 'center',
-		padding: 20,
-	},
-	title: {
-		fontSize: 26,
-		color: 'black',
-		fontWeight: 'bold',
-		alignItems: 'center',
-		marginTop: 20,
-	},
 	text: {
 		color: '#7F462C',
 		textAlign: 'center',
 		fontSize: 20,
 		padding: 20
 	},
-	image: {
-		width: 250,
-		height: 250,
-		resizeMode: 'contain',
-	},
-	buttonCircle: {
-		width: 40,
-		height: 40,
-		backgroundColor: 'rgba(0, 0, 0, .2)',
-		borderRadius: 20,
+	container: {
+		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
-	  },
+		backgroundColor:'white'
+	},
+	image: {
+		alignSelf: 'center',
+		justifyContent:'center',
+	},
+	paragraph: {
+		textAlign: 'center',
+		color: constants.Colors.color_intro,
+		fontSize:20,
+		alignSelf:'auto',
+		marginBottom:2,
+		fontFamily:constants.fonts.Cardo
+	},
 });
 
 
@@ -196,7 +161,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	// verify: data => dispatch(getLotDetails(data)),
+	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

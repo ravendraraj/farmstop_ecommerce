@@ -5,4 +5,5 @@ export default {
     Futura_Std_Medium: 'FuturaStd-Medium',
     FontsFree_Net_SFProText_Semibold: "SFProText-Semibold",
     FontItalic:"italic",
+    Cardo:'Cardo'
 }

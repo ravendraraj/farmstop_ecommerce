@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react';
+import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
@@ -10,7 +11,7 @@ import {ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 //var appIntro = "done";
 
-const Navigation = ({navigation}) => {
+const Navigation = ({navigation,introDoneProps}) => {
   const [appIntro, setIntro] = useState("null1");
   useEffect(() => {
     // Create an scoped async function in the hoo
@@ -36,12 +37,20 @@ const Navigation = ({navigation}) => {
   return (
     <NavigationContainer ref={navigationRef}>
       <RootAppStack.Navigator initialRouteName="AppInroduction">
-        {/* { appIntro === 'introHadDone' ? (<RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>):<RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>} */}
-          <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
-          <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>
+        { appIntro === 'introHadDone' ? (<RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>):<RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>}
+          {/* <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
+          <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/> */}
       </RootAppStack.Navigator>
     </NavigationContainer>
   )
   };
 
-export default Navigation
+  const mapStateToProps = state => ({
+      introDoneProps : state.appIntro
+  });
+  
+  const mapDispatchToProps = dispatch => ({
+    // introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
+  });
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

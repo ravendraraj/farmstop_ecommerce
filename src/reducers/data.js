@@ -1,19 +1,17 @@
-const initialDataState = { productData: null, remeasureProd : null };
+const initialDataState = {appIntro:'', productData: null, remeasureProd : null };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
-        case 'Home':
+        case 'APP_INTRO_DONE':
         return { 
             ...state,
-            productData : action.payload,
-            remeasureProd : null,
+            appIntro:action.data
         };
         
-        case 'SAVED_SELLER_INFO':
+        case 'PRODUCT_FETCH':
         return {
             ...state,
-            remeasureProd: action.data,
-            productData : null,
+            productData : action.payload,
         };
 
         default:

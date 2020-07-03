@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { navigate } from '../lib/RootNavigation'
+import { navigate } from '../appnavigation/RootNavigation'
 import {
     useTheme,
     Avatar,

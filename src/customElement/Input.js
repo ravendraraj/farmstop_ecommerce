@@ -25,7 +25,7 @@ export const PrimaryTextInput = (props) => {
     );
 }
 
-export const SearchBox = (props) => {
+export const SearchBox1 = (props) => {
     return (
             <View style={styles.inputSearchBox}>
                 <AntDesign name="search1" size={25} color={constants.Colors.color_BLACK} style={{paddingTop:20,paddingLeft:20}}/>
@@ -36,6 +36,30 @@ export const SearchBox = (props) => {
                 />
             </View>
     );
+}
+
+export const SearchBox =(props)=>{
+    return(
+    <View style={styles.SectionStyle}>
+          {/* <Image
+            //We are showing the Image from online
+            source={{uri:'https://raw.githubusercontent.com/AboutReact/sampleresource/master/input_phone.png',}}
+            
+            //You can also show the image from you project directory like below
+            //source={require('./Images/phone.png')}
+
+            //Image Style
+            style={styles.ImageStyle}
+          /> */}
+          <AntDesign name="search1" size={25} color={constants.Colors.color_BLACK} 
+          style={styles.ImageStyle}/>
+
+          <TextInput
+            {...props}
+            style={{ flex: 1 }}
+          />
+        </View>
+        )
 }
 
 export const TextHeading = (props) => {
@@ -83,7 +107,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection:'row',
         justifyContent:'flex-start',
-        width:width
+        width:'100%'
     },
     textInput: {
         flex: 1,
@@ -96,4 +120,22 @@ const styles = StyleSheet.create({
         paddingTop: constants.vh(28),
         fontSize: 14
     },
+    SectionStyle: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        // borderWidth: 0.5,
+        // borderColor: '#000',
+        height: 40,
+        // borderRadius: 5,
+        // margin: 10,
+      },
+    
+      ImageStyle: {
+        padding: 10,
+        margin: 5,
+        resizeMode: 'stretch',
+        alignItems: 'center',
+      },
 });

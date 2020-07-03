@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {AppRegistry} from 'react-native';
-import Navigation from './src/lib/Navigation'
+import Navigation from './src/appnavigation/Navigation'
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
