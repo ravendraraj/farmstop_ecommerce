@@ -51,12 +51,12 @@ class WelcomeScreen extends Component {
 		
 	}
 	
-
+	
 	_onDone = () => {
 		Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
 		console.log("seller");
-		navigate('Home');
+		navigate('DrawerScreen');
 	}
 
 	_renderNextButton = () => {

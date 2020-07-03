@@ -13,9 +13,9 @@ export default function header({navigation}){
 
     return(
         <View style = {styles.head}>
-            <TouchableOpacity style={{marginLeft:4}} >
+            {/* <TouchableOpacity style={{marginLeft:4}} >
                 <Icon name="menu" size={30} onPress={openMenue} color={constants.Colors.color_BLACK}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'90%'}}>
                 <TouchableOpacity style={{marginRight:20}}>
                     <Material name="cart" size={30} color={constants.Colors.color_BLACK}/>

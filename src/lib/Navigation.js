@@ -1,12 +1,15 @@
 import React,{useEffect,useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
 import DrawerScreen from './DrawerScreen';
 import AppIntroScreen from './AppIntroScreen';
 import {ToastAndroid} from 'react-native';
+// import HomeStack from './HomeStack'
 
 import AsyncStorage from '@react-native-community/async-storage';
-var appIntro = "done";
+//var appIntro = "done";
+
 const Navigation = ({navigation}) => {
   const [appIntro, setIntro] = useState("null1");
   useEffect(() => {
@@ -29,9 +32,14 @@ const Navigation = ({navigation}) => {
     getIntroToken();
   }, []);
 
+  const RootAppStack = createStackNavigator();
   return (
     <NavigationContainer ref={navigationRef}>
-        { appIntro === 'introHadDone' ? (<DrawerScreen/>):<AppIntroScreen/>}
+      <RootAppStack.Navigator initialRouteName="AppInroduction">
+        {/* { appIntro === 'introHadDone' ? (<RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>):<RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>} */}
+          <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
+          <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>
+      </RootAppStack.Navigator>
     </NavigationContainer>
   )
   };
