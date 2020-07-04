@@ -6,7 +6,7 @@ import { navigationRef } from './RootNavigation';
 import DrawerScreen from './DrawerScreen';
 import AppIntroScreen from './AppIntroScreen';
 import {ToastAndroid} from 'react-native';
-// import HomeStack from './HomeStack'
+// import WelcomeScreen from '../component/NewWelcomeScreen'
 
 import AsyncStorage from '@react-native-community/async-storage';
 //var appIntro = "done";
@@ -39,7 +39,7 @@ const Navigation = ({navigation,introDoneProps}) => {
       <RootAppStack.Navigator initialRouteName="AppInroduction">
         { appIntro === 'introHadDone' ? (<RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>):<RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>}
           {/* <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
-          <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/> */}
+          <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={WelcomeScreen}/> */}
       </RootAppStack.Navigator>
     </NavigationContainer>
   )

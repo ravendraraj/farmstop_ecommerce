@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Alert, Dimensions, ScrollView } from 'react-native'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import SellerInfoScreen from './SellerInfoScreen'
 import image from "../constants/Image";
 import { navigate } from '../appnavigation/RootNavigation'
-import CustomStyles from "../constants/CustomStyles";
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import constants from '../constants'
+import HomeScreen from './HomeScreen'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -32,16 +30,10 @@ const slides = [
 		text: 'Are you a consumer and want to Buy anything "Organic"',
 		image: image.appIntro3,
 		backgroundColor: '#F7BB64',
-	},
-	// {
-	// 	key: 'sellbuyopt',
-	// 	text: 'Are you a consumer and want to Buy anything "Organic"',
-	// 	image: require('../images/slider3.png'),
-	// 	backgroundColor: '#F7BB64',
-	// },
+	}
 ];
 
-class WelcomeScreen extends Component {
+class NewWelcomeScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -49,16 +41,27 @@ class WelcomeScreen extends Component {
 			seller: false,
 			buyer: false,
 		};
-		
+		this.getCache();
 	}
 	
-	
+	async getCache(){
+		try{
+			let value = await AsyncStorage.getItem('introToken');
+			
+			if(value === 'done'){
+				this.setState({show_Main_App:true})
+			}
+		}
+		catch(e){
+			console.log('caught error', e);
+		}
+	}
+
 	_onDone(){
-		this.props.introDone("introDone");
-		Alert.alert("Async function call");
-		AsyncStorage.setItem('introHadDone', 'introHadDone');
-		console.log("seller");
-		navigate('Drawer');
+		AsyncStorage.setItem('introToken', 'done');
+		this.setState({show_Main_App:true});
+		Alert.alert("App Intro Token saved");
+		// navigate('Drawer');
 	}
 
 	_renderExploreMore(key){
@@ -114,7 +117,7 @@ class WelcomeScreen extends Component {
 	render() {
 		if (this.state.show_Main_App) {
 			return (
-				<SellerInfoScreen />
+				<HomeScreen />
 			);
 		} else {
 			return (
@@ -134,8 +137,7 @@ const styles = StyleSheet.create({
 		color: '#7F462C',
 		textAlign: 'center',
 		fontSize: 20,
-		padding: 20,
-		fontFamily:constants.fonts.Cardo_Regular
+		padding: 20
 	},
 	container: {
 		flex: 1,
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
 		fontSize:20,
 		alignSelf:'auto',
 		marginBottom:2,
-		fontFamily:constants.fonts.Cardo_Regular
+		fontFamily:constants.fonts.Cardo
 	},
 });
 
@@ -167,5 +169,5 @@ const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(NewWelcomeScreen);
 

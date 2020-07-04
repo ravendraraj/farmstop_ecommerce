@@ -18,6 +18,8 @@ import {
 } from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import fonts from '../constants/Fonts'
+import colors from '../constants/Color'
 
 //import{ AuthContext } from '../component/context';
 
@@ -55,6 +57,7 @@ export default function DrawerContent(props) {
 
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem 
+                          
                             icon={({color, size}) => (
                                 <Icon 
                                 name="home-outline" 

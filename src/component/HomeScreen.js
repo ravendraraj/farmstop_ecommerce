@@ -7,11 +7,12 @@ import { SearchBox, TextHeading } from '../customElement/Input'
 // import { TouchableOpacity } from 'react-native-gesture-handler';
 import {prod_image} from '../constants/url'
 import constants from '../constants'
+import { navigate } from '../appnavigation/RootNavigation'
 
 //api call
-import {getProduct} from '../lib/api'
+import {getProduct ,getProductType} from '../lib/api'
 //import { constants } from 'fs';
-
+const regular = constants.fonts.Cardo_Regular;
 class HomeScreen extends Component {
     constructor(props){
         super(props)
@@ -20,15 +21,15 @@ class HomeScreen extends Component {
 
     componentDidMount(){
         console.log("I am Call")
-        this.props.getItem();
+        this.props.getItem({start:1,end:6});
     }
 
     _getItemType(prod_id){
-        Alert.alert("Selected Prod"+prod_id);    
+        this.props.getProductType(prod_id)
+        // Alert.alert("Selected Prod"+prod_id);    
+        navigate('ProductType');
     }
     
-
-
     renederItemType () {
         let ItemList = this.props.itemData;
         if(ItemList != "undefined" && ItemList !=null){
@@ -39,7 +40,7 @@ class HomeScreen extends Component {
                 <View style={{ flex: 1, flexDirection: 'column', margin:4,alignItems:'center' }}>
                     <TouchableOpacity onPress={()=>this._getItemType(item.id)}>
                         <Image style={styles.imageThumbnail} source={{ uri: (prod_image+item.img) }} />
-                        <Text style={{fontSize:12,marginTop:10,alignSelf:'center'}}>{item.title}</Text>
+                        <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{item.title}</Text>
                     </TouchableOpacity>
                 </View>
             )}
@@ -102,7 +103,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getItem: () => dispatch(getProduct()),
+    getItem: (data) => dispatch(getProduct(data)),
+    // selecttProd:(data)=>dispatch({type:'SELECT_PRODUCT',prodId:data}),
+    getProductType:(data)=>dispatch(getProductType(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

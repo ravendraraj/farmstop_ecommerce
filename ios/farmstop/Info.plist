@@ -71,6 +71,9 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Cardo-Bold.ttf</string>
+		<string>Cardo-Italic.ttf</string>
+		<string>Cardo-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

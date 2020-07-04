@@ -1,4 +1,4 @@
-const initialDataState = {appIntro:'', productData: null, remeasureProd : null };
+const initialDataState = {appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -12,6 +12,12 @@ const data = (state = initialDataState, action) => {
         return {
             ...state,
             productData : action.payload,
+        };
+
+        case 'PRODUCT_VARIATION':
+        return {
+            ...state,
+            productVatiation : action.payload,
         };
 
         default:

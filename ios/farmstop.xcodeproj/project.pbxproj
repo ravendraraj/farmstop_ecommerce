@@ -32,6 +32,9 @@
 		2442F244CC8A481B9743067A /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF9430FB95E4FF3AC3A01CF /* Octicons.ttf */; };
 		4F2626BBFB654F4FBB45AFE4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85F6C7CAD3BF4DF4A1D064F3 /* SimpleLineIcons.ttf */; };
 		239B8F2857E442DEB0009E2B /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAD613851F174231BFC9D521 /* Zocial.ttf */; };
+		891AACBF21E74927B4E9E732 /* Cardo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0CF6E9CA662C41F18B27E88C /* Cardo-Bold.ttf */; };
+		52F70F762F144CC2A1371E1B /* Cardo-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE91CC8A2604429782F56227 /* Cardo-Italic.ttf */; };
+		BDC1CE170F044096949BB208 /* Cardo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF87F9AEEA774324B44F1DA6 /* Cardo-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,9 @@
 		DFF9430FB95E4FF3AC3A01CF /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		85F6C7CAD3BF4DF4A1D064F3 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		DAD613851F174231BFC9D521 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0CF6E9CA662C41F18B27E88C /* Cardo-Bold.ttf */ = {isa = PBXFileReference; name = "Cardo-Bold.ttf"; path = "../assets/fonts/Cardo-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CE91CC8A2604429782F56227 /* Cardo-Italic.ttf */ = {isa = PBXFileReference; name = "Cardo-Italic.ttf"; path = "../assets/fonts/Cardo-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AF87F9AEEA774324B44F1DA6 /* Cardo-Regular.ttf */ = {isa = PBXFileReference; name = "Cardo-Regular.ttf"; path = "../assets/fonts/Cardo-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +215,9 @@
 				DFF9430FB95E4FF3AC3A01CF /* Octicons.ttf */,
 				85F6C7CAD3BF4DF4A1D064F3 /* SimpleLineIcons.ttf */,
 				DAD613851F174231BFC9D521 /* Zocial.ttf */,
+				0CF6E9CA662C41F18B27E88C /* Cardo-Bold.ttf */,
+				CE91CC8A2604429782F56227 /* Cardo-Italic.ttf */,
+				AF87F9AEEA774324B44F1DA6 /* Cardo-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,6 +377,9 @@
 				2442F244CC8A481B9743067A /* Octicons.ttf in Resources */,
 				4F2626BBFB654F4FBB45AFE4 /* SimpleLineIcons.ttf in Resources */,
 				239B8F2857E442DEB0009E2B /* Zocial.ttf in Resources */,
+				891AACBF21E74927B4E9E732 /* Cardo-Bold.ttf in Resources */,
+				52F70F762F144CC2A1371E1B /* Cardo-Italic.ttf in Resources */,
+				BDC1CE170F044096949BB208 /* Cardo-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
