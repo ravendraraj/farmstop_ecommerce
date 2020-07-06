@@ -10,6 +10,11 @@ import {
 import constants from "../constants";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 const width = Dimensions.get('window').width;
+
+const bold = constants.fonts.Cardo_Bold;
+const italic = constants.fonts.Cardo_Italic;
+const regular = constants.fonts.Cardo_Regular;
+
 export const PrimaryTextInput = (props) => {
     return (
         <View>
@@ -41,16 +46,6 @@ export const SearchBox1 = (props) => {
 export const SearchBox =(props)=>{
     return(
     <View style={styles.SectionStyle}>
-          {/* <Image
-            //We are showing the Image from online
-            source={{uri:'https://raw.githubusercontent.com/AboutReact/sampleresource/master/input_phone.png',}}
-            
-            //You can also show the image from you project directory like below
-            //source={require('./Images/phone.png')}
-
-            //Image Style
-            style={styles.ImageStyle}
-          /> */}
           <AntDesign name="search1" size={25} color={constants.Colors.color_BLACK} 
           style={styles.ImageStyle}/>
 
@@ -65,7 +60,7 @@ export const SearchBox =(props)=>{
 export const TextHeading = (props) => {
     return (
         <View>
-            <Text style={styles.textInputTitle,{color:constants.Colors.color_heading,fontFamily:'italic',fontSize:20}}>{props.title}</Text>
+            <Text style={styles.textInputTitle,{color:constants.Colors.color_heading,fontFamily:italic,fontSize:props.fontsize}}>{props.title}</Text>
         </View>
     );
 }
@@ -116,9 +111,9 @@ const styles = StyleSheet.create({
         color: '#05375a',
     },
     text: {
-        paddingHorizontal: constants.vh(15),
-        paddingTop: constants.vh(28),
-        fontSize: 14
+        // paddingHorizontal: constants.vh(25),
+        paddingTop: constants.vh(15),
+        fontSize: 18
     },
     SectionStyle: {
         flexDirection: 'row',

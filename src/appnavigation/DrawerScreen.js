@@ -13,7 +13,7 @@ import SellerInfoScreen from '../component/SellerInfoScreen';
 const Drawer = createDrawerNavigator();
 const DrawerScreen = ({navigation}) => (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Home" component={StackScreen} />
+        <Drawer.Screen name="MainHome" component={StackScreen} />
         <Drawer.Screen name="My Account" component={HomeScreen} />
         <Drawer.Screen name="My Order" component={SellerInfoScreen} />
     </Drawer.Navigator>

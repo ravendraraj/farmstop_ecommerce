@@ -49,8 +49,8 @@ export default function DrawerContent(props) {
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>Signup</Paragraph>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>/ Login</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption]} onPress={() => {navigate('SignUp')}}>Signup</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption,{paddingLeft:2}]} onPress={() => {navigate('LogIn')}} >/ Login</Paragraph>
                             </View>
                         </View>
                     </View>
@@ -66,7 +66,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Home"
-                            onPress={() => {navigate('Home')}}
+                            onPress={() => {navigate('MainHome')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
@@ -114,7 +114,7 @@ export default function DrawerContent(props) {
                         />
                         <DrawerItem 
                             label="About Us"
-                            onPress={() => {props.navigation.navigate('SupportScreen')}}
+                            onPress={() => {props.navigation.navigate('AboutFarm')}}
                         />
                         <DrawerItem 
                             label="Our Farm"

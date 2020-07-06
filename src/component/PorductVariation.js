@@ -11,6 +11,9 @@ import {fristLetterCapital} from '../lib/helper'
 //api call
 import {getProduct} from '../lib/api'
 
+//navigation function
+import { navigate } from '../appnavigation/RootNavigation'
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const totalprod = Math.ceil(height/100);
@@ -33,6 +36,10 @@ class PorductVariation extends Component {
         Alert.alert("Selected Prod"+prod_id);    
     }
     
+    _knowMore(prod_id){
+        this.props.knowMore(prod_id);
+        navigate("knowMoreProd");
+    }
 
 
     renederItemType () {
@@ -48,31 +55,48 @@ class PorductVariation extends Component {
             data={ItemList}
             renderItem={({ item }) => (
                 <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:40}} >
-                    <TouchableOpacity onPress={()=>this._getItemType(item.id)}>
+                    {/* <TouchableOpacity onPress={()=>this._getItemType(item.id)}> */}
+                    <View>
                         <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                        <TouchableOpacity style={{position:'absolute',top:-4,right:0}}
+                        onPress={()=>this._addinWishList(prodDetails.produc_id,prodDetails.id)}>
+                            <Material name="heart-outline" color={constants.Colors.color_grey} size={30}/>
+                        </TouchableOpacity>
                         <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text>
-                    </TouchableOpacity>
+                    </View>
+                    {/* </TouchableOpacity> */}
 
+                    {/** Select Option */}
                     <View style={{width:'50%'}}>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={{fontSize:20,fontFamily:regular}}>Select</Text>
-                            
-                            <TouchableOpacity>
-                            <Material 
-                                name="plus-circle-outline"
-                                color={constants.Colors.color_grey}
-                                size={25}
-                            />
+                        <View style={{flexDirection:'row'}}>
+                            <TouchableOpacity style={{marginRight:8,marginLeft:5}}>
+                                <Material 
+                                    name="minus-circle-outline"
+                                    color={constants.Colors.color_grey}
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                            <Text style={{fontSize:20,fontFamily:bold}}>Select</Text>
+                            <TouchableOpacity style={{marginLeft:8}}>
+                                <Material 
+                                    name="plus-circle-outline"
+                                    color={constants.Colors.color_grey}
+                                    size={25}
+                                />
                             </TouchableOpacity>
                         </View>
-                        <View>
-                            <Text style={{fontSize:18,fontFamily:regular}}>Rs. {item.price}</Text>
-                            <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:'60%',alignSelf:'flex-end',borderRadius:4}}>
+
+                        {/**Price section */}
+                        <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                            <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.price}</Text>
+                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}>
                                 <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                                <Text style={{fontFamily:regular}}>Add to Cart</Text>
+                                <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity style={{alignSelf:'center',marginTop:15}}>
+
+                        {/**Know More  section */}
+                        <TouchableOpacity style={{alignSelf:'center',marginTop:15}} onPress={()=>this._knowMore(item.id)}>
                             <Text style={{fontFamily:bold}}>Know More</Text>
                         </TouchableOpacity>
                     </View>
@@ -145,6 +169,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
+    knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

@@ -11,5 +11,8 @@ export default {
   fssai :require('../images/fssai.png'),
   indiaOrganic :require('../images/indiaOrganic.png'),
   brand1:require('../images/rsz_1row2brand.png'),
+
+  instagram_logo:require('../images/instagram-logo.png'),
+  aboutFarm : require('../images/aboutfarm.png')
 };
  

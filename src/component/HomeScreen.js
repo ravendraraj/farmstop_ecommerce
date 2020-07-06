@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux';
-import { Searchbar, shadow, TextInput } from 'react-native-paper';
-import CustomStyles from "../constants/CustomStyles";
 import { SearchBox, TextHeading } from '../customElement/Input'
 // import { TouchableOpacity } from 'react-native-gesture-handler';
 import {prod_image} from '../constants/url'
