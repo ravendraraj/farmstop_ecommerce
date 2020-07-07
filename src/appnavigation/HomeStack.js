@@ -13,6 +13,8 @@ import knowMoreProd from '../component/KnowMore';
 import SignUpScreen from '../component/SignUp'
 import LoginScreen from '../component/LoginScreen'
 import AboutFarm from '../component/AboutFarm'
+import otpVerify from '../component/otpVerify'
+import MyCart from '../component/MyCart'
 
 const RootStack = createStackNavigator();
 
@@ -72,6 +74,25 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="AboutFarm" component={AboutFarm}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="MyCart" component={MyCart}/>
+
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="otpVerification" component={otpVerify}/>
+
     </RootStack.Navigator>
 );
 

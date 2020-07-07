@@ -21,10 +21,9 @@ const bold = constants.fonts.Cardo_Bold;
 const regular = constants.fonts.Cardo_Regular;
 const italic = constants.fonts.Cardo_Italic;
 
-class PorductVariation extends Component {
+class MyCart extends Component {
     constructor(props){
         super(props)
-        // this.props.getItem();
     }
 
     componentDidMount(){
@@ -36,52 +35,50 @@ class PorductVariation extends Component {
         Alert.alert("Selected Prod"+prod_id);    
     }
     
-    _knowMore(prod_id){
-        this.props.knowMore(prod_id);
-        navigate("knowMoreProd");
-    }
-
-
-    renderItemTile(){
-        let ItemList = this.props.itemtypeData;
-        if(ItemList != "undefined" && ItemList !=null){
-            let producName = ItemList[0].pname;
-        return(
-            <View>
-                <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
-                    {fristLetterCapital(producName)}
-                </Text>
-            </View>
+    renederCartDetails(){
+        let subtotal = this.props.subtotal;
+        if(subtotal >0){
+            return(
+                <View style={{width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={styles.fonts}>Sub Total</Text>
+                        <Text style={styles.fonts}>{subtotal}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={styles.fonts}>Taxes</Text>
+                        <Text style={styles.fonts}>{subtotal}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={styles.fonts}>Delivery charges</Text>
+                        <Text style={styles.fonts}>{subtotal}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={styles.fonts}>Discount</Text>
+                        <Text style={styles.fonts}>{subtotal}</Text>
+                    </View>
+                    <Text style={{fontFamily:bold,fontSize:20}}>You have a coupon</Text>
+                </View>
+            )
+        }else{
+            return(
+                <View></View>
             )
         }
     }
 
     renederItemType () {
-        let ItemList = this.props.itemtypeData;
+        let ItemList = this.props.cartData;
         if(ItemList != "undefined" && ItemList !=null){
-            let producName = ItemList[0].pname;
         return(
             <View>
-                {/* <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,marginTop:40,marginBottom:30}}>
-                    {fristLetterCapital(producName)}
-                </Text> */}
             <FlatList
             data={ItemList}
             renderItem={({ item }) => (
                 <View style={{marginBottom:10}}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
-                        {/* <TouchableOpacity onPress={()=>this._getItemType(item.id)}> */}
                         <View>
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
-                            <TouchableOpacity style={{position:'absolute',top:-4,right:0}}
-                            onPress={()=>this._addinWishList(prodDetails.produc_id,prodDetails.id)}>
-                                <Material name="heart-outline" color={constants.Colors.color_grey} size={25}/>
-                            </TouchableOpacity>
-                            {/* <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text> */}
                         </View>
-                        {/* </TouchableOpacity> */}
-
-                        {/** Select Option */}
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}>
@@ -102,32 +99,16 @@ class PorductVariation extends Component {
                             </View>
 
                             {/**Price section */}
-                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.price}</Text>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}>
-                                    <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                                    <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
-                                </TouchableOpacity>
-                            </View>
+                            {/* <View style={{alignSelf:'center',marginBottom:10,marginTop:10,backgroundColor:'red',width:'100%'}}> */}
+                                <Text style={{fontSize:20,fontFamily:regular,marginLeft:10}}>Rs. {item.price}</Text>
+                            {/* </View> */}
 
-                            {/**Know More  section */}
-                            {/* <TouchableOpacity style={{alignSelf:'center',marginTop:15}} onPress={()=>this._knowMore(item.id)}>
-                                <Text style={{fontFamily:bold}}>Know More</Text>
-                            </TouchableOpacity> */}
-                        </View>
-                    </View>
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{width:"40%"}}>
-                        <Text style={{fontSize:12,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text>
-                        </View>
-                        <View style={{width:"50%"}}>
-                        <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
-                                <Text style={{fontFamily:bold}}>Know More</Text>
-                        </TouchableOpacity>
+            
                         </View>
                     </View>
                 </View>
             )}
+
             //Setting the number of column
             numColumns={1}
             ListHeaderComponent={()=>(
@@ -140,9 +121,7 @@ class PorductVariation extends Component {
                 </View>
             )}
             ListFooterComponent={()=>(
-
-                <View style={{width:'100%',height:60}}>
-                </View>
+                this.renederCartDetails()
             )}
             
             keyExtractor={(item) => item.id}
@@ -161,29 +140,24 @@ class PorductVariation extends Component {
     render() {
         return (
 
-            <View style={styles.container}>
-                {/* <ScrollView > */}
-                    {/* <SearchBox autoCapitalize="none"
-                        //onChangeText={(val) => this.textInputChange(val)}
-                        placeholder={'Search for good health'}
-                    /> */}
-                    <View style={styles.MainContainer}>
-                        {this.renderItemTile()}
-                        {this.renederItemType()}
-                    </View>
-                {/* </ScrollView> */}
-            </View>
-        )
+                <View style={styles.container}>
+                        <View style={styles.MainContainer}>
+                            <View>
+                                <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
+                                    My Cart
+                                </Text>
+                            </View>
+                            {this.renederItemType()}
+                            {/* {this.renederCartDetails()} */}
+                        </View>
+                </View>
+            )
+        }
     }
-}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // paddingTop:30,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // margin: 10,
         backgroundColor:constants.Colors.color_WHITE
       },
     MainContainer: {
@@ -201,11 +175,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between',
         margin:1
+    },
+    fonts:{
+        fontSize:20,
+        fontFamily:regular
     }
   });
 
 const mapStateToProps = state => ({
-    itemtypeData :state.data.productVatiation,
+    cartData :state.data.addedItems,
+    subtotal:state.data.total,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -213,4 +192,4 @@ const mapDispatchToProps = dispatch => ({
     knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);
+export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

@@ -18,7 +18,7 @@ class HomeScreen extends Component {
     }
 
     componentDidMount(){
-        console.log("I am Call")
+        // console.log("I am Call")
         this.props.getItem({start:1,end:6});
     }
 

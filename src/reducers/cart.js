@@ -1,8 +1,10 @@
 const initState = {addedItems:[],total: 0};
+
 const cart= (state = initState,action)=>{
    
     //INSIDE HOME COMPONENT
     if(action.type === "ADD_TO_CART"){
+         item = getState().data.productVatiation;
          let addedItem = state.items.find(item=> item.id === action.id)
           //check if the action id exists in the addedItems
          let existed_item= state.addedItems.find(item=> action.id === item.id)

@@ -40,8 +40,20 @@ class KnowMore extends Component {
         }
     }
     
+    _addInCart(prodTypeId){
+        this.props.addToCart(prodTypeId);
+    }
 
+    _addProd(prodId){
+        //Alert.alert("addProd"+prodId)
+        this.props.addToCart(prodId);
+    }
 
+    _removeProd(prodId){
+        //Alert.alert("removeProd"+prodId)
+        this.props.removeFromCart(prodId);
+    }
+    
     renederItemType () {
         let ItemList = this.props.itemtypeData;
         let prodId = this.props.prodId;
@@ -50,7 +62,7 @@ class KnowMore extends Component {
             // let producName = ItemList[0].pname;
             let prodDetails = ItemList.find((item) => item.id === prodId);
             let prodDesc = prodDetails.long_description != '' ? prodDetails.long_description : 'Not Available.';
-            console.log(prodDetails);
+            
             return(
                 <View style={{alignItems:'center'}}>
                     <View style={{marginTop:20}}>
@@ -64,7 +76,7 @@ class KnowMore extends Component {
                     <View style={{flexDirection:'row',justifyContent:'center',alignSelf:'center',width:'80%',marginTop:30}}>
                     <View style={{alignItems:'flex-start'}}>
                         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <TouchableOpacity style={{marginRight:10}}>
+                            <TouchableOpacity style={{marginRight:10}} onPress={()=>this._removeProd(prodId)}>
                                 <Material 
                                     name="minus-circle-outline"
                                     color={constants.Colors.color_grey}
@@ -74,7 +86,7 @@ class KnowMore extends Component {
 
                             <Text style={{fontSize:20,fontFamily:regular}}>Select</Text>
 
-                            <TouchableOpacity style={{marginLeft:10}}>
+                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this._addProd(prodId)}>
                                 <Material 
                                     name="plus-circle-outline"
                                     color={constants.Colors.color_grey}
@@ -84,7 +96,9 @@ class KnowMore extends Component {
                         </View>
                         <Text style={{fontFamily:regular,fontSize:20,paddingLeft:3}}>Rs. {prodDetails.price}</Text>
                     </View>
-                    <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}>
+                    <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}
+                        onPress={()=>this._addInCart(prodId)}>
+
                         <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                         <Text style={{fontFamily:regular}}>Add to Cart</Text>
                     </TouchableOpacity>
@@ -154,6 +168,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
+    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
+    removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowMore);
