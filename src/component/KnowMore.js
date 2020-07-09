@@ -8,6 +8,7 @@ import SocialLink from './SocialLinks'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
+import {navigate} from '../appnavigation/RootNavigation'
 
 
 const width = Dimensions.get('window').width;
@@ -42,6 +43,7 @@ class KnowMore extends Component {
     
     _addInCart(prodTypeId){
         this.props.addToCart(prodTypeId);
+        navigate("MyCart");
     }
 
     _addProd(prodId){

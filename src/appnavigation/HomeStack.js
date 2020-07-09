@@ -15,6 +15,8 @@ import LoginScreen from '../component/LoginScreen'
 import AboutFarm from '../component/AboutFarm'
 import otpVerify from '../component/otpVerify'
 import MyCart from '../component/MyCart'
+import ContactScreen from '../component/ContactScreen'
+import SocialLoginScreen from '../component/SocialLoginScreeen'
 
 const RootStack = createStackNavigator();
 
@@ -92,6 +94,23 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="otpVerification" component={otpVerify}/>
+                    
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="ContactScreen" component={ContactScreen}/>
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="SocialLogin" component={SocialLoginScreen}/>
 
     </RootStack.Navigator>
 );

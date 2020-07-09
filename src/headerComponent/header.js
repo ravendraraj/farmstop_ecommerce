@@ -1,12 +1,13 @@
 import React from 'react'
+import {Image} from 'react-native'
 import {View,StyleSheet,Text,TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/Entypo';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import constants from '../constants'
 import {navigate} from '../appnavigation/RootNavigation'
 
-export default function header({navigation}){
+function header({navigation,cartItem}){
     // onPress={() => {navigation.openDrawer()}}
     const openMenue =()=>{
         navigation.openDrawer()
@@ -16,6 +17,7 @@ export default function header({navigation}){
         navigate("MyCart");
     }
 
+    let totalProd = cartItem.length > 0 ? cartItem.length:"";
     return(
         <View style = {styles.head}>
             {/* <TouchableOpacity style={{marginLeft:4}} >
@@ -23,11 +25,14 @@ export default function header({navigation}){
             </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
                 <TouchableOpacity style={{marginRight:20}} onPress={()=>cart()}>
-                    <Material name="cart" size={30} color={constants.Colors.color_BLACK}/>
+                    <Text style={{position:'absolute',left:15,top:0,zIndex:2,color:constants.Colors.color_BLACK}}>{totalProd}</Text>
+                    {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
+                    <Image source={constants.image.cart} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity >
-                    <Icon name="user" size={28}/>
+                    {/* <Icon name="user" size={28}/> */}
+                    <Image source={constants.image.profile} style={{width:40,height:40}}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -47,3 +52,15 @@ const styles = StyleSheet.create({
         color:'black',
     }
 });
+
+
+const mapStateToProps = state => ({
+    cartItem :state.data.addedItems,
+});
+
+const mapDispatchToProps = dispatch => ({
+    // getItemVariation: (data) => dispatch(getProductVariation(data)),
+    // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(header);

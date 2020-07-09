@@ -1,4 +1,4 @@
-const initialDataState = {addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
+const initialDataState = {searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -31,7 +31,13 @@ const data = (state = initialDataState, action) => {
         return{
             ...state,
             otpVerification:action.otp,
-        }
+        };
+
+        case 'AUTO_COMPLETE_PROD':
+        return {
+            ...state,
+            searchProdName:action.payload
+        };
         
 
         //cart reducers 

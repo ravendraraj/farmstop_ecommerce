@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Alert, Dimensions, ScrollView } from 'react-native'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import SellerInfoScreen from './SellerInfoScreen'
 import image from "../constants/Image";
 import { navigate } from '../appnavigation/RootNavigation'
-import CustomStyles from "../constants/CustomStyles";
-import AntDesign from 'react-native-vector-icons/AntDesign';
+// import CustomStyles from "../constants/CustomStyles";
+// import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import constants from '../constants'
+import {searchProductType} from '../lib/api'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -46,19 +46,27 @@ class WelcomeScreen extends Component {
 		super(props);
 		this.state = {
 			show_Main_App: false,
-			seller: false,
-			buyer: false,
 		};
-		
 	}
 	
 	
+
+	async componentDidMount() {
+		const res = await AsyncStorage.getItem('introHadDone');
+		if(res === "introHadDone"){
+			this.setState({ show_Main_App: true });
+			setTimeout(function(){  
+				navigate('DrawerScreen');  
+			  }, 1000);
+		}
+		this.props.searchProductType();
+		//console.log("Ravennnndra")
+	}
+
 	_onDone(){
-		this.props.introDone("introDone");
-		Alert.alert("Async function call");
+		// Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
-		console.log("seller");
-		navigate('Drawer');
+		navigate('DrawerScreen');
 	}
 
 	_renderExploreMore(key){
@@ -114,7 +122,10 @@ class WelcomeScreen extends Component {
 	render() {
 		if (this.state.show_Main_App) {
 			return (
-				<SellerInfoScreen />
+				<View style={styles.container}>
+					<Image source={constants.image.appIntro1} style={{alignSelf:'center'}}/>
+					<Text style={styles.welcomText}>Welcome in Farmstop</Text>
+				</View>
 			);
 		} else {
 			return (
@@ -156,6 +167,13 @@ const styles = StyleSheet.create({
 		marginBottom:2,
 		fontFamily:constants.fonts.Cardo_Regular
 	},
+	welcomText: {
+		color: '#7F462C',
+		textAlign: 'center',
+		fontSize: 25,
+		padding: 20,
+		fontFamily:constants.fonts.Cardo_Bold
+	}
 });
 
 
@@ -165,6 +183,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
+	searchProductType: () => dispatch(searchProductType()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
 import { connect } from 'react-redux';
-import { SearchBox } from '../customElement/Input'
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
+import {Loader} from '../customElement/Loader'
+import {CouponTextInput} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
-
-//api call
-import {getProduct} from '../lib/api'
 
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
@@ -23,20 +21,56 @@ const italic = constants.fonts.Cardo_Italic;
 
 class MyCart extends Component {
     constructor(props){
-        super(props)
+        super(props);
+        this.state={
+            subtotal:0,
+            deliveryCharges:0,
+            discount:0,
+            tax:0,
+            total:0,
+        }
     }
 
     componentDidMount(){
         //console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
+        this.props.removeloader();
     }
+
 
     _getItemType(prod_id){
         Alert.alert("Selected Prod"+prod_id);    
     }
+
+    _loadLoader() {
+        if(this.props.animate) {
+            return(
+                <Loader />
+            )
+        }
+    }
     
+        //add product in cart
+    _addInCart(prodCatId_id,Itemid,navigateToCart){
+        this.props.addToCart(Itemid);
+    
+        //When click on add to cart then navigate on cart screen
+        if(navigateToCart){
+            navigate("MyCart");
+        }
+    }
+    
+        //Remove from cart 
+    _removeFromCart(prodCatId,itemId){
+            this.props.removeFromCart(itemId);
+    }
+
     renederCartDetails(){
         let subtotal = this.props.subtotal;
+        let tax = 0;
+        let deliveryCharges = 0;
+        let discount = this.state.discount;
+        let total = subtotal;
         if(subtotal >0){
             return(
                 <View style={{width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
@@ -46,22 +80,38 @@ class MyCart extends Component {
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                         <Text style={styles.fonts}>Taxes</Text>
-                        <Text style={styles.fonts}>{subtotal}</Text>
+                        <Text style={styles.fonts}>{tax}</Text>
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                         <Text style={styles.fonts}>Delivery charges</Text>
-                        <Text style={styles.fonts}>{subtotal}</Text>
+                        <Text style={styles.fonts}>{deliveryCharges}</Text>
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                         <Text style={styles.fonts}>Discount</Text>
-                        <Text style={styles.fonts}>{subtotal}</Text>
+                        <Text style={styles.fonts}>{discount}</Text>
                     </View>
                     <Text style={{fontFamily:bold,fontSize:20}}>You have a coupon</Text>
+                    <View style={{flexDirection:'row'}}>
+                        <Image source={constants.image.couponImg} style={{width:60,height:40,marginTop:15}}/>
+                        <CouponTextInput placeholder="Enter coupon code"/>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:'90%'}}>
+                        <TouchableOpacity>
+                            <Text style={styles.checkout}>Checkout </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.checkout}>Rs. {total} </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )
         }else{
             return(
-                <View></View>
+                <View style={{alignSelf:'center'}}>
+                    <Text style={styles.welcomText}>
+                        Not found any product
+                    </Text>
+                </View>
             )
         }
     }
@@ -81,7 +131,8 @@ class MyCart extends Component {
                         </View>
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity style={{marginRight:8,marginLeft:5}}>
+                                <TouchableOpacity style={{marginRight:8,marginLeft:5}}
+                                onPress={()=>this._removeFromCart(item.product_id, item.id)}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -89,7 +140,7 @@ class MyCart extends Component {
                                     />
                                 </TouchableOpacity>
                                 <Text style={{fontSize:20,fontFamily:bold}}>Select</Text>
-                                <TouchableOpacity style={{marginLeft:8}}>
+                                <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._addInCart(item.product_id, item.id,false)}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -128,13 +179,14 @@ class MyCart extends Component {
             />
             </View>
         )
-        }else{
-            return(
-                <View style={{alignSelf:'center'}}>
-                    <Text> Loading....</Text>
-                </View>
-            )
         }
+        // else{
+        //     return(
+        //         <View style={{alignSelf:'center'}}>
+        //             <Text> Loading....</Text>
+        //         </View>
+        //     )
+        // }
     }
 
     render() {
@@ -147,6 +199,7 @@ class MyCart extends Component {
                                     My Cart
                                 </Text>
                             </View>
+                            {this._loadLoader()}
                             {this.renederItemType()}
                             {/* {this.renederCartDetails()} */}
                         </View>
@@ -179,17 +232,34 @@ const styles = StyleSheet.create({
     fonts:{
         fontSize:20,
         fontFamily:regular
+    },
+    welcomText: {
+		color: constants.Colors.color_intro,
+		textAlign: 'center',
+		fontSize: 18,
+		padding: 20,
+		fontFamily:regular
+    },
+    checkout:{
+        color: constants.Colors.color_intro,
+		fontSize: 30,
+		padding: 20,
+		fontFamily:bold
     }
   });
 
 const mapStateToProps = state => ({
     cartData :state.data.addedItems,
     subtotal:state.data.total,
+    animate : state.indicator,
 });
 
 const mapDispatchToProps = dispatch => ({
-    getItemVariation: (data) => dispatch(getProductVariation(data)),
-    knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
+    // getItemVariation: (data) => dispatch(getProductVariation(data)),
+    knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId}),
+    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
+    removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
+    removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

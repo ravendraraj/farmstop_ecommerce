@@ -18,8 +18,10 @@ import {
 } from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo'
 import fonts from '../constants/Fonts'
 import colors from '../constants/Color'
+import constants from 'jest-haste-map/build/constants';
 
 //import{ AuthContext } from '../component/context';
 
@@ -99,7 +101,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="FAQ"
-                            onPress={() => {props.navigation.navigate('SettingScreen')}}
+                            onPress={() => {props.navigation.navigate('SocialLogin')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
@@ -120,6 +122,14 @@ export default function DrawerContent(props) {
                             label="Our Farm"
                             onPress={() => {props.navigation.navigate('SupportScreen')}}
                         />
+                        <View style={styles.row}>
+                        <View style={{paddingLeft:20}}>
+                                <Entypo name="mail" color={colors.color_intro} size={40} />
+                            <Paragraph style={[ styles.contactUs,{paddingLeft:2}]} onPress={() => {navigate('ContactScreen')}} >
+                                Contact Us
+                            </Paragraph>
+                        </View>
+                    </View>
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>
@@ -171,4 +181,9 @@ const styles = StyleSheet.create({
       paddingVertical: 12,
       paddingHorizontal: 16,
     },
+    contactUs:{
+        fontFamily:fonts.Cardo_Regular,
+        fontSize:16,
+        marginRight:3,
+    }
   });
