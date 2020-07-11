@@ -64,8 +64,8 @@ class SocialLoginScreen extends Component{
             )
         }else{
             return(
-            <View style={{width:'90%',alignSelf:"center"}}>
-                        <Image source={constants.image.social_login} style={{width:200,height:200,marginTop:10,alignSelf:'center'}}/>
+            <View style={{width:'80%',alignSelf:"center"}}>
+                        <Image source={constants.image.social_login} style={{width:width/2,height:width/2,marginTop:height/20,alignSelf:'center'}}/>
                         
                         <View style={{flexDirection:'row',alignSelf:'center'}}>
                             <Text style={styles.text}>Login Or Register</Text>
@@ -73,31 +73,27 @@ class SocialLoginScreen extends Component{
 
                         <View style={{flexDirection:'row',justifyContent:'space-evenly',margin:10}}>
                             <TouchableOpacity>
-                                <Image source={constants.image.gmail_icon} style={{width:54,height:38}}/>
+                                <Image source={constants.image.gmail_icon} style={{width:65,height:45}}/>
                             </TouchableOpacity>
                             <TouchableOpacity >
-                                <Icon name="facebook-square" size={45} color={constants.Colors.color_facebook}/>
+                                <Icon name="facebook-square" size={53} color={constants.Colors.color_facebook}/>
                             </TouchableOpacity>
                         </View>
-                        <Text style={{alignSelf:'center',fontSize:25,fontFamily:constants.fonts.Cardo_Regular}}>or</Text>
+                        <Text style={{alignSelf:'center',fontSize:28,fontFamily:constants.fonts.Cardo_Regular}}>or</Text>
 
                         <Text style={styles.text}>Register Here</Text>
                         <View style={styles.inputBox}>
-                            <PrimaryTextInput placeholder="Enter Email/Mobile Number "/>
+                            <PrimaryTextInput placeholder="Enter Email/"/>
                         </View>
                         <View style={styles.inputBox}>
-                            <PrimaryTextInput placeholder="Enter Password" secureTextEntry={true}/>
+                            <PrimaryTextInput placeholder="Password" secureTextEntry={true}/>
                         </View>
                         <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this._renderForgetView()}>
                             <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Regular,color:constants.Colors.color_BLACK}}>Forget Password?</Text>
                         </TouchableOpacity>
-                         
-                        <View style={{marginTop:10,marginBottom:30}}>
-                            <Text style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Bold,fontSize:18,alignItems:'center'}}>
-                            Having issues signing up, please write to us at info@farmstop.info
-                        </Text>
-                        </View>
-                         
+                        <TouchableOpacity style={{alignSelf:'center',marginTop:40}}>
+                            <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Log In</Text>
+                        </TouchableOpacity>
                     </View>
             )
         }
@@ -120,11 +116,11 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{
-        marginTop:8
+        marginTop:20
     },
     text:{
         color:constants.Colors.color_BLACK,
-        fontSize:20,
+        fontSize:25,
         fontFamily:constants.fonts.Cardo_Bold
     }
 })
