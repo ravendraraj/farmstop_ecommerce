@@ -46,6 +46,7 @@ class WelcomeScreen extends Component {
 		super(props);
 		this.state = {
 			show_Main_App: false,
+			logined:false,
 		};
 	}
 	
@@ -53,12 +54,18 @@ class WelcomeScreen extends Component {
 
 	async componentDidMount() {
 		const res = await AsyncStorage.getItem('introHadDone');
+		const login_status = await AsyncStorage.getItem('Logined');
 		if(res === "introHadDone"){
-			this.setState({ show_Main_App: true });
-			setTimeout(function(){  
-				navigate('DrawerScreen');  
-			  }, 1000);
+			if(login_status =="YES"){
+				this.setState({ show_Main_App: true });
+				setTimeout(function(){  
+					navigate('DrawerScreen');  
+				}, 1000);
+			}else{
+				navigate('NotLogin');
+			}
 		}
+
 		this.props.searchProductType();
 		//console.log("Ravennnndra")
 	}
@@ -66,7 +73,8 @@ class WelcomeScreen extends Component {
 	_onDone(){
 		// Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
-		navigate('DrawerScreen');
+		//navigate('DrawerScreen');
+		navigate('NotLogin');
 	}
 
 	_renderExploreMore(key){

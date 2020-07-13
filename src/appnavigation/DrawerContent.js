@@ -1,6 +1,7 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { View, StyleSheet } from 'react-native';
 import { navigate } from '../appnavigation/RootNavigation'
+import {logout} from '../lib/api'
 import {
     useTheme,
     Avatar,
@@ -22,6 +23,12 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import fonts from '../constants/Fonts'
 import colors from '../constants/Color'
 import constants from 'jest-haste-map/build/constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+  } from '@react-native-community/google-signin';
 
 //import{ AuthContext } from '../component/context';
 
@@ -29,7 +36,74 @@ export default function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
+    const logout = async () =>{
+        let userType =  await AsyncStorage.getItem('Login_Type');
+        console.log("userType")
+        console.log(userType)
+        if( userType== "GMAIL"){
+            console.log("ravendra");
+        //    await GoogleSignin.revokeAccess();
+        //     await GoogleSignin.signOut();
+            await AsyncStorage.removeItem("Logined");
+            await AsyncStorage.removeItem("Login_Type");
+            await AsyncStorage.removeItem("name");
+            await AsyncStorage.removeItem("profile");
+            await AsyncStorage.removeItem("email");
+    
+            //setTimeout(function(){  
+              navigate('NotLogin');  
+            //}, 1000);
+        }
+    
+        if( userType== "MANUAL"){
+            console.log("ravendra manual");
+            //    await GoogleSignin.revokeAccess();
+            //     await GoogleSignin.signOut();
+                await AsyncStorage.removeItem("Logined");
+                await AsyncStorage.removeItem("Login_Type");
+                await AsyncStorage.removeItem("name");
+                await AsyncStorage.removeItem("profile");
+                await AsyncStorage.removeItem("email");
+                await AsyncStorage.removeItem("mobile");
+        
+                //setTimeout(function(){  
+                  navigate('NotLogin');  
+                //}, 1000);
+
+        }
+    
+        if( userType== "FACEBOOK"){
+            //fdsfds
+        }
+    }
     // const { signOut, toggleTheme } = React.useContext(AuthContext);
+    const [userImage, setImage] = useState("null");
+    const [userEmail, setEmail] = useState("null");
+    const [userName, setName] = useState("null");
+
+    useEffect(() => {
+        // Create an scoped async function in the hoo
+        async function getUserDetails() {
+            try {
+                
+                let image = await AsyncStorage.getItem('profile');
+                setImage(image);
+
+                let name = await AsyncStorage.getItem('name');
+                
+                setName(name);
+
+                let email = await AsyncStorage.getItem('email');
+                setEmail(email);
+                console.log(image+"-"+name+"-"+email);
+            } catch(e) {
+            console.log(e);
+            }
+        }
+        // Execute the created function directly
+        getUserDetails();
+    }, []);
+     
 
     return(
         <View style={{flex:1}}>
@@ -39,13 +113,13 @@ export default function DrawerContent(props) {
                         <View style={{flexDirection:'row',marginTop: 15}}>
                             <Avatar.Image 
                                 source={{
-                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                    uri: userImage
                                 }}
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>Ravendra</Title>
-                                <Caption style={styles.caption}>Singh</Caption>
+                                <Title style={styles.title}>{userName}</Title>
+                                {/* <Caption style={styles.caption}>Singh</Caption> */}
                             </View>
                         </View>
 
@@ -127,6 +201,13 @@ export default function DrawerContent(props) {
                                 <Entypo name="mail" color={colors.color_intro} size={40} />
                             <Paragraph style={[ styles.contactUs,{paddingLeft:2}]} onPress={() => {navigate('ContactScreen')}} >
                                 Contact Us
+                            </Paragraph>
+                        </View>
+                    </View>
+                    <View style={styles.row}>
+                    <View style={{paddingLeft:20}}>
+                            <Paragraph style={[ styles.contactUs,{paddingLeft:2}]} onPress={() => {logout()}} >
+                                Logout
                             </Paragraph>
                         </View>
                     </View>

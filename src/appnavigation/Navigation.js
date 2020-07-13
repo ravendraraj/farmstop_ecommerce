@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './RootNavigation';
 import DrawerScreen from './DrawerScreen';
+import NoneValidate from './NoneValidate';
 import AppIntroScreen from './AppIntroScreen';
 import WelcomeScreen from '../component/WelcomeScreen'
 
@@ -39,6 +40,8 @@ const Navigation = ({navigation,introDoneProps}) => {
         {/* { appIntro === 'introHadDone' ? (<RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>):<RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={AppIntroScreen}/>} */}
           <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
           <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={WelcomeScreen}/>
+          <RootAppStack.Screen  options={{headerShown: false}} name="NotLogin" component={NoneValidate}/>
+
       </RootAppStack.Navigator>
     </NavigationContainer>
   )

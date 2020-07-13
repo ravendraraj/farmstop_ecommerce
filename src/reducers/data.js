@@ -33,6 +33,15 @@ const data = (state = initialDataState, action) => {
             otpVerification:action.otp,
         };
 
+        case 'SAVE_REGISTERTION_DETAIL':
+        return{
+            ...state,
+            Otp:action.otp,
+            username:action.username,
+            email:action.email,
+            password:action.password,
+        };
+
         case 'AUTO_COMPLETE_PROD':
         return {
             ...state,

@@ -3,19 +3,16 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DrawerContent from './DrawerContent'
 //stack
-import StackScreen from './HomeStack';
+import WithoutSignInStack from './WithoutSignInStack';
 
 //Screens
 import HomeScreen from '../component/HomeScreen';
 import SellerInfoScreen from '../component/SellerInfoScreen';
 
 const Drawer = createDrawerNavigator();
-const DrawerScreen = ({navigation}) => (
+const NoneValidate = ({navigation}) => (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen name="MainHome" component={StackScreen} />
-        <Drawer.Screen name="My Account" component={HomeScreen} />
-        <Drawer.Screen name="My Order" component={SellerInfoScreen} />
+        <Drawer.Screen name="MainHome" component={WithoutSignInStack} />
     </Drawer.Navigator>
 );
-
-export default DrawerScreen
+export default NoneValidate

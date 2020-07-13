@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "321830598673",
+    "firebase_url": "https://farmstop-a3cf8.firebaseio.com",
+    "project_id": "farmstop-a3cf8",
+    "storage_bucket": "farmstop-a3cf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321830598673:android:6d1a22515e5ede20fb59b0",
+        "android_client_info": {
+          "package_name": "com.farmstop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321830598673-86qcmugmcpqov5mqfpmc6du8ofskogca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.farmstop",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "321830598673-ru3q3a3qro7170svm1ppeoujknj88fiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbf3Vx8XfT7bHre41-LR756szBBNfp3bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321830598673-ru3q3a3qro7170svm1ppeoujknj88fiq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
