@@ -24,7 +24,7 @@ export const loginValidation = (data) => (dispatch,getState) => {
                 AsyncStorage.setItem('email', response.user.email);
                 AsyncStorage.setItem('mobile', response.user.mobile);
                 //console.log(response.user.mobile+" "+response.user.email+" "+response.user.name);
-
+                dispatch({type:'AUTHORIZED-USER', email:response.user.email})
             setTimeout(function(){  
                 navigate('DrawerScreen');
             }, 1000);
@@ -80,7 +80,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                 AsyncStorage.setItem('name', userData["name"]);
                 AsyncStorage.setItem('profile', userData["image"]);
                 AsyncStorage.setItem('email', userData["email"]);
-
+                dispatch({type:'AUTHORIZED-USER', email:userData["email"]})
                 navigate('DrawerScreen');
                 
                 dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});

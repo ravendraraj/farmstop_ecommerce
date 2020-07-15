@@ -51,11 +51,15 @@ class HomeScreen extends Component {
   }
 
 
-  _getItemType(prod_id) {
-    this.props.getProductType(prod_id)
+  async _getItemType(prod_id) {
+    // this.props.getProductType(prod_id)
     // Alert.alert("Selected Prod"+prod_id);    
-    this.props.loader();
-    navigate('ProductType');
+    //this.props.loader();
+    // navigate('ProductType');
+   await this.props.setProdId(prod_id);
+    this.props.navigation.navigate('ProductType', {
+      itemId: prod_id
+    });
   }
 
 
@@ -217,6 +221,7 @@ const mapDispatchToProps = dispatch => ({
   getProductType: (data) => dispatch(getProductType(data)),
   searchProductType: () => dispatch(searchProductType()),
   getProductTypeByKeyword: (keyword) => dispatch(getProductTypeByKeyword(keyword)),
+  setProdId :(data)=>dispatch({type:'ACTIVE-PROD', id:data}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

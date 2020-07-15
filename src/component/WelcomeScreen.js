@@ -55,12 +55,14 @@ class WelcomeScreen extends Component {
 	async componentDidMount() {
 		const res = await AsyncStorage.getItem('introHadDone');
 		const login_status = await AsyncStorage.getItem('Logined');
+		const userEmail = await AsyncStorage.getItem('email');
 		if(res === "introHadDone"){
 			if(login_status =="YES"){
 				this.setState({ show_Main_App: true });
 				setTimeout(function(){  
 					navigate('DrawerScreen');  
 				}, 1000);
+				this.props.loginedIn(userEmail)
 			}else{
 				navigate('NotLogin');
 			}
@@ -192,6 +194,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
 	searchProductType: () => dispatch(searchProductType()),
+	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

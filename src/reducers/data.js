@@ -1,4 +1,4 @@
-const initialDataState = {searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
+const initialDataState = {authEmail:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -48,6 +48,109 @@ const data = (state = initialDataState, action) => {
             searchProdName:action.payload
         };
         
+        case 'ACTIVE-PROD':
+        return {
+            ...state,
+            activeProduct:action.id
+        };
+
+        case 'AUTHORIZED-USER':
+        return{
+            ...state,
+            authEmail :action.email
+        };
+
+        case 'ADD-WISH':
+            let activeProdId = action.activeProdId;
+            let updateItemList = state.productVatiation.map(item => {
+                if(item.id == activeProdId){
+                    console.log(item);
+                    console.log(item.isMyWish);
+                     if(item.isMyWish === 'heart-outline'){
+                            item.isMyWish = "heart";
+                            console.log("heart");
+                     }else{
+                       item.isMyWish = "heart-outline";
+                        console.log("outline");
+                     } 
+                }
+
+                return item;
+              });
+              //console.log(updateItemList);
+        return {
+            ...state,
+            productVatiation :updateItemList,
+        };
+
+        case 'ADD-PROD-QTY':
+            
+            let selectProdId = action.activeProdId;
+            let actionType = action.actionType;
+            let Price = state.total;
+            let newItemList = state.productVatiation.map(item => {
+                if(item.id == selectProdId){
+                    let itemPrice = parseFloat(item.selectedQtyPrice);
+                     if(actionType === 'add'){
+                        item.selectedQty += 1;
+                        if(item.selectedQty >1){
+                            itemPrice += parseFloat(item.price);
+                            item.selectedQtyPrice = itemPrice;
+                            Price += parseFloat(item.price);
+                        }
+                     }else if(actionType === 'remove' && item.selectedQty >0){
+                        item.selectedQty -= 1;
+                        if(item.selectedQty >0){
+                            itemPrice -= parseFloat(item.price);
+                            item.selectedQtyPrice = itemPrice;
+                            Price -= parseFloat(item.price);
+                        }
+                     } 
+                }
+
+                return item;
+              });
+              //console.log(updateItemList);
+        return {
+            ...state,
+            productVatiation :newItemList,
+            total :Price
+        };
+        
+
+        case 'MANAGE-CART-QTY':
+            
+            let cartSelectProdId = action.activeProdId;
+            let cartActionType = action.actionType;
+            let totalPrice = parseFloat(state.total);
+            let newCartItemList = state.addedItems.map(item => {
+                if(item.id == cartSelectProdId.id){
+                    let cartItemPrice = parseFloat(item.selectedQtyPrice);
+                     if(cartActionType === 'add'){
+                        item.selectedQty += 1;
+                        if(item.selectedQty >1){
+                            cartItemPrice += parseFloat(item.price);
+                            item.selectedQtyPrice = cartItemPrice;
+                            totalPrice += parseFloat(item.price);
+                        }
+                     }else if(cartActionType === 'remove' && item.selectedQty >0){
+                        item.selectedQty -= 1;
+                        if(item.selectedQty >0){
+                            cartItemPrice -= parseFloat(item.price);
+                            item.selectedQtyPrice = cartItemPrice;
+                            totalPrice -= parseFloat(item.price);
+                        }
+                     }
+                }
+
+                return item;
+              });
+              //console.log(updateItemList);
+        return {
+            ...state,
+            addedItems :newCartItemList,
+            total :totalPrice
+        };
 
         //cart reducers 
         case "ADD_TO_CART" :

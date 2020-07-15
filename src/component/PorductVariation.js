@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
+import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions ,ToastAndroid} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -9,7 +9,7 @@ import {fristLetterCapital} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
 
 //api call
-import {getProduct} from '../lib/api'
+import { getProductType } from '../lib/api'
 
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
@@ -25,11 +25,41 @@ class PorductVariation extends Component {
     constructor(props){
         super(props)
         // this.props.getItem();
+        this.state={
+            ListItem :''
+        }
     }
 
-    componentDidMount(){
-        //console.log("I am Call")
+   async componentDidMount(){
+        console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
+        await this.props.getProductType(this.props.activeProd)
+
+        let ItemList = this.props.itemtypeData;
+        if(ItemList != "undefined" && ItemList !=null){
+            // let producName = ItemList[0].pname;
+
+            let LitsItem = ItemList.map(item => {
+                item.isMyWish = 'heart-outline';
+                // item.selectedQty = 0;
+                return item;
+              });
+
+              this.setState({ListItem : LitsItem});
+        }
+    }
+
+    _addinWishList = data => {
+        // data.isMyWish =! "heart" ? "heart-outline": "heart";
+        if(this.props.authEmail !=''){
+            this.props.addInWish(data.id);
+        }else{
+            ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+    };
+    
+    _manageProdQty = (prod ,typeaction)=>{
+        this.props.manageQty({prodId:prod,typeOfAct:typeaction});
     }
 
     _loadLoader() {
@@ -54,10 +84,10 @@ class PorductVariation extends Component {
         this.props.addToCart(Itemid);
 
         //When click on add to cart then navigate on cart screen
-        if(navigateToCart){
-            this.props.loader();
-            navigate("MyCart");
-        }
+        // if(navigateToCart){
+        //     //this.props.loader();
+        //     navigate("MyCart");
+        // }
     }
 
     //Remove from cart 
@@ -80,16 +110,24 @@ class PorductVariation extends Component {
     }
 
     renederItemType () {
+        
         let ItemList = this.props.itemtypeData;
         if(ItemList != "undefined" && ItemList !=null){
-            let producName = ItemList[0].pname;
+
+            let updateItemList = ItemList.map(item => {
+                if(item.isMyWish == ''){
+                    item.isMyWish = 'heart-outline';
+                }
+                return item;
+            });
+
         return(
             <View>
                 {/* <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,marginTop:40,marginBottom:30}}>
                     {fristLetterCapital(producName)}
                 </Text> */}
             <FlatList
-            data={ItemList}
+            data={updateItemList}
             renderItem={({ item }) => (
                 <View style={{marginBottom:10}}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
@@ -97,8 +135,8 @@ class PorductVariation extends Component {
                         <View>
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                             <TouchableOpacity style={{position:'absolute',top:-4,right:0}}
-                            onPress={()=>this._addinWishList(prodDetails.produc_id,prodDetails.id)}>
-                                <Material name="heart-outline" color={constants.Colors.color_grey} size={25}/>
+                            onPress={()=>this._addinWishList(item)}>
+                                <Material name={item.isMyWish} color={constants.Colors.color_grey} size={25}/>
                             </TouchableOpacity>
                             {/* <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text> */}
                         </View>
@@ -108,16 +146,16 @@ class PorductVariation extends Component {
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
-                                onPress={()=>this._removeFromCart(item.product_id,item.id)}>
+                                onPress={()=>this._manageProdQty(item.id,'remove')}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
                                         size={25}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Select</Text>
+                                <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
                                 <TouchableOpacity style={{marginLeft:8}}
-                                onPress={()=>this._addInCart(item.product_id,item.id,false)}>
+                                onPress={()=>this._manageProdQty(item.id,'add')}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -128,7 +166,7 @@ class PorductVariation extends Component {
 
                             {/**Price section */}
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.price}</Text>
+                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedQtyPrice}</Text>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
                                     onPress={()=>this._addInCart(item.product_id,item.id,true)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
@@ -171,7 +209,9 @@ class PorductVariation extends Component {
                 </View>
             )}
             
-            keyExtractor={(item) => item.id}
+            // keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id.toString()}
+            extraData={this.state}
             />
             </View>
         )
@@ -235,6 +275,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     animate : state.indicator,
     itemtypeData :state.data.productVatiation,
+    activeProd : state.data.activeProduct,
+    authEmail :state.data.authEmail,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -243,6 +285,9 @@ const mapDispatchToProps = dispatch => ({
     addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     loader:()=>dispatch({type : 'LOADING'}),
+    getProductType: (data) => dispatch(getProductType(data)),
+    addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
+    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

@@ -115,7 +115,9 @@ class MyCart extends Component {
             )
         }
     }
-
+    _manageCartProdQty = (prod ,typeaction)=>{
+        this.props.manageCartQty({prodId:prod,typeOfAct:typeaction});
+    }
     renederItemType () {
         let ItemList = this.props.cartData;
         if(ItemList != "undefined" && ItemList !=null){
@@ -132,15 +134,15 @@ class MyCart extends Component {
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
-                                onPress={()=>this._removeFromCart(item.product_id, item.id)}>
+                                onPress={()=>this._manageCartProdQty(item,'remove')}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
                                         size={25}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Select</Text>
-                                <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._addInCart(item.product_id, item.id,false)}>
+                                <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
+                                <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -151,7 +153,7 @@ class MyCart extends Component {
 
                             {/**Price section */}
                             {/* <View style={{alignSelf:'center',marginBottom:10,marginTop:10,backgroundColor:'red',width:'100%'}}> */}
-                                <Text style={{fontSize:20,fontFamily:regular,marginLeft:10}}>Rs. {item.price}</Text>
+                                <Text style={{fontSize:20,fontFamily:regular,marginLeft:10}}>Rs. {item.selectedQtyPrice}</Text>
                             {/* </View> */}
 
             
@@ -260,6 +262,7 @@ const mapDispatchToProps = dispatch => ({
     addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
+    manageCartQty:(data) =>dispatch({type:'MANAGE-CART-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

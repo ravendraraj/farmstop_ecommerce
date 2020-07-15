@@ -40,6 +40,12 @@ class SocialLoginScreen extends Component{
         GoogleSignin.configure({
             webClientId: "321830598673-ru3q3a3qro7170svm1ppeoujknj88fiq.apps.googleusercontent.com",
         });
+
+        if(this.props.authEmail != "")
+        {
+            this.props.loginedIn("");
+        }
+
     }
     
     _renderForgetView(){
@@ -238,6 +244,7 @@ const mapStateToProps = state => ({
     // itemtypeData :state.data.productVatiation,
     animate: state.indicator,
     error: state.error.err,
+    authEmail :state.data.authEmail,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -245,6 +252,7 @@ const mapDispatchToProps = dispatch => ({
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
     manualLogin:(data)=>dispatch(loginValidation(data)),
     social_login:(data)=>dispatch(socialLogin(data)),
+    loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);
