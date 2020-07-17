@@ -9,14 +9,14 @@ import {fristLetterCapital} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
 
 //api call
-import { getProductType } from '../lib/api'
+import { getProductType,setWishListItemInLocal } from '../lib/api'
 
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const totalprod = Math.ceil(height/100);
+const totalprod = Math.ceil(height/(width/4));
 const bold = constants.fonts.Cardo_Bold;
 const regular = constants.fonts.Cardo_Regular;
 const italic = constants.fonts.Cardo_Italic;
@@ -26,32 +26,34 @@ class PorductVariation extends Component {
         super(props)
         // this.props.getItem();
         this.state={
-            ListItem :''
+            ListItem :'',
+            page:1,
         }
     }
 
    async componentDidMount(){
-        console.log("I am Call")
+        // console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
-        await this.props.getProductType(this.props.activeProd)
+        await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
 
-        let ItemList = this.props.itemtypeData;
-        if(ItemList != "undefined" && ItemList !=null){
-            // let producName = ItemList[0].pname;
+        // let ItemList = this.props.itemtypeData;
+        // if(ItemList != "undefined" && ItemList !=null){
+        //     // let producName = ItemList[0].pname;
 
-            let LitsItem = ItemList.map(item => {
-                item.isMyWish = 'heart-outline';
-                // item.selectedQty = 0;
-                return item;
-              });
+        //     let LitsItem = ItemList.map(item => {
+        //         item.isMyWish = 'heart-outline';
+        //         // item.selectedQty = 0;
+        //         return item;
+        //       });
 
-              this.setState({ListItem : LitsItem});
-        }
+        //       this.setState({ListItem : LitsItem});
+        // }
     }
 
     _addinWishList = data => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
-        if(this.props.authEmail !=''){
+        if(this.props.authEmail != "" || this.props.authMobile != ''){
+            //this.props.setWishInLocal(data);
             this.props.addInWish(data.id);
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -60,6 +62,16 @@ class PorductVariation extends Component {
     
     _manageProdQty = (prod ,typeaction)=>{
         this.props.manageQty({prodId:prod,typeOfAct:typeaction});
+    }
+
+    LoadMoreRandomData = async() =>{
+        if(this.props.no_more_data == false){
+            let pageNo = this.state.page+1;
+            await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
+            this.setState({page:pageNo});
+        }else{
+            ToastAndroid.showWithGravity("No more product find", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
     }
 
     _loadLoader() {
@@ -97,7 +109,7 @@ class PorductVariation extends Component {
 
     renderItemTile(){
         let ItemList = this.props.itemtypeData;
-        if(ItemList != "undefined" && ItemList !=null){
+        if(ItemList.length >0){
             let producName = ItemList[0].pname;
         return(
             <View>
@@ -112,7 +124,7 @@ class PorductVariation extends Component {
     renederItemType () {
         
         let ItemList = this.props.itemtypeData;
-        if(ItemList != "undefined" && ItemList !=null){
+        if(ItemList != "undefined" && ItemList.length > 0){
 
             let updateItemList = ItemList.map(item => {
                 if(item.isMyWish == ''){
@@ -210,8 +222,11 @@ class PorductVariation extends Component {
             )}
             
             // keyExtractor={(item) => item.id}
-            keyExtractor={item => item.id.toString()}
-            extraData={this.state}
+            keyExtractor={(item,index) => item.id.toString()}
+            // extraData={this.state}
+            onEndReachedThreshold={0.5}
+            onEndReached={this.LoadMoreRandomData}
+
             />
             </View>
         )
@@ -277,6 +292,8 @@ const mapStateToProps = state => ({
     itemtypeData :state.data.productVatiation,
     activeProd : state.data.activeProduct,
     authEmail :state.data.authEmail,
+    authMobile :state.data.authMobile,
+    no_more_data: state.data.no_more_data
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -287,7 +304,8 @@ const mapDispatchToProps = dispatch => ({
     loader:()=>dispatch({type : 'LOADING'}),
     getProductType: (data) => dispatch(getProductType(data)),
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
-    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct})
+    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
+    setWishInLocal :(data)=>dispatch(setWishListItemInLocal(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

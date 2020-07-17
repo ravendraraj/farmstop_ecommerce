@@ -46,19 +46,7 @@ class LoginScreen extends Component{
     }
 
     _renderView(){
-        if(this.state.forget == true){
-            return(
-                <View style={{width:'80%',alignSelf:"center"}}>
-                            <TextHeading title="forgot password?" fontsize={25}/>
-                            <View style={styles.inputBox}>
-                                <PrimaryTextInput placeholder="Enter Email Id" onChangeText={(text) => this.setState({emailId:text})}/>
-                            </View>
-                            <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._sendOtp()}>
-                                <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
-                            </TouchableOpacity>
-                        </View>
-            )
-        }else{
+        
             return(
             <View style={{width:'80%',alignSelf:"center"}}>
                         <TextHeading title="Log in" fontsize={25}/>
@@ -68,7 +56,7 @@ class LoginScreen extends Component{
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Password" secureTextEntry={true}/>
                         </View>
-                        <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this._renderForgetView()}>
+                        <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this.props.navigation.navigate('ForgetPassword')}>
                             <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Regular,color:constants.Colors.color_BLACK}}>Forget Password?</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{alignSelf:'center',marginTop:40}}>
@@ -76,7 +64,6 @@ class LoginScreen extends Component{
                         </TouchableOpacity>
                     </View>
             )
-        }
     }
 
     render(){

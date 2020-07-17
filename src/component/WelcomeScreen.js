@@ -75,6 +75,7 @@ class WelcomeScreen extends Component {
 	_onDone(){
 		// Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
+		//AsyncStorage.setItem('WishList', []); //for wishList Storage
 		//navigate('DrawerScreen');
 		navigate('NotLogin');
 	}

@@ -1,4 +1,4 @@
-const initialErrorState = { err: null, respStatus: null };
+const initialErrorState = { err: null, respStatus: null ,success:null };
 const error = (state = initialErrorState, action) => {
     switch (action.type) {
       case 'ERROR_LOGIN':
@@ -11,12 +11,19 @@ const error = (state = initialErrorState, action) => {
       return { 
         ...state,
         err : null,
+        success:null,
       };
 
       case 'ERROR_SUBMIT':
       return { 
         ...state,
         err : action.payload
+      };
+
+      case 'SUCCESS':
+      return { 
+        ...state,
+        success: action.payload
       };
 
       default:

@@ -49,6 +49,7 @@ export default function DrawerContent(props) {
             await AsyncStorage.removeItem("name");
             await AsyncStorage.removeItem("profile");
             await AsyncStorage.removeItem("email");
+            await AsyncStorage.removeItem("userId");
     
             //setTimeout(function(){  
               navigate('NotLogin');  
@@ -65,6 +66,7 @@ export default function DrawerContent(props) {
                 await AsyncStorage.removeItem("profile");
                 await AsyncStorage.removeItem("email");
                 await AsyncStorage.removeItem("mobile");
+                await AsyncStorage.removeItem("userId");
         
                 //setTimeout(function(){  
                   navigate('NotLogin');  
@@ -87,6 +89,7 @@ export default function DrawerContent(props) {
             try {
                 
                 let image = await AsyncStorage.getItem('profile');
+                
                 setImage(image);
 
                 let name = await AsyncStorage.getItem('name');

@@ -57,7 +57,7 @@ class KnowMore extends Component {
 
     _addinWishList = prodId => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
-        if(this.props.authEmail != ""){
+        if(this.props.authEmail != "" || this.props.authMobile != ''){
             this.props.addInWish(prodId);
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -185,6 +185,7 @@ const mapStateToProps = state => ({
     itemtypeData :state.data.productVatiation,
     prodId:state.data.knowMoreProdId,
     authEmail :state.data.authEmail,
+    authMobile :state.data.authMobile,
 });
 
 const mapDispatchToProps = dispatch => ({

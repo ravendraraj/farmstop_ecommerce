@@ -11,6 +11,7 @@ const indicator = (state = false, action) => {
         case 'SIGNUP_SUCCESS':
         case 'OTP_SEND':
         case 'REGISTER_USER':
+        case 'SUCCESS':
             return false;
         default :
             return state;

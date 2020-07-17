@@ -1,4 +1,4 @@
-const initialDataState = {authEmail:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:null };
+const initialDataState = {Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[] };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -13,12 +13,30 @@ const data = (state = initialDataState, action) => {
             ...state,
             productData : action.payload,
         };
-
-        case 'PRODUCT_VARIATION':
+        
+        case 'NO_MORE_DATA':
         return {
             ...state,
-            productVatiation : action.payload,
+            no_more_data: action.payload,
         };
+
+        case 'PRODUCT_VARIATION':
+            console.log(state.activeProduct +" != " + action.payload[0].product_id);
+            console.log(state.productVatiation.length);
+        if((state.productVatiation.length > 0) && (state.activeProduct == action.payload[0].product_id)){
+            let searchProdctList = [ ...state.productVatiation, ...action.payload];
+            console.log("same");
+            return {
+                ...state,
+                productVatiation : searchProdctList,
+            };
+        }else{
+            console.log("initial");
+            return {
+                ...state,
+                productVatiation : action.payload,
+            };  
+        }
 
 
         case 'KNOW_MORE_ABOUT_PROD':
@@ -51,13 +69,17 @@ const data = (state = initialDataState, action) => {
         case 'ACTIVE-PROD':
         return {
             ...state,
-            activeProduct:action.id
+            activeProduct:action.id,
+            productVatiation:[],
+            no_more_data:false,
         };
 
         case 'AUTHORIZED-USER':
         return{
             ...state,
-            authEmail :action.email
+            authEmail :action.email,
+            authMobile: action.mobile,
+            authUserID: action.userID,
         };
 
         case 'ADD-WISH':

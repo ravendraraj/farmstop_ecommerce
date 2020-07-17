@@ -140,19 +140,7 @@ class SocialLoginScreen extends Component{
 
 
     _renderView(){
-        if(this.state.forget == true){
-            return(
-                <View style={{width:'80%',alignSelf:"center"}}>
-                            <TextHeading title="forgot password?" fontsize={25}/>
-                            <View style={styles.inputBox}>
-                                <PrimaryTextInput placeholder="Enter Email Id" onChangeText={(text) => this.setState({emailId:text})}/>
-                            </View>
-                            <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._sendOtp()}>
-                                <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
-                            </TouchableOpacity>
-                        </View>
-            )
-        }else{
+       
             return(
             <View style={{width:'80%',alignSelf:"center"}}>
                         <Image source={constants.image.social_login} style={{width:width/2,height:width/2,marginTop:height/20,alignSelf:'center'}}/>
@@ -184,7 +172,7 @@ class SocialLoginScreen extends Component{
                             <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this._renderSignUpScreen()}>
                                 <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Create Account</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this._renderForgetView()}>
+                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this.props.navigation.navigate('ForgetPassword')}>
                                 <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Forget Password?</Text>
                             </TouchableOpacity>
                         </View>
@@ -196,7 +184,6 @@ class SocialLoginScreen extends Component{
                         {/* </View> */}
                     </View>
             )
-        }
     }
 
     _ShowError() {
@@ -208,7 +195,8 @@ class SocialLoginScreen extends Component{
                   { text: "OK", onPress: () => console.log("OK Pressed") }
                 ],
                 { cancelable: false }
-              ); 
+              );
+              this.props.removeError(); 
         }
       }
 
@@ -216,7 +204,7 @@ class SocialLoginScreen extends Component{
         return(
             <View style={styles.container}>
                 <ScrollView>
-                    {this._ShowError()}
+                    {/* {this._ShowError()} */}
         	        {this._loadLoader()}
                     {this._renderView()}
                 </ScrollView>
@@ -248,7 +236,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    // getItemVariation: (data) => dispatch(getProductVariation(data)),
+    removeError: () => dispatch({type:'REMOVE_ERROR'}),
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
     manualLogin:(data)=>dispatch(loginValidation(data)),
     social_login:(data)=>dispatch(socialLogin(data)),
