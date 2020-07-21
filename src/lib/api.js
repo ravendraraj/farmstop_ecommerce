@@ -17,15 +17,21 @@ export const loginValidation = (data) => (dispatch,getState) => {
         .then(response => {
             if(response.status == "1"){
                 dispatch({ type : 'LOGIN_SUCCESS', payload : response.user});
+
+                 var authUser = {
+                    'Login_Type' :"MANUAL",
+                    'name' :response.user.name,
+                    'profile' :'null',
+                    'email' :response.user.email,
+                    'userId' :response.user.id,
+                    'mobile' :response.user.mobile
+                };
+                 
+                AsyncStorage.setItem('authData', JSON.stringify(authUser));
                 AsyncStorage.setItem('Logined', 'YES');
-                AsyncStorage.setItem('Login_Type', "MANUAL");
-                AsyncStorage.setItem('name', response.user.name);
-                AsyncStorage.setItem('profile', "null");
-                AsyncStorage.setItem('email', response.user.email);
-                AsyncStorage.setItem('mobile', response.user.mobile);
-                AsyncStorage.setItem('userId', response.user.id);
-                //console.log(response.user.mobile+" "+response.user.email+" "+response.user.name);
-                dispatch({type:'AUTHORIZED-USER', email:response.user.email,mobile:response.user.mobile ,userID:response.user.id})
+
+                dispatch({type:'AUTHORIZED-USER', email:response.user.email,mobile:response.user.mobile ,userID:response.user.id});
+
             setTimeout(function(){  
                 navigate('DrawerScreen');
             }, 1000);
@@ -70,18 +76,25 @@ export const socialLogin = (userData) => (dispatch,getState) => {
 
     fetch(url,post_req)
     .then(res =>{
-        console.log(res)
         res.json()
         .then(response => {
             console.log(response)
             if(response.status == "1"){
                 
-                AsyncStorage.setItem('Logined', 'YES');
-                AsyncStorage.setItem('Login_Type', userData["social_type"]);
-                AsyncStorage.setItem('name', userData["name"]);
-                AsyncStorage.setItem('profile', userData["image"]);
-                AsyncStorage.setItem('email', userData["email"]);
-                AsyncStorage.setItem('userId', userData["id"]);
+                var authUser = {
+                    'Login_Type' :userData["social_type"],
+                    'name' :userData["name"],
+                    'profile' :userData["image"],
+                    'email' :userData["email"],
+                    'userId' :userData["id"],
+                    'mobile' :'null'
+                };
+
+                 AsyncStorage.setItem('Logined', 'YES');
+                //  console.log(authUser);
+                //  console.log("Login -data "+JSON.stringify(authUser));
+                 AsyncStorage.setItem('authData', JSON.stringify(authUser));
+
                 dispatch({type:'AUTHORIZED-USER', email:userData["email"] ,userID:userData["id"]})
                 navigate('DrawerScreen');
                 
@@ -245,6 +258,10 @@ export const getProductType = (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     // prodID:this.props.activeProd ,start:this.state,end:totalprod
     let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
+    if(getState().data.authUserID != ''){
+        url = url + "&userId="+getState().data.authUserID;
+    }
+    
     console.log(url);
 
     fetch(url)
@@ -298,9 +315,12 @@ export const searchProductType = (data) => (dispatch,getState) => {
 export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
 
     dispatch({type : 'LOADING'});
-    //https://demo1.farmstop.in/api-searchByKeyword?term=a
+    //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
     console.log(data.key);
     let url = weburl + 'api-productByKeyword?term='+data.key;
+    if(getState().data.authUserID != ''){
+        url = url + "&userId="+getState().data.authUserID;
+    }
     console.log(url);
 
     fetch(url)
@@ -327,9 +347,7 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
 export const getWishListItem= (data) => (dispatch,getState) => {
 
     dispatch({type : 'LOADING'});
-    //https://demo1.farmstop.in/api-searchByKeyword?term=a
-    console.log(data.key);
-    let url = weburl + 'api-productByKeyword?term='+data.key;
+    let url = weburl + 'api-get-wishList?userId='+getState().data.authUserID;
     console.log(url);
 
     fetch(url)
@@ -338,7 +356,7 @@ export const getWishListItem= (data) => (dispatch,getState) => {
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_VARIATION', payload : response.searchProduct});
+                dispatch({ type : 'MY_WISHLIST', payload : response.wishList});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -352,21 +370,18 @@ export const getWishListItem= (data) => (dispatch,getState) => {
     });
 }
 
-export const setWishListItem= (data) => (dispatch,getState) => {
+export const setWishListItemOnServer= (data) => (dispatch,getState) => {
 
-    dispatch({type : 'LOADING'});
-    //https://demo1.farmstop.in/api-searchByKeyword?term=a
-    console.log(data.key);
-    let url = weburl + 'api-wishList?prodId='+data.prodId+"&userId ="+getState().data.authUserID;
+    let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID;
     console.log(url);
-
+    console.log(getState().data);
     fetch(url)
     .then(res =>{
         res.json()
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_VARIATION', payload : response.searchProduct});
+                dispatch({ type : 'SAVED_WISH', payload : response.message});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -376,34 +391,88 @@ export const setWishListItem= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.lof("NetWork Error");
     });
+
 }
 
-export const setWishListItemInLocal= (data) => (dispatch,getState) => {
+/** Local management */
+export const setWishListItemInLocal= (data) => (dispatch,getState) => { 
+        getLocalSaveWishList().then((wishData) => {
+            
+            if(wishData == "NULL" ){
+                AsyncStorage.setItem('WishItem', JSON.stringify([data]));
+            }else{
+                
+                let oldWishList = JSON.parse(wishData);
+                let oldWishLength = oldWishList.length;
 
-    let wishList = getUserWishList();
-    console.log(data);
-    console.log(wishList);
-    if(wishList.length <= 0)
-    { 
-        AsyncStorage.setItem('WishList', data);
+                if(oldWishLength > 0){
+                    let removed = oldWishList.filter(item => data.id != item.id); // etract existing prod id
+                    
+                    if(oldWishList.length == removed.length){
+                        oldWishList.push(data);
+                        AsyncStorage.setItem('WishItem', JSON.stringify(oldWishList));
+                    }else{
+                        AsyncStorage.setItem('WishItem', JSON.stringify(removed));
+                    }
+                }else{
+                    AsyncStorage.setItem('WishItem', JSON.stringify([data]));
+                }
+            }
+            
+        });
+}
 
-    }else{
-        //let findItem = wishList.find(item=> item.id == data.id);
-        let findItem = wishList.find(item=> data.id === item.id);
-        if(findItem.length > 0){
-            console.log("remove");
-            let removed = wishList.filter(item=> item.id != data.id);
-            AsyncStorage.setItem('WishList', removed);
-        }else{
-            AsyncStorage.setItem('WishList', [...wishList , ...removed]);
-        }
+async function getLocalSaveWishList() {
+    try {
+
+        let WishItem = await AsyncStorage.getItem('WishItem');
+        return WishItem;
+
+    }catch(e) {
+        console.log(e);
     }
-    
 }
 
-async function getUserWishList() {
-    let WishList = await AsyncStorage.getItem('WishList');
-    return WishList;
+
+export const checkDelivery= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-check-delivery-loc?lat='+data.lat+"&lng="+data.lng;
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                
+                
+                    var userShipingAddress = {
+                        "address" : response.address,
+                        "postal_code":response.detail['pincode'],
+                    }
+
+                    AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
+                    dispatch({type:'SUCCESS',payload:response.message+" "+response.address});
+                    dispatch({ type : 'LOCATION_FETCHED',  address : response.address , details:response.detail});
+                
+            }else{
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.lof("NetWork Error");
+    });
+
 }
+
+
+

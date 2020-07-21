@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import { View, Text, StyleSheet, Image, Alert, Dimensions, ScrollView } from 'react-native'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import image from "../constants/Image";
-import { navigate } from '../appnavigation/RootNavigation'
-// import CustomStyles from "../constants/CustomStyles";
-// import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import constants from '../constants'
-import {searchProductType} from '../lib/api'
+import {navigate} from '../appnavigation/RootNavigation'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -48,36 +45,47 @@ class WelcomeScreen extends Component {
 			show_Main_App: false,
 			logined:false,
 		};
+		
 	}
 	
 	
-
 	async componentDidMount() {
 		const res = await AsyncStorage.getItem('introHadDone');
-		const login_status = await AsyncStorage.getItem('Logined');
-		const userEmail = await AsyncStorage.getItem('email');
 		if(res === "introHadDone"){
-			if(login_status =="YES"){
-				this.setState({ show_Main_App: true });
-				setTimeout(function(){  
-					navigate('DrawerScreen');  
-				}, 1000);
-				this.props.loginedIn(userEmail)
-			}else{
-				navigate('NotLogin');
-			}
-		}
+				this.getAsyncData("authData").then((authData) => {
+					console.log("I am first component");
+					if(authData != null){
+						this.setState({ show_Main_App: true });
+						let objAuthData = JSON.parse(authData);
+						console.log(objAuthData);
+						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId})
 
-		this.props.searchProductType();
-		//console.log("Ravennnndra")
+						setTimeout(function(){  
+							navigate('DrawerScreen');  
+						}, 1000);
+
+					}else{
+						navigate('NotLogin');
+					}
+			});
+		}
+	}
+
+	async  getAsyncData(params) {
+		try {
+	
+			let data = await AsyncStorage.getItem(params);
+			return data;
+	
+		}catch(e) {
+			console.log(e);
+		}
 	}
 
 	_onDone(){
-		// Alert.alert("Async function call");
 		AsyncStorage.setItem('introHadDone', 'introHadDone');
-		//AsyncStorage.setItem('WishList', []); //for wishList Storage
-		//navigate('DrawerScreen');
-		navigate('NotLogin');
+		AsyncStorage.setItem('WishItem', 'NULL'); //for wishList Storage
+		this.props.navigation.navigate('NotLogin');
 	}
 
 	_renderExploreMore(key){
@@ -95,30 +103,25 @@ class WelcomeScreen extends Component {
 			if (item.key === 'one') {
 				return (
 					<View style={styles.container}>
-						{/* <ScrollView > */}
-							<View style={{ alignItems: 'center' }}>
-								<Image source={item.image} stye={{ paddingTop: 10 }} />
+								<Image source={item.image} style={{marginTop:constants.vh(100)}}/>
 								<Text style={styles.text}>{item.text}</Text>
-									{/* <View style={{marginBottom:1,padding:20}}> */}
-										<View style={{ marginBottom:5,paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
-											<Image source={image.brand1} style={{ width:300, height: 70 }} />
-										</View>
-										<View style={{ marginBottom:20,paddingTop: 20, flexDirection: 'row', justifyContent: 'space-between' }} >
+									<View style={styles.barndCss}>
+										<Image source={image.brand1} style={{ width:300, height: 70 }} />
+									</View>
+									<View style={styles.barndCss}>
+										<View style={{flex:1, flexDirection: 'row', justifyContent: 'center' }} >
 											<Image source={image.fssai} style={{ width: 90, height: 90 }} />
 											<Image source={image.indiaOrganic} style={{ width: 90, height: 90 }} />
 										</View>
-									{/* </View> */}
-							</View>
-						{/* </ScrollView> */}
+									</View>
 					</View>
 				);
 			} else {
 				return (
 					<View style={styles.container}>
 
-						<Image source={item.image} style={styles.image}/>
-						<View style={{marginTop:20,alignItems:'center'}}>
-
+						<Image source={item.image} style={ item.key === 'two' ? styles.silder2 : styles.silder3}/>
+						<View style={{flex: 1,justifyContent:'flex-end',marginBottom:80,alignItems:'center'}}>
 							<Text style={styles.paragraph}>
 								{item.text}
 							</Text>
@@ -132,20 +135,27 @@ class WelcomeScreen extends Component {
 
 	render() {
 		if (this.state.show_Main_App) {
+			// console.log("I am first view");
 			return (
 				<View style={styles.container}>
+					<View style={{flex:1,justifyContent:'center'}}>
 					<Image source={constants.image.appIntro1} style={{alignSelf:'center'}}/>
 					<Text style={styles.welcomText}>Welcome in Farmstop</Text>
+					</View>
 				</View>
 			);
 		} else {
 			return (
+				// <View style={styles.container}>
 				<AppIntroSlider
 					renderItem={this._renderItem}
 					data={slides}
 					dotStyle={{ backgroundColor: 'black' }}
 					activeDotStyle={{ backgroundColor: '#7F462C' }}
+					showNextButton = {false}
+					showDoneButton = {false}
 				/>
+				// </View>
 			);
 		}
 	}
@@ -161,14 +171,21 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		justifyContent: 'center',
+		alignItems: 'center',
 		backgroundColor:'white'
 	},
-	image: {
-		width:width-10,
-		height:width-15,
-		alignSelf: 'center',
+	silder2: {	
 		justifyContent:'center',
+		width:"85%",
+		height:"45%",
+		marginTop:constants.vh(100)
+	},
+	silder3: {
+		// // flex:1,
+		justifyContent:'center',
+		width:"80%",
+		height:"50%",
+		marginTop:constants.vh(100)
 	},
 	paragraph: {
 		textAlign: 'center',
@@ -176,7 +193,7 @@ const styles = StyleSheet.create({
 		fontSize:20,
 		alignSelf:'auto',
 		marginBottom:2,
-		fontFamily:constants.fonts.Cardo_Regular
+		fontFamily:constants.fonts.Cardo_Regular,
 	},
 	welcomText: {
 		color: '#7F462C',
@@ -184,6 +201,10 @@ const styles = StyleSheet.create({
 		fontSize: 25,
 		padding: 20,
 		fontFamily:constants.fonts.Cardo_Bold
+	},
+	barndCss:{
+		flex: 1,
+		justifyContent: 'flex-end',
 	}
 });
 
@@ -194,8 +215,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
-	searchProductType: () => dispatch(searchProductType()),
-	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data})
+	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

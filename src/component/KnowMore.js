@@ -9,7 +9,7 @@ import SocialLink from './SocialLinks'
 import {fristLetterCapital} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
 import {navigate} from '../appnavigation/RootNavigation'
-
+import {Picker} from '@react-native-community/picker';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -32,14 +32,6 @@ class KnowMore extends Component {
         //console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
     }
-
-    // _addinWishList(prod_id,prodTypeId){
-    //     if(this.state.my_wish == "heart-outline"){
-    //         this.setState({my_wish:'heart',wishProdId:prod_id,wishProdType:prodTypeId})
-    //     }else{
-    //         this.setState({my_wish:'heart-outline',wishProdId:null,wishProdType:null})
-    //     }
-    // }
 
     _manageProdQty = (prod ,typeaction)=>{
         this.props.manageQty({prodId:prod,typeOfAct:typeaction});
@@ -68,7 +60,20 @@ class KnowMore extends Component {
         //Alert.alert("removeProd"+prodId)
         this.props.removeFromCart(prodId);
     }
+
+    setVariationType(variationValue, prod_id){
+        console.log(variationValue);
+        //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
+        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+    }
     
+    variationOpt = (variation) =>{
+        
+        return( variation.map( (item,index) => { 
+              return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
+        }));
+    }
+
     renederItemType () {
         let ItemList = this.props.itemtypeData;
         let prodId = this.props.prodId;
@@ -103,7 +108,16 @@ class KnowMore extends Component {
                                 />
                             </TouchableOpacity>
 
-                            <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text>
+                            {/* <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text> */}
+                            <Picker
+                                    selectedValue = {prodDetails.selectedVariationID == ""? "": prodDetails.selectedQtyVariation}
+                                    // mode="dropdown"
+                                    style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
+                                    onValueChange={ (value) => ( this.setVariationType(value,prodDetails.id))}
+                                    >
+                                    <Picker.Item label="Select" value="Select"  />
+                                    { this.variationOpt(prodDetails.variation_details) }
+                                </Picker>
 
                             <TouchableOpacity style={{marginLeft:10}} 
                             onPress={()=>this._manageProdQty(prodId,'add')}>
@@ -194,6 +208,7 @@ const mapDispatchToProps = dispatch => ({
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
+    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowMore);

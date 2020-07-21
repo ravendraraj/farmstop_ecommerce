@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
+import { View, Image,Text, ToastAndroid,FlatList,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -8,10 +8,10 @@ import {Loader} from '../customElement/Loader'
 import {CouponTextInput} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
-import {Picker} from '@react-native-community/picker';
-
+import {getWishListItem} from  '../lib/api'
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
+import {Picker} from '@react-native-community/picker';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -20,7 +20,7 @@ const bold = constants.fonts.Cardo_Bold;
 const regular = constants.fonts.Cardo_Regular;
 const italic = constants.fonts.Cardo_Italic;
 
-class MyCart extends Component {
+class WishList extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -32,15 +32,8 @@ class MyCart extends Component {
         }
     }
 
-    componentDidMount(){
-        //console.log("I am Call")
-        //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
-        this.props.removeloader();
-    }
-
-
-    _getItemType(prod_id){
-        Alert.alert("Selected Prod"+prod_id);    
+    async componentDidMount(){
+        await this.props.getWishListItem();
     }
 
     _loadLoader() {
@@ -51,80 +44,10 @@ class MyCart extends Component {
         }
     }
     
-        //add product in cart
-    _addInCart(prodCatId_id,Itemid,navigateToCart){
-        this.props.addToCart(Itemid);
-    
-        //When click on add to cart then navigate on cart screen
-        if(navigateToCart){
-            navigate("MyCart");
-        }
-    }
-    
-        //Remove from cart 
-    _removeFromCart(prodCatId,itemId){
-            this.props.removeFromCart(itemId);
-    }
-
-    renederCartDetails(){
-        let subtotal = this.props.subtotal;
-        let tax = 0;
-        let deliveryCharges = 0;
-        let discount = this.state.discount;
-        let total = subtotal;
-        if(subtotal >0){
-            return(
-                <View style={{width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={styles.fonts}>Sub Total</Text>
-                        <Text style={styles.fonts}>{subtotal}</Text>
-                    </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={styles.fonts}>Taxes</Text>
-                        <Text style={styles.fonts}>{tax}</Text>
-                    </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={styles.fonts}>Delivery charges</Text>
-                        <Text style={styles.fonts}>{deliveryCharges}</Text>
-                    </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={styles.fonts}>Discount</Text>
-                        <Text style={styles.fonts}>{discount}</Text>
-                    </View>
-                    <Text style={{fontFamily:bold,fontSize:20}}>You have a coupon</Text>
-                    <View style={{flexDirection:'row'}}>
-                        <Image source={constants.image.couponImg} style={{width:60,height:40,marginTop:15}}/>
-                        <CouponTextInput placeholder="Enter coupon code"/>
-                    </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',width:'90%'}}>
-                        <TouchableOpacity>
-                            <Text style={styles.checkout}>Checkout </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style={styles.checkout}>Rs. {total} </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            )
-        }else{
-            return(
-                <View style={{alignSelf:'center'}}>
-                    <Text style={styles.welcomText}>
-                        Not found any product
-                    </Text>
-                </View>
-            )
-        }
-    }
-    
-    _manageCartProdQty = (prod ,typeaction)=>{
-        this.props.manageCartQty({prodId:prod,typeOfAct:typeaction});
-    }
-
     setVariationType(variationValue, prod_id){
         console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
-        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+        this.props.selectProdVariationInWish({prod_id:prod_id ,value:variationValue});
     }
 
     variationOpt = (variation) =>{
@@ -133,10 +56,39 @@ class MyCart extends Component {
               return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
         }));
     }
+    
+        //Remove from cart 
+    _removeFromCart(prodCatId,itemId){
+            this.props.removeFromCart(itemId);
+    }
+
+    _manageCartProdQty = (prod ,typeaction)=>{
+        if(prod.selectedVariationID !=''){
+            this.props.manageCartQty({prodId:prod.id,typeOfAct:typeaction});
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+    }
+
+    _addInCart(prodCatId_id,variationId,Itemid,navigateToCart){
+        if(variationId !=''){
+            this.props.addToCart(Itemid);
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+    }
+
+    selectQtyDetail(item){
+        if(item.selectedVariationID != ''){
+            return(
+                <Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>{(item.selectedQtyVariation +" | QTY:"+item.selectedQty)} </Text>
+            )
+        }
+    }
 
     renederItemType () {
-        let ItemList = this.props.cartData;
-        if(ItemList != "undefined" && ItemList !=null){
+        let ItemList = this.props.my_wish_list;
+        if(ItemList.length >0){
         return(
             <View>
             <FlatList
@@ -166,7 +118,7 @@ class MyCart extends Component {
                                     <Picker.Item label="Select" value="Select"  />
                                     { this.variationOpt(item.variation_details) }
                                 </Picker>
-                                {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text> */}
+                                {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text> */}
                                 <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                     <Material 
                                         name="plus-circle-outline"
@@ -175,12 +127,17 @@ class MyCart extends Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-
-                            <Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>{item.selectedQtyVariation} | QTY:{item.selectedQty} </Text>
+                            {this.selectQtyDetail(item)}
                             {/**Price section */}
-                            {/* <View style={{alignSelf:'center',marginBottom:10,marginTop:10,backgroundColor:'red',width:'100%'}}> */}
-                                <Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>Total- Rs. {item.selectedQtyPrice}</Text>
-                            {/* </View> */}
+                            {/**Price section */}
+                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
+                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.product_variation_id,true)}>
+                                    <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
+                                    <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
+                                </TouchableOpacity>
+                            </View>
 
             
                         </View>
@@ -199,22 +156,13 @@ class MyCart extends Component {
                 backgroundColor:constants.Colors.color_grey}}>
                 </View>
             )}
-            ListFooterComponent={()=>(
-                this.renederCartDetails()
-            )}
+            
             
             keyExtractor={(item) => item.id}
             />
             </View>
         )
         }
-        // else{
-        //     return(
-        //         <View style={{alignSelf:'center'}}>
-        //             <Text> Loading....</Text>
-        //         </View>
-        //     )
-        // }
     }
 
     render() {
@@ -224,7 +172,7 @@ class MyCart extends Component {
                         <View style={styles.MainContainer}>
                             <View>
                                 <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
-                                    My Cart
+                                    Wish List
                                 </Text>
                             </View>
                             {this._loadLoader()}
@@ -277,19 +225,17 @@ const styles = StyleSheet.create({
   });
 
 const mapStateToProps = state => ({
-    cartData :state.data.addedItems,
-    subtotal:state.data.total,
+    my_wish_list :state.data.my_wish_list,
     animate : state.indicator,
 });
 
 const mapDispatchToProps = dispatch => ({
-    // getItemVariation: (data) => dispatch(getProductVariation(data)),
-    knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId}),
-    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
+    getWishListItem: ()=>dispatch(getWishListItem()),
+    addToCart :(prodId)=> dispatch({type:'ADD_WISH_ITEM_TO_CART',id:prodId}),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
-    manageCartQty:(data) =>dispatch({type:'MANAGE-CART-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
-    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value})
+    manageCartQty:(data) =>dispatch({type:'MANAGE-WISHPROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
+    selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value})
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyCart);
+export default connect(mapStateToProps, mapDispatchToProps)(WishList);

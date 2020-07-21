@@ -9,7 +9,8 @@ import {fristLetterCapital} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
 
 //api call
-import { getProductType,setWishListItemInLocal } from '../lib/api'
+import { getProductType,setWishListItemInLocal ,setWishListItemOnServer} from '../lib/api'
+import {Picker} from '@react-native-community/picker';
 
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
@@ -34,6 +35,8 @@ class PorductVariation extends Component {
    async componentDidMount(){
         // console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
+        //console.log(this.props.route.params)
+        if(this.props.activeProd != '')
         await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
 
         // let ItemList = this.props.itemtypeData;
@@ -53,24 +56,31 @@ class PorductVariation extends Component {
     _addinWishList = data => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
         if(this.props.authEmail != "" || this.props.authMobile != ''){
-            //this.props.setWishInLocal(data);
+            //this.props.setWishInLocal(data);//save in local
+            this.props.setWishListItemOnServer(data); //save in server
             this.props.addInWish(data.id);
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     };
     
-    _manageProdQty = (prod ,typeaction)=>{
-        this.props.manageQty({prodId:prod,typeOfAct:typeaction});
+    _manageProdQty = (prod ,variationId,typeaction)=>{
+        if(variationId !=""){
+            this.props.manageQty({prodId:prod,typeOfAct:typeaction});
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
     }
 
     LoadMoreRandomData = async() =>{
-        if(this.props.no_more_data == false){
-            let pageNo = this.state.page+1;
-            await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
-            this.setState({page:pageNo});
-        }else{
-            ToastAndroid.showWithGravity("No more product find", ToastAndroid.SHORT, ToastAndroid.TOP);
+        if(this.props.activeProd !=''){
+            if(this.props.no_more_data == false){
+                let pageNo = this.state.page+1;
+                await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
+                this.setState({page:pageNo});
+            }else{
+                ToastAndroid.showWithGravity("No more product find", ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
         }
     }
 
@@ -92,8 +102,13 @@ class PorductVariation extends Component {
     }
 
     //add product in cart
-    _addInCart(prodCatId_id,Itemid,navigateToCart){
-        this.props.addToCart(Itemid);
+    _addInCart(prodCatId_id,ProdVariationID,Itemid,navigateToCart){
+
+        if(ProdVariationID !=''){
+            this.props.addToCart(Itemid);
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
 
         //When click on add to cart then navigate on cart screen
         // if(navigateToCart){
@@ -117,6 +132,27 @@ class PorductVariation extends Component {
                     {fristLetterCapital(producName)}
                 </Text>
             </View>
+            )
+        }
+    }
+
+    setVariationType(variationValue, prod_id){
+        console.log(variationValue);
+        //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
+        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+    }
+
+    variationOpt = (variation) =>{
+        
+        return( variation.map( (item,index) => { 
+              return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
+        }));
+    }
+
+    selectQtyDetail(item){
+        if(item.selectedVariationID != ''){
+            return(
+                <Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>{(item.selectedQtyVariation +" | QTY:"+item.selectedQty)} </Text>
             )
         }
     }
@@ -158,16 +194,26 @@ class PorductVariation extends Component {
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
-                                onPress={()=>this._manageProdQty(item.id,'remove')}>
+                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove')}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
                                         size={25}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
+
+                                <Picker
+                                    selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                    // mode="dropdown"
+                                    style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
+                                    onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                    >
+                                    <Picker.Item label="Select" value="Select"  />
+                                    { this.variationOpt(item.variation_details) }
+                                </Picker>
+                                {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text> */}
                                 <TouchableOpacity style={{marginLeft:8}}
-                                onPress={()=>this._manageProdQty(item.id,'add')}>
+                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add')}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -175,12 +221,12 @@ class PorductVariation extends Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-
+                            {this.selectQtyDetail(item)}
                             {/**Price section */}
-                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedQtyPrice}</Text>
+                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10}}>
+                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
-                                    onPress={()=>this._addInCart(item.product_id,item.id,true)}>
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,true)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                     <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                                 </TouchableOpacity>
@@ -306,6 +352,8 @@ const mapDispatchToProps = dispatch => ({
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
     manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
     setWishInLocal :(data)=>dispatch(setWishListItemInLocal(data)),
+    setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
+    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

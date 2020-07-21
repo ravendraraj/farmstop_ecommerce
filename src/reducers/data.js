@@ -1,4 +1,5 @@
-const initialDataState = {Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[] };
+const initialDataState = {my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:'' };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -12,7 +13,25 @@ const data = (state = initialDataState, action) => {
         return {
             ...state,
             productData : action.payload,
+            activeProduct:''
         };
+
+        case 'LOCATION_FETCHED':
+            // console.log(action.details)
+            //shipping_cost
+            return {
+                ...state,
+                selectAddress : action.address,
+                shippingCharges :action.details['shipping_cost'],
+                shippingPincode :action.details['pincode'],
+        }; 
+        
+        // case 'NOT_DELIVER':
+        //     //console.log(action.details)
+        //     return {
+        //         ...state,
+        //         selectAddress : action.address,
+        //     }; 
         
         case 'NO_MORE_DATA':
         return {
@@ -21,17 +40,17 @@ const data = (state = initialDataState, action) => {
         };
 
         case 'PRODUCT_VARIATION':
-            console.log(state.activeProduct +" != " + action.payload[0].product_id);
-            console.log(state.productVatiation.length);
+            //console.log(state.activeProduct +" != " + action.payload[0].product_id);
+            //console.log(state.productVatiation.length);
         if((state.productVatiation.length > 0) && (state.activeProduct == action.payload[0].product_id)){
             let searchProdctList = [ ...state.productVatiation, ...action.payload];
-            console.log("same");
+            //console.log("same");
             return {
                 ...state,
                 productVatiation : searchProdctList,
             };
         }else{
-            console.log("initial");
+            //console.log("initial");
             return {
                 ...state,
                 productVatiation : action.payload,
@@ -82,18 +101,24 @@ const data = (state = initialDataState, action) => {
             authUserID: action.userID,
         };
 
+        case 'MY_WISHLIST':
+        return{
+            ...state,
+            my_wish_list:action.payload,
+        }
+
         case 'ADD-WISH':
             let activeProdId = action.activeProdId;
             let updateItemList = state.productVatiation.map(item => {
                 if(item.id == activeProdId){
-                    console.log(item);
-                    console.log(item.isMyWish);
+                    //console.log(item);
+                    //console.log(item.isMyWish);
                      if(item.isMyWish === 'heart-outline'){
                             item.isMyWish = "heart";
-                            console.log("heart");
+                      //      console.log("heart");
                      }else{
                        item.isMyWish = "heart-outline";
-                        console.log("outline");
+                        //console.log("outline");
                      } 
                 }
 
@@ -110,22 +135,32 @@ const data = (state = initialDataState, action) => {
             let selectProdId = action.activeProdId;
             let actionType = action.actionType;
             let Price = state.total;
+
             let newItemList = state.productVatiation.map(item => {
                 if(item.id == selectProdId){
                     let itemPrice = parseFloat(item.selectedQtyPrice);
                      if(actionType === 'add'){
                         item.selectedQty += 1;
-                        if(item.selectedQty >1){
-                            itemPrice += parseFloat(item.price);
+
+                        if(item.selectedQty >0){
+                            
+                            if(item.selectedQty >1){
+                                itemPrice += parseFloat(item.selectedVariationPrice);
+                            }
+
                             item.selectedQtyPrice = itemPrice;
-                            Price += parseFloat(item.price);
+                            //Price += parseFloat(item.selectedVariationPrice);
                         }
+
                      }else if(actionType === 'remove' && item.selectedQty >0){
                         item.selectedQty -= 1;
-                        if(item.selectedQty >0){
-                            itemPrice -= parseFloat(item.price);
+                        if(item.selectedQty >=0){
+                            if(item.selectedQty >0){
+                                itemPrice -= parseFloat(item.selectedVariationPrice);
+                            }
+
                             item.selectedQtyPrice = itemPrice;
-                            Price -= parseFloat(item.price);
+                            //Price -= parseFloat(item.selectedVariationPrice);
                         }
                      } 
                 }
@@ -140,6 +175,50 @@ const data = (state = initialDataState, action) => {
         };
         
 
+        case 'MANAGE-WISHPROD-QTY':
+            
+            let selectWishProdId = action.activeProdId;
+            let wishactionType = action.actionType;
+            let WishPrice = state.total;
+            console.log(selectWishProdId);
+            let newWishItemList = state.my_wish_list.map(item => {
+                if(item.id == selectWishProdId){
+                    let WishItemPrice = parseFloat(item.selectedQtyPrice);
+                     if(wishactionType === 'add'){
+                        item.selectedQty += 1;
+
+                        if(item.selectedQty >0){
+                            
+                            if(item.selectedQty >1){
+                                WishItemPrice += parseFloat(item.selectedVariationPrice);
+                            }
+
+                            item.selectedQtyPrice = WishItemPrice;
+                            //Price += parseFloat(item.selectedVariationPrice);
+                        }
+
+                     }else if(wishactionType === 'remove' && item.selectedQty >0){
+                        item.selectedQty -= 1;
+                        if(item.selectedQty >=0){
+                            if(item.selectedQty >0){
+                                WishItemPrice -= parseFloat(item.selectedVariationPrice);
+                            }
+
+                            item.selectedQtyPrice = WishItemPrice;
+                            //Price -= parseFloat(item.selectedVariationPrice);
+                        }
+                     } 
+                }
+
+                return item;
+              });
+              //console.log(updateItemList);
+        return {
+            ...state,
+            my_wish_list :newWishItemList,
+            total :WishPrice
+        };
+
         case 'MANAGE-CART-QTY':
             
             let cartSelectProdId = action.activeProdId;
@@ -148,19 +227,23 @@ const data = (state = initialDataState, action) => {
             let newCartItemList = state.addedItems.map(item => {
                 if(item.id == cartSelectProdId.id){
                     let cartItemPrice = parseFloat(item.selectedQtyPrice);
+
                      if(cartActionType === 'add'){
                         item.selectedQty += 1;
-                        if(item.selectedQty >1){
-                            cartItemPrice += parseFloat(item.price);
+                        if(item.selectedQty >0){
+                            if(item.selectedQty >1){
+                              cartItemPrice += parseFloat(item.selectedVariationPrice);
+                            }
                             item.selectedQtyPrice = cartItemPrice;
-                            totalPrice += parseFloat(item.price);
+                            totalPrice += parseFloat(item.selectedVariationPrice);
                         }
+
                      }else if(cartActionType === 'remove' && item.selectedQty >0){
                         item.selectedQty -= 1;
                         if(item.selectedQty >0){
-                            cartItemPrice -= parseFloat(item.price);
+                            cartItemPrice -= parseFloat(item.selectedVariationPrice);
                             item.selectedQtyPrice = cartItemPrice;
-                            totalPrice -= parseFloat(item.price);
+                            totalPrice -= parseFloat(item.selectedVariationPrice);
                         }
                      }
                 }
@@ -174,6 +257,67 @@ const data = (state = initialDataState, action) => {
             total :totalPrice
         };
 
+        //Set product Variation 
+        case "SET_PRODUCT_VARIATION":
+            let selectedProdId = action.prod_id;
+            let selectedVariation = action.variation;
+            let changeVariation = state.productVatiation.map((item,index) => {
+                if(item.id == selectedProdId){
+                        item.variation_details.map(variation => {
+                            
+                        if(variation.varition === selectedVariation){
+                            // console.log("Select ravendra");
+                            item.selectedQtyVariation = selectedVariation;
+                            item.selectedQtyPrice = variation.right_price;
+                            item.selectedVariationID = variation.varition_detail_id;
+                            item.selectedVariationPrice = variation.right_price;
+                            item.selectedQty=1;
+                        }else if(selectedVariation === "Select"){
+                            // console.log("Not Select");
+                            item.selectedVariationID = "";
+                            item.selectedVariationPrice ="";
+                        }
+                    })
+                }
+
+                return item;
+            });
+            return{
+                ...state,
+                productVatiation:changeVariation,
+            }
+        
+        //for wish list item
+        case "SET_PRODUCT_VARIATION_IN_WISH":
+                let selectedWishProdId = action.prod_id;
+                let selectedWishVariation = action.variation;
+                let changeMy_wish_list = state.my_wish_list.map((item,index) => {
+                    if(item.id == selectedWishProdId){
+                            item.variation_details.map(variation => {
+                                
+                            if(variation.varition === selectedWishVariation){
+                                // console.log("Select ravendra");
+                                item.selectedQtyVariation = selectedWishVariation;
+                                item.selectedQtyPrice = variation.right_price;
+                                item.selectedVariationID = variation.varition_detail_id;
+                                item.selectedVariationPrice = variation.right_price;
+                                item.selectedQty=1;
+                            }else if(selectedWishVariation === "Select"){
+                                // console.log("Not Select");
+                                item.selectedVariationID = "";
+                                item.selectedVariationPrice ="";
+                            }
+                        })
+                    }
+    
+                    return item;
+                });
+
+                return{
+                    ...state,
+                    my_wish_list:changeMy_wish_list,
+                }
+        
         //cart reducers 
         case "ADD_TO_CART" :
     
@@ -185,16 +329,42 @@ const data = (state = initialDataState, action) => {
                addedItem.quantity += 1 
                 return{
                    ...state,
-                    total: state.total + parseFloat(addedItem.price) ,
+                   //addedItems: [...state.addedItems, addedItem], 
                    }
            }
             else{
                addedItem.quantity = 1;
                //calculating the total
-               let newTotal = state.total + parseFloat(addedItem.price) 
+               let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
                return{
                    ...state,
                    addedItems: [...state.addedItems, addedItem],
+                   total : newTotal,
+               }
+               
+        }
+
+        //cart reducers for wish item 
+        case "ADD_WISH_ITEM_TO_CART" :
+    
+            let addedWishItem = state.my_wish_list.find(item => item.product_variation_id === action.id);
+             //check if the action id exists in the addedItems
+            let existedWishItem= state.addedItems.find(item=> action.id === item.id)
+            if(existedWishItem)
+            {
+            //    addedItem.quantity += 1 
+                return{
+                   ...state,
+                   //addedItems: [...state.addedItems, addedItem], 
+                   }
+           }
+            else{
+            //    addedItem.quantity = 1;
+               //calculating the total
+               let newTotal = state.total + parseFloat(addedWishItem.selectedQtyPrice) 
+               return{
+                   ...state,
+                   addedItems: [...state.addedItems, addedWishItem],
                    total : newTotal,
                }
                

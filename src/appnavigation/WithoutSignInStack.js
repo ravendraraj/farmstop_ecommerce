@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 //screens
 
 import HomeScreen from '../component/HomeScreen';
+import Mainheader from '../headerComponent/main_screen_header'
 import Header from '../headerComponent/header';
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
 import productVariation from '../component/PorductVariation';
@@ -18,6 +19,7 @@ import MyCart from '../component/MyCart'
 import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
 import ForgetPassword from '../component/ForgetPassword'
+import GoogleLoc from '../component/GoogleLoc'
 
 const RootStack = createStackNavigator();
 
@@ -26,7 +28,8 @@ const WithoutSignInStack = ({navigation}) => (
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                headerTitle: () => <Header navigation={navigation} />,
+                // headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: () => <Mainheader navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
@@ -120,6 +123,14 @@ const WithoutSignInStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="ForgetPassword" component={ForgetPassword}/>
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="GoogleLocation" component={GoogleLoc}/>
 
     </RootStack.Navigator>
 );

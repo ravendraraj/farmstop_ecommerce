@@ -48,7 +48,7 @@ class SocialLoginScreen extends Component{
 
     }
     
-    _renderForgetView(){
+    _renderForgetView(){ 
         this.setState({forget:true});
     }
 
@@ -57,7 +57,7 @@ class SocialLoginScreen extends Component{
     }
 
     setEmailMob(text){
-        console.log(text);
+       // console.log(text);
         this.setState({emailIdOrMobile:text});
     }
     
@@ -120,14 +120,14 @@ class SocialLoginScreen extends Component{
             //send sever request for saving data
             this.props.social_login(user_data);
 
-            console.log(userInfo)
+            // console.log(userInfo)
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
-            Alert.alert(error.code)
+            //Alert.alert(error.code)
           } else if (error.code === statusCodes.IN_PROGRESS) {
             // operation (e.g. sign in) is in progress already
-            Alert.alert(error.code)
+            //Alert.alert(error.code)
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
            console.log(error.code)
@@ -143,18 +143,18 @@ class SocialLoginScreen extends Component{
        
             return(
             <View style={{width:'80%',alignSelf:"center"}}>
-                        <Image source={constants.image.social_login} style={{width:width/2,height:width/2,marginTop:height/20,alignSelf:'center'}}/>
+                        <Image source={constants.image.social_login} style={styles.socialImage}/>
                         
                         <View style={{flexDirection:'row',alignSelf:'center'}}>
                             <Text style={styles.text}>Login Or Register</Text>
                         </View>
 
-                        <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10,marginBottom:10}}>
+                        <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10}}>
                             <TouchableOpacity onPress={this._signIn}>
-                                <Image source={constants.image.gmail_icon} style={{width:65,height:45}}/>
+                                <Image source={constants.image.gmail_icon} style={styles.gmaiIcon}/>
                             </TouchableOpacity>
                             <TouchableOpacity >
-                                <Icon name="facebook-square" size={53} color={constants.Colors.color_facebook}/>
+                                <Icon name="facebook-square" size={constants.vh(60)} color={constants.Colors.color_facebook}/>
                             </TouchableOpacity>
                         </View>
 
@@ -219,12 +219,22 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{
-        marginTop:20
+        // marginTop:20
     },
     text:{
         color:constants.Colors.color_BLACK,
         fontSize:25,
         fontFamily:constants.fonts.Cardo_Bold
+    },
+    socialImage:{
+        width:constants.vw(160),
+        height:constants.vh(160),
+        marginTop:constants.vh(2),
+        alignSelf:'center'
+    },
+    gmaiIcon:{
+        width:constants.vw(60),
+        height:constants.vh(50),
     }
 })
 

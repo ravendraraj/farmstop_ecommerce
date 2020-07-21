@@ -11,7 +11,10 @@ const indicator = (state = false, action) => {
         case 'SIGNUP_SUCCESS':
         case 'OTP_SEND':
         case 'REGISTER_USER':
+        case 'MY_WISHLIST':
         case 'SUCCESS':
+        case "LOCATION_FETCHED":
+        case "NOT_DELIVER":
             return false;
         default :
             return state;

@@ -37,20 +37,23 @@ export default function DrawerContent(props) {
     const paperTheme = useTheme();
 
     const logout = async () =>{
-        let userType =  await AsyncStorage.getItem('Login_Type');
-        console.log("userType")
-        console.log(userType)
+        // let userType =  await AsyncStorage.getItem('Login_Type');
+        // console.log("userType")
+        // console.log(userType)
+        await AsyncStorage.removeItem("authData");
+        navigate('NotLogin'); 
         if( userType== "GMAIL"){
             console.log("ravendra");
         //    await GoogleSignin.revokeAccess();
         //     await GoogleSignin.signOut();
-            await AsyncStorage.removeItem("Logined");
-            await AsyncStorage.removeItem("Login_Type");
-            await AsyncStorage.removeItem("name");
-            await AsyncStorage.removeItem("profile");
-            await AsyncStorage.removeItem("email");
-            await AsyncStorage.removeItem("userId");
-    
+            // await AsyncStorage.removeItem("Logined");
+            // await AsyncStorage.removeItem("Login_Type");
+            // await AsyncStorage.removeItem("name");
+            // await AsyncStorage.removeItem("profile");
+            // await AsyncStorage.removeItem("email");
+            // await AsyncStorage.removeItem("userId");
+            
+            await AsyncStorage.removeItem("authData");
             //setTimeout(function(){  
               navigate('NotLogin');  
             //}, 1000);
@@ -60,14 +63,14 @@ export default function DrawerContent(props) {
             console.log("ravendra manual");
             //    await GoogleSignin.revokeAccess();
             //     await GoogleSignin.signOut();
-                await AsyncStorage.removeItem("Logined");
-                await AsyncStorage.removeItem("Login_Type");
-                await AsyncStorage.removeItem("name");
-                await AsyncStorage.removeItem("profile");
-                await AsyncStorage.removeItem("email");
-                await AsyncStorage.removeItem("mobile");
-                await AsyncStorage.removeItem("userId");
-        
+                // await AsyncStorage.removeItem("Logined");
+                // await AsyncStorage.removeItem("Login_Type");
+                // await AsyncStorage.removeItem("name");
+                // await AsyncStorage.removeItem("profile");
+                // await AsyncStorage.removeItem("email");
+                // await AsyncStorage.removeItem("mobile");
+                // await AsyncStorage.removeItem("userId");
+                await AsyncStorage.removeItem("authData");
                 //setTimeout(function(){  
                   navigate('NotLogin');  
                 //}, 1000);
@@ -82,23 +85,32 @@ export default function DrawerContent(props) {
     const [userImage, setImage] = useState("null");
     const [userEmail, setEmail] = useState("null");
     const [userName, setName] = useState("null");
+    const [userMobile, setMobile] = useState("null");
+    
 
     useEffect(() => {
         // Create an scoped async function in the hoo
         async function getUserDetails() {
             try {
                 
-                let image = await AsyncStorage.getItem('profile');
+                // let image = await AsyncStorage.getItem('profile');
                 
-                setImage(image);
+                // setImage(image);
 
-                let name = await AsyncStorage.getItem('name');
+                // let name = await AsyncStorage.getItem('name');
                 
-                setName(name);
+                // setName(name);
 
-                let email = await AsyncStorage.getItem('email');
-                setEmail(email);
-                console.log(image+"-"+name+"-"+email);
+                // let email = await AsyncStorage.getItem('email');
+                // setEmail(email);
+                let authData = await AsyncStorage.getItem("authData");
+                let objAuthData = JSON.parse(authData);
+                setName(objAuthData.name);
+                setImage(objAuthData.profile);
+                setEmail(objAuthData.email);
+                setMobile(objAuthData.mobile);
+
+                console.log(objAuthData.name+"-"+objAuthData.profile+"-"+objAuthData.email+"-"+objAuthData.userId+"-"+objAuthData.mobile);
             } catch(e) {
             console.log(e);
             }
@@ -167,7 +179,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Wish List"
-                            onPress={() => {props.navigation.navigate('BookmarkScreen')}}
+                            onPress={() => {props.navigation.navigate('WishList')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (

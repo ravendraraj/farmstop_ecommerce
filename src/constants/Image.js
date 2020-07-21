@@ -20,6 +20,7 @@ export default {
   cart : require('../images/cart.png'),
   profile : require('../images/profile.png'),
   social_login : require('../images/social_login.png'),
-  gmail_icon : require('../images/gmail_icon.png')
+  gmail_icon : require('../images/gmail_icon.png'),
+  google_location :require('../images/google-location.png'),
 };
  

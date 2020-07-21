@@ -4,12 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 // import { connect } from 'react-redux';
 
 //screens
-
-import HomeScreen from '../component/HomeScreen';
-import Header from '../headerComponent/header';
+import HomeScreen from '../component/HomeScreen'
+import Header from '../headerComponent/header'
+import Mainheader from '../headerComponent/main_screen_header'
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
-import productVariation from '../component/PorductVariation';
-import knowMoreProd from '../component/KnowMore';
+import productVariation from '../component/PorductVariation'
+import knowMoreProd from '../component/KnowMore'
 import SignUpScreen from '../component/SignUp'
 import LoginScreen from '../component/LoginScreen'
 import AboutFarm from '../component/AboutFarm'
@@ -17,6 +17,8 @@ import otpVerify from '../component/otpVerify'
 import MyCart from '../component/MyCart'
 import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
+import WishList from '../component/WishList'
+import GoogleLoc from '../component/GoogleLoc'
 
 const RootStack = createStackNavigator();
 
@@ -25,7 +27,7 @@ const HomeStack = ({navigation}) => (
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: () => <Mainheader navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
@@ -111,6 +113,22 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="SocialLogin" component={SocialLoginScreen}/>
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="WishList" component={WishList}/>
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="GoogleLocation" component={GoogleLoc}/>
 
     </RootStack.Navigator>
 );
