@@ -168,7 +168,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="My Account"
-                            onPress={() => {navigate('SellerInfo')}}
+                            onPress={() => {navigate('TestMarquee')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (

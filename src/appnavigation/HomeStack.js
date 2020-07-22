@@ -19,6 +19,7 @@ import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
 import WishList from '../component/WishList'
 import GoogleLoc from '../component/GoogleLoc'
+import TestMarquee from '../component/TestMarquee'
 
 const RootStack = createStackNavigator();
 
@@ -129,7 +130,14 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="GoogleLocation" component={GoogleLoc}/>
-
+<RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="TestMarquee" component={TestMarquee}/>
     </RootStack.Navigator>
 );
 

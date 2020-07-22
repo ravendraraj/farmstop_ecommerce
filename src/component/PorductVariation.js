@@ -15,6 +15,10 @@ import {Picker} from '@react-native-community/picker';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 
+import AutoScrollListview from '../customElement/Auto'
+import Marquee from '../customElement/marquee'
+// import TestMarquee from './TestMarquee';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const totalprod = Math.ceil(height/(width/4));
@@ -33,24 +37,8 @@ class PorductVariation extends Component {
     }
 
    async componentDidMount(){
-        // console.log("I am Call")
-        //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
-        //console.log(this.props.route.params)
         if(this.props.activeProd != '')
         await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
-
-        // let ItemList = this.props.itemtypeData;
-        // if(ItemList != "undefined" && ItemList !=null){
-        //     // let producName = ItemList[0].pname;
-
-        //     let LitsItem = ItemList.map(item => {
-        //         item.isMyWish = 'heart-outline';
-        //         // item.selectedQty = 0;
-        //         return item;
-        //       });
-
-        //       this.setState({ListItem : LitsItem});
-        // }
     }
 
     _addinWishList = data => {
@@ -109,12 +97,6 @@ class PorductVariation extends Component {
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
-
-        //When click on add to cart then navigate on cart screen
-        // if(navigateToCart){
-        //     //this.props.loader();
-        //     navigate("MyCart");
-        // }
     }
 
     //Remove from cart 
@@ -122,18 +104,15 @@ class PorductVariation extends Component {
         this.props.removeFromCart(itemId);
     }
 
-    renderItemTile(){
-        let ItemList = this.props.itemtypeData;
-        if(ItemList.length >0){
-            let producName = ItemList[0].pname;
-        return(
-            <View>
-                <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
-                    {fristLetterCapital(producName)}
-                </Text>
+    renderItemTitle(){
+        const Auto=this.props.productData.length>0?<AutoScrollListview itemList= {this.props.productData} totalProd={totalprod} scrollPosition={5} /> :null;
+        return (
+            <View style={{paddingBottom:0,marginBottom:-70}}>
+                <Marquee duration={18*1000} >
+                        {Auto}
+                </Marquee>
             </View>
-            )
-        }
+        )
     }
 
     setVariationType(variationValue, prod_id){
@@ -174,6 +153,7 @@ class PorductVariation extends Component {
                 {/* <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,marginTop:40,marginBottom:30}}>
                     {fristLetterCapital(producName)}
                 </Text> */}
+                {this.renderItemTitle()}
             <FlatList
             data={updateItemList}
             renderItem={({ item }) => (
@@ -297,7 +277,7 @@ class PorductVariation extends Component {
                     /> */}
                     { this._loadLoader() }
                     <View style={styles.MainContainer}>
-                        {this.renderItemTile()}
+                        {/* {this.renderItemTile()} */}
                         {this.renederItemType()}
                     </View>
                 {/* </ScrollView> */}
@@ -339,7 +319,8 @@ const mapStateToProps = state => ({
     activeProd : state.data.activeProduct,
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
-    no_more_data: state.data.no_more_data
+    no_more_data: state.data.no_more_data,
+    productData : state.data.productData,
 });
 
 const mapDispatchToProps = dispatch => ({
