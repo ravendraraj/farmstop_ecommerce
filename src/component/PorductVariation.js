@@ -54,7 +54,7 @@ class PorductVariation extends Component {
     
     _manageProdQty = (prod ,variationId,typeaction)=>{
         if(variationId !=""){
-            this.props.manageQty({prodId:prod,typeOfAct:typeaction});
+            this.props.manageQty({ prodId: prod, typeOfAct: typeaction ,screen: this.props.route.name});
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -85,7 +85,7 @@ class PorductVariation extends Component {
     }
     
     _knowMore(prod_id){
-        this.props.knowMore(prod_id);
+        this.props.knowMore({prodId:prod_id, screen:this.props.route.name});
         navigate("knowMoreProd");
     }
 
@@ -118,7 +118,7 @@ class PorductVariation extends Component {
     setVariationType(variationValue, prod_id){
         console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
-        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+        this.props.selectProdVariation({ prod_id: prod_id, value: variationValue ,screen: this.props.route.name});
     }
 
     variationOpt = (variation) =>{
@@ -325,16 +325,16 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
-    knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId}),
+    knowMore:(data)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:data.prodId,screen:data.screen}),
     addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     loader:()=>dispatch({type : 'LOADING'}),
     getProductType: (data) => dispatch(getProductType(data)),
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
-    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
+    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct ,screen:data.screen}),
     setWishInLocal :(data)=>dispatch(setWishListItemInLocal(data)),
     setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
-    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value})
+    selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

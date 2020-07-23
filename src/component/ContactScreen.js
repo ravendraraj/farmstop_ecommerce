@@ -9,21 +9,21 @@ const width = Dimensions.get('window').width;
 export default function ContactScreen(){
         return(
             <View style={styles.container}>
-                <ScrollView>
-                    <View style={{width:'90%',alignSelf:"center",marginTop:40}}>
+                {/* <ScrollView> */}
+                    <View style={{flex:1,flexDirection:'column',width:'90%',alignSelf:"center"}}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_heading ,fontSize:25}}>
                             Contact Us
                         </Text>
-                        <View style={{marginTop:10}}>
-                            <Image source={constants.image.contactus} style={{width:width-20,height:width-140,alignSelf:'center'}}/>
-                            <View style={{marginTop:40}}>
+                        <View style={{marginTop:constants.vw(25)}}>
+                            <Image source={constants.image.contactus} style={{width:"88%",height:'39%',alignSelf:'center'}}/>
+                            <View style={{marginTop:constants.vw(10)}}>
                                 <Text style={styles.text}>
                                     Write to us at
                                 </Text>
                                 <Text style={styles.text}>
                                     info@farmstop.in
                                 </Text>
-                                <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:25,marginTop:20,marginBottom:25}}>
+                                <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(28),marginTop:constants.vw(10),marginBottom:constants.vw(10)}}>
                                     Or
                                 </Text>
                                 <Text style={styles.text}>
@@ -35,7 +35,7 @@ export default function ContactScreen(){
                             </View>
                         </View>
                     </View>
-                </ScrollView>
+                {/* </ScrollView> */}
             </View>
         )
 }
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         marginTop:20
     },
     text:{
-        fontSize:25,
+        fontSize:constants.vw(28),
         fontFamily:constants.fonts.Cardo_Bold
     }
 

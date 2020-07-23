@@ -1,5 +1,5 @@
 const initialDataState = {my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:'' };
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:'',searchProductList:[] };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -62,6 +62,7 @@ const data = (state = initialDataState, action) => {
         return{
             ...state,
             knowMoreProdId : action.prodTypeId,
+            screen:action.screen,
         };
 
         case 'SAVE_OTP':
@@ -84,13 +85,20 @@ const data = (state = initialDataState, action) => {
             ...state,
             searchProdName:action.payload
         };
-        
+
+        case 'SEARCH_PRODUCT_LIST':
+            return {
+                ...state,
+                searchProductList:action.payload
+        };
+
         case 'ACTIVE-PROD':
         return {
             ...state,
             activeProduct:action.id,
             productVatiation:[],
             no_more_data:false,
+            searchProductList:[],
         };
 
         case 'AUTHORIZED-USER':
@@ -130,13 +138,41 @@ const data = (state = initialDataState, action) => {
             productVatiation :updateItemList,
         };
 
+        case 'SEARCH-PROD-ADD-WISH':
+            let activeProd = action.activeProdId;
+            let updateList = state.searchProductList.map(item => {
+                if(item.id == activeProd){
+                    //console.log(item);
+                    //console.log(item.isMyWish);
+                     if(item.isMyWish === 'heart-outline'){
+                            item.isMyWish = "heart";
+                      //      console.log("heart");
+                     }else{
+                       item.isMyWish = "heart-outline";
+                        //console.log("outline");
+                     } 
+                }
+
+                return item;
+              });
+              //console.log(updateItemList);
+        return {
+            ...state,
+            searchProductList :updateList,
+        };
+
         case 'ADD-PROD-QTY':
             
             let selectProdId = action.activeProdId;
             let actionType = action.actionType;
             let Price = state.total;
+            let datasetForCartQty = state.productVatiation;
+            
+            if(action.screen == "Search"){
+                datasetForCartQty = state.searchProductList;
+            }
 
-            let newItemList = state.productVatiation.map(item => {
+            let newItemList = datasetForCartQty.map(item => {
                 if(item.id == selectProdId){
                     let itemPrice = parseFloat(item.selectedQtyPrice);
                      if(actionType === 'add'){
@@ -168,12 +204,19 @@ const data = (state = initialDataState, action) => {
                 return item;
               });
               //console.log(updateItemList);
-        return {
-            ...state,
-            productVatiation :newItemList,
-            total :Price
-        };
-        
+        if(action.screen == "Search"){
+            return {
+                ...state,
+                searchProductList :newItemList,
+                total :Price
+            };
+        }else{
+            return {
+                ...state,
+                productVatiation :newItemList,
+                total :Price
+            };
+        }
 
         case 'MANAGE-WISHPROD-QTY':
             
@@ -261,7 +304,12 @@ const data = (state = initialDataState, action) => {
         case "SET_PRODUCT_VARIATION":
             let selectedProdId = action.prod_id;
             let selectedVariation = action.variation;
-            let changeVariation = state.productVatiation.map((item,index) => {
+            let getDataSet = state.productVatiation;
+            if(action.screen == "Search"){
+                getDataSet = state.searchProductList;
+            }
+
+            let changeVariation = getDataSet.map((item,index) => {
                 if(item.id == selectedProdId){
                         item.variation_details.map(variation => {
                             
@@ -282,9 +330,17 @@ const data = (state = initialDataState, action) => {
 
                 return item;
             });
-            return{
-                ...state,
-                productVatiation:changeVariation,
+
+            if(action.screen == "Search"){
+                return{
+                    ...state,
+                    searchProductList:changeVariation,
+                }
+            }else{
+                return{
+                    ...state,
+                    productVatiation:changeVariation,
+                }
             }
         
         //for wish list item
@@ -321,7 +377,13 @@ const data = (state = initialDataState, action) => {
         //cart reducers 
         case "ADD_TO_CART" :
     
-            let addedItem = state.productVatiation.find(item => item.id === action.id);
+            let dataSetForCart = state.productVatiation;
+            
+            if(action.screen == "Search"){
+                dataSetForCart = state.searchProductList;
+            }
+            
+            let addedItem = dataSetForCart.find(item => item.id === action.id);
              //check if the action id exists in the addedItems
             let existed_item= state.addedItems.find(item=> action.id === item.id)
             if(existed_item)

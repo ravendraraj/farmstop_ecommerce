@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
 import { SearchBox, TextHeading } from '../customElement/Input'
 import { Loader } from '../customElement/Loader'
@@ -76,7 +76,7 @@ class HomeScreen extends Component {
             <View style={{ flex: 1, flexDirection: 'column', margin: 4, alignItems: 'center' }}>
               <TouchableOpacity onPress={() => this._getItemType(item.id)}>
                 <Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />
-                <Text style={{ fontSize: 12, marginTop: 10, alignSelf: 'center', fontFamily: regular }}>{item.title}</Text>
+                <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold }}>{item.title}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -99,8 +99,27 @@ class HomeScreen extends Component {
 
   seacrhProduct(key) {
     // Alert.alert(key);
-    this.props.getProductTypeByKeyword({ key })
+    this.props.getProductTypeByKeyword({ prodKey:key ,screen:this.props.route.name});
     this.props.navigation.navigate('ProductType',{keyword:key});
+  }
+
+  renderSourceSection(){
+    let ItemList = this.props.itemData;
+    if (ItemList != "undefined" && ItemList != null) {
+      return(
+        <View style={{flex:1,justifyContent:"flex-end",marginBottom:10,}}>
+          
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to your home</Text>
+                <Image source={constants.image.knowMoreSource} style={{width:constants.width-20,height:constants.width/4.5}}/>
+                {/* <ScrollView onScroll={Alert.alert('i am call')}> */}
+                  <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("AboutFarm")}>
+                    <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>
+                  </TouchableOpacity>
+                {/* </ScrollView> */}
+        </View>
+      )
+    }
   }
 
   render() {
@@ -144,9 +163,13 @@ class HomeScreen extends Component {
           />
           {/* </View> */}
           <View style={styles.MainContainer}>
+          
             {this._ShowError()}
             {this._loadLoader()}
             {this.renederItemType()}
+            {/* <ScrollView style={{flex: 1}} onScroll={this._onScroll}> */}
+            {this.renderSourceSection()}
+            {/* </ScrollView> */}
           </View>
           {/* </ScrollView> */}
         </View>
@@ -172,10 +195,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   imageThumbnail: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    height: 100,
+    alignSelf: 'center',
+    width: constants.vw(70),
+    height: constants.vw(70),
   },
   autocompleteContainer: {
     position: 'absolute',

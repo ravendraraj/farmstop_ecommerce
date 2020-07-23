@@ -22,5 +22,12 @@ export default {
   social_login : require('../images/social_login.png'),
   gmail_icon : require('../images/gmail_icon.png'),
   google_location :require('../images/google-location.png'),
+
+  knowMoreSource:require('../images/knowMoreSource.jpeg'),
+  scrollIcon:require('../images/scrollIcon.jpeg'),
+
+  //tab navigation image
+  homeIcon:require('../images/homeIcon.jpeg'),
+  searchIcon:require('../images/searchIcon.jpeg'),
 };
  

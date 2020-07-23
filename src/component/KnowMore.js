@@ -10,6 +10,7 @@ import {fristLetterCapital} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
 import {navigate} from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
+import {setWishListItemOnServer} from '../lib/api'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -33,12 +34,20 @@ class KnowMore extends Component {
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
     }
 
-    _manageProdQty = (prod ,typeaction)=>{
-        this.props.manageQty({prodId:prod,typeOfAct:typeaction});
+    _manageProdQty = (prod ,typeaction ,variationId)=>{
+        if(variationId !=""){
+            this.props.manageQty({prodId:prod,typeOfAct:typeaction ,screen:this.props.screen});
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
     }
     
-    _addInCart(prodTypeId){
-        this.props.addToCart(prodTypeId);
+    _addInCart(prodTypeId,variationId){
+        if(variationId !=""){
+            this.props.addToCart({prodId:prodTypeId ,screen:this.props.screen});
+        }else{
+            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
         // navigate("MyCart");
     }
 
@@ -47,10 +56,16 @@ class KnowMore extends Component {
         this.props.addToCart(prodId);
     }
 
-    _addinWishList = prodId => {
+    _addinWishList = prod => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
         if(this.props.authEmail != "" || this.props.authMobile != ''){
-            this.props.addInWish(prodId);
+            this.props.setWishListItemOnServer(prod); //save in server
+            this.props.addInWish(prod.id);
+            
+            if(this.props.screen == "Search"){
+                this.props.addSearchItemInWish(prod.id);
+            }
+
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -64,7 +79,8 @@ class KnowMore extends Component {
     setVariationType(variationValue, prod_id){
         console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
-        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+        //this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+        this.props.selectProdVariation({ prod_id: prod_id, value: variationValue ,screen: this.props.screen});
     }
     
     variationOpt = (variation) =>{
@@ -75,7 +91,14 @@ class KnowMore extends Component {
     }
 
     renederItemType () {
-        let ItemList = this.props.itemtypeData;
+        let ItemList = null;
+        
+        if(this.props.screen == "Search"){
+            ItemList = this.props.searchProductList
+        }else{
+            ItemList = this.props.itemtypeData
+        }
+
         let prodId = this.props.prodId;
     
         if(ItemList != "undefined" && ItemList !=null && prodId != null){
@@ -88,19 +111,19 @@ class KnowMore extends Component {
 
             return(
                 <View style={{alignItems:'center'}}>
-                    <View style={{marginTop:20}}>
+                    <View style={{marginTop:constants.vw(2)}}>
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
                         <TouchableOpacity style={{alignSelf:'flex-end',marginTop:-20,marginRight:-30}}
-                        onPress={()=>this._addinWishList(prodId)}>
+                        onPress={()=>this._addinWishList(prodDetails)}>
                             <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={30}/>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{fontSize:25,marginTop:10,alignSelf:'center',fontFamily:bold}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
+                    <Text style={{fontSize:constants.vw(25),alignSelf:'center',fontFamily:bold}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
                     <View style={{flexDirection:'row',justifyContent:'center',alignSelf:'center',width:'80%',marginTop:30}}>
                     <View style={{alignItems:'flex-start'}}>
                         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                             <TouchableOpacity style={{marginRight:10}} 
-                            onPress={()=>this._manageProdQty(prodId,'remove')}>
+                            onPress={()=>this._manageProdQty(prodId,'remove',prodDetails.selectedVariationID)}>
                                 <Material 
                                     name="minus-circle-outline"
                                     color={constants.Colors.color_grey}
@@ -120,7 +143,7 @@ class KnowMore extends Component {
                                 </Picker>
 
                             <TouchableOpacity style={{marginLeft:10}} 
-                            onPress={()=>this._manageProdQty(prodId,'add')}>
+                            onPress={()=>this._manageProdQty(prodId,'add',prodDetails.selectedVariationID)}>
                                 <Material 
                                     name="plus-circle-outline"
                                     color={constants.Colors.color_grey}
@@ -131,7 +154,7 @@ class KnowMore extends Component {
                         <Text style={{fontFamily:regular,fontSize:20,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
                     </View>
                     <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}
-                        onPress={()=>this._addInCart(prodId)}>
+                        onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID )}>
 
                         <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                         <Text style={{fontFamily:regular}}>Add to Cart</Text>
@@ -142,7 +165,7 @@ class KnowMore extends Component {
                     </View>
 
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
-                        <Text style={{fontSize:25,fontFamily:bold}}>Know your source</Text>
+                        <Text style={{fontSize:constants.vw(25),fontFamily:bold}}>Know your source</Text>
                         <Text style={{fontSize:20,fontFamily:regular}}>check out our farms and follow us on</Text>
                         <SocialLink size='25'/>
                     </View>
@@ -185,8 +208,8 @@ const styles = StyleSheet.create({
     },
     singleImg: {
       alignItems: 'center',
-      width:width/2,
-      height:width/2,
+      width:constants.vw(130),
+      height:constants.vw(130),
     },
     row:{
         flexDirection: 'row', 
@@ -198,17 +221,21 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     itemtypeData :state.data.productVatiation,
     prodId:state.data.knowMoreProdId,
+    screen:state.data.screen,
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
+    searchProductList: state.data.searchProductList,
 });
 
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
-    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
+    addToCart :(data)=> dispatch({type:'ADD_TO_CART',id:data.prodId,screen:data.screen}),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
-    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
+    manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct ,screen:data.screen}),
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
-    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value})
+    selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
+    addSearchItemInWish :(data)=>dispatch({type:'SEARCH-PROD-ADD-WISH',activeProdId:data}),
+    setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowMore);

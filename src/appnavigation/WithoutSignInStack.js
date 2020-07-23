@@ -21,6 +21,9 @@ import SocialLoginScreen from '../component/SocialLoginScreeen'
 import ForgetPassword from '../component/ForgetPassword'
 import GoogleLoc from '../component/GoogleLoc'
 
+import TabNavProdvariation from './TabNavProdvariation'
+//import WishTabNav from './WishTabNav'
+
 const RootStack = createStackNavigator();
 
 const WithoutSignInStack = ({navigation}) => (
@@ -43,7 +46,7 @@ const WithoutSignInStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            name="ProductType" component={productVariation}/>
+            name="ProductType" component={TabNavProdvariation}/>
             
         <RootStack.Screen 
             options={({ navigation }) => ({

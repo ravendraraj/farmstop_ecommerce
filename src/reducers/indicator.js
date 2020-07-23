@@ -15,6 +15,7 @@ const indicator = (state = false, action) => {
         case 'SUCCESS':
         case "LOCATION_FETCHED":
         case "NOT_DELIVER":
+        case "SEARCH_PRODUCT_LIST":
             return false;
         default :
             return state;

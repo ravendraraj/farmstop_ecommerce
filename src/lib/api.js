@@ -316,8 +316,8 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
 
     dispatch({type : 'LOADING'});
     //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
-    console.log(data.key);
-    let url = weburl + 'api-productByKeyword?term='+data.key;
+    console.log(data);
+    let url = weburl + 'api-productByKeyword?term='+data.prodKey;
     if(getState().data.authUserID != ''){
         url = url + "&userId="+getState().data.authUserID;
     }
@@ -329,7 +329,12 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_VARIATION', payload : response.searchProduct});
+                if(data.screen == "Search"){
+                    dispatch({ type : 'SEARCH_PRODUCT_LIST', payload : response.searchProduct});
+                }else{
+                    dispatch({ type : 'PRODUCT_VARIATION', payload : response.searchProduct});
+                }
+                
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -342,6 +347,37 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
     });
 }
+
+// export const getProductListForSearch = (data) => (dispatch,getState) => {
+
+//     dispatch({type : 'LOADING'});
+//     //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
+//     console.log(data.key);
+//     let url = weburl + 'api-productByKeyword?term='+data.key+'&prodId='+data.activeProd;
+//     if(getState().data.authUserID != ''){
+//         url = url + "&userId="+getState().data.authUserID;
+//     }
+//     console.log(url);
+
+//     fetch(url)
+//     .then(res =>{
+//         res.json()
+//         .then(response => {
+//             //console.log(response);
+//             if(response.status == "1"){
+//                 dispatch({ type : 'SEARCH_PRODUCT_LIST', payload : response.searchProduct});
+//             }else{
+//                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+//             }
+//         })
+//         .catch( err => {
+//             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+//         })
+//     })
+//     .catch( err => {
+//         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+//     });
+// }
 
 /**################################# Wish List ################################################### */
 export const getWishListItem= (data) => (dispatch,getState) => {

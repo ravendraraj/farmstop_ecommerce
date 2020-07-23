@@ -8,7 +8,7 @@ import HomeScreen from '../component/HomeScreen'
 import Header from '../headerComponent/header'
 import Mainheader from '../headerComponent/main_screen_header'
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
-import productVariation from '../component/PorductVariation'
+// import productVariation from '../component/PorductVariation'
 import knowMoreProd from '../component/KnowMore'
 import SignUpScreen from '../component/SignUp'
 import LoginScreen from '../component/LoginScreen'
@@ -17,10 +17,15 @@ import otpVerify from '../component/otpVerify'
 import MyCart from '../component/MyCart'
 import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
-import WishList from '../component/WishList'
+// import WishList from '../component/WishList'
 import GoogleLoc from '../component/GoogleLoc'
 import TestMarquee from '../component/TestMarquee'
 
+
+
+//tab navigation
+import TabNavProdvariation from './TabNavProdvariation'
+import WishTabNav from './WishTabNav'
 const RootStack = createStackNavigator();
 
 const HomeStack = ({navigation}) => (
@@ -42,8 +47,10 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            name="ProductType" component={productVariation}/>
             
+            // name="ProductType" component={productVariation}/>
+            name="ProductType" component={TabNavProdvariation}/>
+
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -52,7 +59,7 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="knowMoreProd" component={knowMoreProd}/>
-
+{/* 
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -69,7 +76,7 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            name="LogIn" component={LoginScreen}/>
+            name="LogIn" component={LoginScreen}/> */}
         
         <RootStack.Screen 
             options={({ navigation }) => ({
@@ -106,6 +113,14 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="ContactScreen" component={ContactScreen}/>
+        {/* <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="SocialLogin" component={SocialLoginScreen}/> */}
         <RootStack.Screen 
                     options={({ navigation }) => ({
                         headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -113,15 +128,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="SocialLogin" component={SocialLoginScreen}/>
-        <RootStack.Screen 
-                    options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                        headerTitle: () => <Header navigation={navigation} />,
-                        headerStyle:{shadowOpacity:0,elevation: 0},
-                        headerTransparent:false,
-                    })}
-                    name="WishList" component={WishList}/>
+                    name="WishList" component={WishTabNav}/>
         <RootStack.Screen 
                     options={({ navigation }) => ({
                         headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
