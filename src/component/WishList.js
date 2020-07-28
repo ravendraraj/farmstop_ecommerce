@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, ToastAndroid,FlatList,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
+import { View, Image,Text, ToastAndroid,FlatList,StyleSheet,TouchableOpacity,Dimensions,Alert } from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -8,10 +8,13 @@ import {Loader} from '../customElement/Loader'
 import {CouponTextInput} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
-import {getWishListItem} from  '../lib/api'
+import {getWishListItem ,addItemToCart,setCartItemLocal} from  '../lib/api'
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
+import Autocomplete from 'react-native-autocomplete-input'
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -29,11 +32,13 @@ class WishList extends Component {
             discount:0,
             tax:0,
             total:0,
+            productList: [],
         }
     }
 
     async componentDidMount(){
-        await this.props.getWishListItem();
+        if(this.props.route.name != "SearchWishItem")
+            await this.props.getWishListItem();
     }
 
     _loadLoader() {
@@ -70,9 +75,18 @@ class WishList extends Component {
         }
     }
 
-    _addInCart(prodCatId_id,variationId,Itemid,navigateToCart){
+    async _addInCart(prodCatId_id,variationId,Itemid,selectedQty){
         if(variationId !=''){
-            this.props.addToCart(Itemid);
+            // this.props.addToCart(Itemid);
+            var data = [];
+            data["id"] = Itemid;
+            data["variationId"] = variationId;
+            data["screen"] = this.props.route.name;
+            data["qty"] = selectedQty
+            // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
+            await this.props.addItemToCart(data);
+            this.props.setCartItemLocal();
+
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -87,10 +101,19 @@ class WishList extends Component {
     }
 
     renederItemType () {
-        let ItemList = this.props.my_wish_list;
+        // let ItemList = this.props.my_wish_list;
+        // if(this.props.route.name == "SearchWishItem" ){
+            
+            // if(this.state.searchedKey != ''){
+           let ItemList = this.props.my_wish_list;//.filter(item=> item.attributename == key);
+            // }else{
+               // ItemList =[];
+            // }
+        // }
+
         if(ItemList.length >0){
         return(
-            <View>
+            <View style={{marginBottom:60}}>
             <FlatList
             data={ItemList}
             renderItem={({ item }) => (
@@ -98,6 +121,7 @@ class WishList extends Component {
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View>
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(13),alignSelf:'center'}}>{item.attribute_name}</Text>
                         </View>
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row'}}>
@@ -133,7 +157,7 @@ class WishList extends Component {
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
                                 <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
-                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.product_variation_id,true)}>
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.product_variation_id,item.selectedQty)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                     <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                                 </TouchableOpacity>
@@ -162,6 +186,16 @@ class WishList extends Component {
             />
             </View>
         )
+        }else{
+            if(this.props.route.name != "SearchWishItem" ){
+                return(
+                    <View style={{flex:1}}>
+                        <Text style={{alignSelf:'center',fontSize:16,fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_intro,marginTop:constants.vh(20)}}>
+                            Not found any item
+                        </Text>
+                    </View>
+                )
+            }
         }
     }
 
@@ -175,6 +209,7 @@ class WishList extends Component {
                                     Wish List
                                 </Text>
                             </View>
+                            {/* {this.searchComonent()} */}
                             {this._loadLoader()}
                             {this.renederItemType()}
                             {/* {this.renederCartDetails()} */}
@@ -194,6 +229,10 @@ const styles = StyleSheet.create({
       //flex: 1,
       //padding: 10,
     },
+      descriptionContainer: {
+        flex: 1,
+        justifyContent: 'center',
+      },
     imageThumbnail: {
       justifyContent: 'center',
       alignItems: 'center',
@@ -216,12 +255,19 @@ const styles = StyleSheet.create({
 		padding: 20,
 		fontFamily:regular
     },
-    checkout:{
-        color: constants.Colors.color_intro,
-		fontSize: 30,
-		padding: 20,
-		fontFamily:bold
-    }
+    ImageStyle: {
+        // padding: 10,
+        marginTop: 13,
+        marginLeft: 10,
+        // resizeMode: 'stretch',
+        //alignItems: 'center',
+      },
+      itemText: {
+        fontSize: 15,
+        paddingTop: 5,
+        paddingBottom: 5,
+        margin: 2,
+      },
   });
 
 const mapStateToProps = state => ({
@@ -235,7 +281,9 @@ const mapDispatchToProps = dispatch => ({
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
     manageCartQty:(data) =>dispatch({type:'MANAGE-WISHPROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
-    selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value})
+    selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value}),
+    addItemToCart :(data)=> dispatch(addItemToCart(data)),
+    setCartItemLocal:()=>dispatch(setCartItemLocal()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WishList);

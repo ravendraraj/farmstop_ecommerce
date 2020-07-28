@@ -118,7 +118,7 @@ class SocialLoginScreen extends Component{
             user_data["image"] = userInfo.user.photo;
             
             //send sever request for saving data
-            this.props.social_login(user_data);
+            await this.props.social_login(user_data);
 
             // console.log(userInfo)
         } catch (error) {
@@ -250,7 +250,7 @@ const mapDispatchToProps = dispatch => ({
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
     manualLogin:(data)=>dispatch(loginValidation(data)),
     social_login:(data)=>dispatch(socialLogin(data)),
-    loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data})
+    loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);

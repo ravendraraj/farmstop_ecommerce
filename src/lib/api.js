@@ -31,7 +31,7 @@ export const loginValidation = (data) => (dispatch,getState) => {
                 AsyncStorage.setItem('Logined', 'YES');
 
                 dispatch({type:'AUTHORIZED-USER', email:response.user.email,mobile:response.user.mobile ,userID:response.user.id});
-
+                
             setTimeout(function(){  
                 navigate('DrawerScreen');
             }, 1000);
@@ -95,7 +95,8 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                 //  console.log("Login -data "+JSON.stringify(authUser));
                  AsyncStorage.setItem('authData', JSON.stringify(authUser));
 
-                dispatch({type:'AUTHORIZED-USER', email:userData["email"] ,userID:userData["id"]})
+                dispatch({type:'AUTHORIZED-USER', email:userData["email"] ,userID:userData["id"]});
+                
                 navigate('DrawerScreen');
                 
                 dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
@@ -428,14 +429,14 @@ export const setWishListItemOnServer= (data) => (dispatch,getState) => {
     })
     .catch( err => {
         // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.lof("NetWork Error");
+        console.log("NetWork Error");
     });
 
 }
 
 /** Local management */
 export const setWishListItemInLocal= (data) => (dispatch,getState) => { 
-        getLocalSaveWishList().then((wishData) => {
+        getLocalSaveWishList('WishItem').then((wishData) => {
             
             if(wishData == "NULL" ){
                 AsyncStorage.setItem('WishItem', JSON.stringify([data]));
@@ -461,10 +462,10 @@ export const setWishListItemInLocal= (data) => (dispatch,getState) => {
         });
 }
 
-async function getLocalSaveWishList() {
+async function getLocalSaveWishList(DataType) {
     try {
 
-        let WishItem = await AsyncStorage.getItem('WishItem');
+        let WishItem = await AsyncStorage.getItem(DataType);
         return WishItem;
 
     }catch(e) {
@@ -489,11 +490,12 @@ export const checkDelivery= (data) => (dispatch,getState) => {
                     var userShipingAddress = {
                         "address" : response.address,
                         "postal_code":response.detail['pincode'],
+                        "shippingCharges":response.detail['shipping_cost'],
                     }
 
                     AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
                     dispatch({type:'SUCCESS',payload:response.message+" "+response.address});
-                    dispatch({ type : 'LOCATION_FETCHED',  address : response.address , details:response.detail});
+                    dispatch({ type : 'LOCATION_FETCHED',  address : response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
                 
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -505,10 +507,468 @@ export const checkDelivery= (data) => (dispatch,getState) => {
     })
     .catch( err => {
         // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.lof("NetWork Error");
+        console.log("NetWork Error");
+    });
+
+}
+
+export const checkCouponCode= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-validate-coupnCode/'+data.code;
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value});
+            }else{
+                dispatch({ type : 'ERROR_CODE', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+
+}
+
+export const getAppartment= (data) => (dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    let url = weburl + 'api-appartment';
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                console.log(response.apartment);
+                dispatch({ type : 'GET_APARTMENT', apartment:response.apartment});
+            }else{
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
     });
 
 }
 
 
+export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    let url = weburl + 'api-check-delivery-on-pincode/'+data.pincode;
+    console.log(url);
 
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'DILEVER_ON_PINCODE', shipping_cost:response.details.shipping_cost });
+            }else{
+                dispatch({ type : 'NOT_DILEVER_ON_PINCODE', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+
+}
+
+export const addNewShippingAddress= (data) => (dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    let url = weburl + 'api-add-shipping-address/';
+    var data = new FormData();
+    data.append("id", userData["id"]);
+    data.append("email", userData["email"]);
+    data.append("name", userData["name"]);
+    data.append("first_name", userData["first_name"]);
+    data.append("last_name", userData["last_name"]);
+    data.append("social_type", userData["social_type"]);
+    data.append("image", userData["image"]);    
+
+    let post_req = {
+        method: 'POST',
+        body: data,
+        headers: {
+          Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        }
+    }
+
+    fetch(url,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'DILEVER_ON_PINCODE', shipping_cost:response.details.shipping_cost });
+            }else{
+                dispatch({ type : 'NOT_DILEVER_ON_PINCODE', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+
+}
+
+/** ###################################################### START MANAGE CART SECTION #################################### **/
+//manage cart on local and server
+export const setCartItem=  (data) => async(dispatch,getState) => {
+    
+    await AsyncStorage.setItem('userCart', JSON.stringify(getState().data.addedItems));
+    
+    if(getState().data.authUserID !=''){
+        await updateCartItemsOnServer(getState().data.addedItems , getState().data.authUserID, getState().data.authEmail);
+    }
+
+}
+
+
+/** ###################################################### END MANAGE CART SECTION #################################### **/
+
+/** %%%%%%%%%%%%%%%%%%%%%%%%%%%% start server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+export const addItemToCart = (prodData) => (dispatch,getState) => {
+// export const addItemToCart = (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    // console.log(prodData);
+    let product = prodData.id;
+    let variationId = prodData.variationId;
+    let totalItem = prodData.qty;
+    let screen = prodData.screen;
+
+    let userId = getState().data.authUserID;
+    let emailId = getState().data.authEmail;
+    
+    if(userId !=''){
+        let url = weburl + 'api-setCartItems/';
+        // console.log(url);
+        var data = new FormData();
+        data.append("product", product);
+        data.append("variation_id", variationId);
+        data.append("totalqty", totalItem);
+        data.append("userId", userId);
+        data.append("emailId", emailId);
+        // console.log(userId+"--"+emailId);
+        let post_req = {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            }
+        }
+
+        fetch(url ,post_req)
+        .then(res =>{
+            res.json()
+            .then(response => {
+                //console.log(response);
+                if(response.status == "1"){
+                    dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
+                }else{
+                    dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                }
+            })
+            .catch( err => {
+                dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            })
+        })
+        .catch( err => {
+            // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            console.log("NetWork Error");
+        });
+        
+    }else{
+        dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:0});
+    }
+
+}
+
+//set cart item in asyncstorage 
+// Note: remove this async on logout and set again when perfome login
+export const setCartItemLocal=  (data) => async(dispatch,getState) => {
+
+     await AsyncStorage.setItem('userCart', JSON.stringify(getState().data.addedItems));
+    //  console.log("Cart Local Stroage Update");
+}
+
+export const getCartItem=  (data) => async(dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    if(!getState().data.cartItemSync){
+        let loginedInUser = getState().data.authUserID;
+
+        //get cart item from async strogae
+        if(loginedInUser != ''){
+            //console.log("Local------server---home");
+            let url = weburl +"api-getCartItems?userId="+getState().data.authUserID;
+            console.log(url);
+            fetch(url)
+            .then(res =>{
+                res.json()
+                .then(response => {
+                    //console.log(response);
+                    if(response.status == "1"){
+                        // dispatch({type:'CART_ITEM_SYNC', cartItem:response.cart});
+                        let serverCartItem = response.cart;
+
+                        getLocalSaveWishList('userCart').then((asyncCartData) => {
+                            let serverDataLength = serverCartItem.length;
+                            
+                            if(serverDataLength >0 && asyncCartData == null)
+                            {
+                                // console.log("servere cart data");
+                                // console.log(serverCartItem);
+                                dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+                            }else if( asyncCartData != null){
+                                let updatableData = asyncCartData;
+                                if(serverDataLength <= 0){
+                                    // update async item on server
+                                    // console.log("get async only");
+                                }else{
+
+                                    let cartItems = JSON.parse(asyncCartData); // asyncstroage data
+                                    let notUpdated = []
+                                    // console.log("get async and live only");
+                                    // console.log(cartItems);
+                                    cartItems.map(item=>{
+                                            let find = false;
+                                            serverCartItem.map(serverItem=>{
+                                                // console.log(item.prod_id +"=="+ serverItem.prod_id +"&&"+ item.selectedVariationID +"=="+ serverItem.selectedVariationID)
+                                                if(item.prod_id == serverItem.prod_id && item.selectedVariationID == serverItem.selectedVariationID){
+                                                    find = true;
+                                                }
+                                            });
+                        
+                                            if(!find){
+                                                notUpdated.push(item);
+                                            }
+                                    });
+                        
+                                    updatableData = notUpdated;
+                                }
+                        
+                                    //console.log("merge data");
+                                if(updatableData.length > 0){
+                                    updateCartItemsOnServer(updatableData ,getState().data.authUserID , getState().data.authEmail,dispatch);
+                                }else{
+                                    dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+                                }
+                            // dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+                    }
+                
+                });
+                    }else{
+                        dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                    }
+                })
+                .catch( err => {
+                    dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+                })
+            })
+            .catch( err => {
+                // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+                console.log("NetWork Error");
+            });
+            
+        }else{
+            getLocalSaveWishList('userCart').then((data) => {
+                if(data != null){
+                    cartItems = JSON.parse(data); // asyncstroage data
+                    dispatch({type:'CART_ITEM_SYNC', cartItem:cartItems})
+                }else{
+                    console.log("Cart is empty")
+                    // cartItems = []
+                }
+                
+            });
+        }
+
+    }else{
+        console.log("Cart Data Sync");
+    }
+}
+
+
+// function updateLocalAndServerCartItem (loginedInUser ,emailId ,dispatch){
+
+//         //get cart item from async strogae
+//         if(loginedInUser != ''){
+
+//             var serverCartItem = "";
+//             let url = weburl +"api-getCartItems?userId="+loginedInUser;
+//             // console.log(url);
+//             fetch(url)
+//             .then(res =>{
+//                 res.json()
+//                 .then(response => {
+//                     //console.log(response);
+//                     if(response.status == "1"){
+//                         // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
+//                         // dispatch({type:'CART_ITEM_SYNC', cartItem:response.cart});
+//                         serverCartItem = response.cart;
+                        
+//                         getLocalSaveWishList('userCart').then((asyncCartData) => {
+//                             let serverDataLength = serverCartItem.length;
+                            
+//                             if(serverDataLength >0 && asyncCartData == null)
+//                             {
+//                                 // console.log("servere cart data");
+//                                 // console.log(serverCartItem);
+//                                 dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+//                             }else if( asyncCartData != null){
+//                                 let updatableData = asyncCartData;
+//                                 if(serverDataLength <= 0){
+//                                     // update async item on server
+//                                     // console.log("get async only");
+//                                 }else{
+
+//                                     let cartItems = JSON.parse(asyncCartData); // asyncstroage data
+//                                     let notUpdated = []
+//                                     console.log("get async and live only");
+//                                     console.log(cartItems);
+//                                     cartItems.map(item=>{
+//                                             let find = false;
+//                                             serverCartItem.map(serverItem=>{
+//                                                 console.log(item.prod_id +"=="+ serverItem.prod_id +"&&"+ item.selectedVariationID +"=="+ serverItem.selectedVariationID)
+//                                                 if(item.prod_id == serverItem.prod_id && item.selectedVariationID == serverItem.selectedVariationID){
+//                                                     find = true;
+//                                                 }
+//                                             });
+                        
+//                                             if(!find){
+//                                                 notUpdated.push(item);
+//                                             }
+//                                     });
+                        
+//                                     updatableData = notUpdated;
+//                                 }
+                        
+//                                     //console.log("merge data");
+//                                 if(updatableData.length > 0){
+//                                     updateCartItemsOnServer(updatableData ,loginedInUser , emailId ,dispatch);
+//                                 }else{
+//                                     dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+//                                 }
+//                             // dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+//                     }
+                
+//                 });
+//                     }
+//                 })
+//                 .catch( err => {
+//                     dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+//                 })
+//             })
+//             .catch( err => {
+//                 // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+//                 console.log("NetWork Error");
+//             });
+//         }
+// }
+
+
+
+function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
+    
+    let url = weburl + 'api-setCartItems/';
+    let product ="";
+    let varidationId ="";
+    let totalItem ="";
+    
+    items.map(item=>{
+
+        product +=item.prod_id+',';
+        varidationId +=item.selectedVariationID+',';
+        totalItem +=item.selectedQty+',';
+    })
+
+    var data = new FormData();
+    data.append("product", product);
+    data.append("variation_id", varidationId);
+    data.append("totalqty", totalItem);
+    data.append("userId", userId);
+    data.append("emailId", emailId);
+    // console.log(userId+"--"+emailId);
+    let post_req = {
+        method: 'POST',
+        body: data,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+ //console.log(post_req);
+ //console.log(url)
+    fetch(url,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+
+                let Itemurl = weburl +"api-getCartItems?userId="+userId;
+                console.log(Itemurl);
+                fetch(Itemurl)
+                .then(res =>{
+                    res.json()
+                    .then(response => {
+                        //console.log(response);
+                        if(response.status == "1"){
+                            dispatch({type:'CART_ITEM_SYNC', cartItem:response.cart});
+                        }
+                    })
+                    .catch( err => {
+                        dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+                    })
+                })
+                .catch( err => {
+                    // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+                    console.log("NetWork Error");
+                });    
+
+            }else{
+                // dispatch({ type : 'NOT_DILEVER_ON_PINCODE', payload : response.message});
+                //console.log(response.message);
+            }
+        })
+        .catch( err => {
+            // dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            //console.log("Exceptions");
+            //console.log(err);
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+}
+
+/** %%%%%%%%%%%%%%%%%%%%%%%%%%%% end server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

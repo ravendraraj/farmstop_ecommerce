@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
-import { SearchBox, TextHeading } from '../customElement/Input'
 import { Loader } from '../customElement/Loader'
 import { prod_image } from '../constants/url'
 import constants from '../constants'
@@ -9,9 +8,9 @@ import storeImg from '../constants/Image'
 import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import AsyncStorage from '@react-native-community/async-storage';
 //api call
-import { getProduct, getProductType, searchProductType, getProductTypeByKeyword } from '../lib/api'
+import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem} from '../lib/api'
 
 
 const regular = constants.fonts.Cardo_Regular;
@@ -37,7 +36,48 @@ class HomeScreen extends Component {
     this.props.getItem({ start: 1, end: 6 });
     this.setState({ productList: this.props.productName });
     await this.props.searchProductType();
+    
+    //get fetch location
+    if(this.props.selectAddress == null){
+      try{
+        //await AsyncStorage.removeItem("userShippingAdd");
+        let address = await AsyncStorage.getItem("userShippingAdd");
+        
+        if(address == null){
+          
+          Alert.alert(
+            "Get Shipping Address",
+            "Please select shipping address",
+            [
+              { text: "OK", onPress: () => this.props.navigation.navigate("GoogleLocation") }
+            ],
+            { cancelable: false }
+          );
+
+        }else{
+          let addressArray =  JSON.parse(address);
+          //console.log(addressArray.address +" "+ addressArray.postal_code +" "+addressArray.shippingCharges);
+          // this.props.shippingAddress({address:addressArray.address , shipping_cost:addressArray.shippingCharges, pincode:addressArray.postal_code});
+        }
+      }catch(e){
+        console.log(e);
+      }
+
+      await this.props.getCartItem();
   }
+
+  }
+
+  async  getLocation(params) {
+		try {
+	
+			let data = await AsyncStorage.getItem(params);
+			return data;
+	
+		}catch(e) {
+			console.log(e);
+		}
+	}
 
   findProduct(query) {
     //method called everytime when we change the value of the input
@@ -93,7 +133,7 @@ class HomeScreen extends Component {
       ToastAndroid.showWithGravity(this.props.error, ToastAndroid.SHORT, ToastAndroid.TOP);
       setTimeout(() => {
         this.props.removeError();
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -247,6 +287,7 @@ const mapStateToProps = state => ({
   error: state.error.err,
   itemData: state.data.productData,
   productName: state.data.searchProdName,
+  selectAddress:state.data.selectAddress,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -257,6 +298,8 @@ const mapDispatchToProps = dispatch => ({
   getProductTypeByKeyword: (keyword) => dispatch(getProductTypeByKeyword(keyword)),
   setProdId: (data) => dispatch({ type: 'ACTIVE-PROD', id: data }),
   searchProductType: () => dispatch(searchProductType()),
+  shippingAddress: (data) =>dispatch({ type : 'ASYNC_LOCATION_FETCHED',  address : data.address , shipping_cost:data.shipping_cost, pincode:data.pincode}),
+  getCartItem:()=>dispatch(getCartItem()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

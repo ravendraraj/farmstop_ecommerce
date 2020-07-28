@@ -1,5 +1,5 @@
-const initialDataState = {my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:'',searchProductList:[] };
+const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,searchProductList:[],cartItemSync:false };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -8,7 +8,35 @@ const data = (state = initialDataState, action) => {
             ...state,
             appIntro:action.data
         };
+
+        case 'DILEVER_ON_PINCODE':
+            return{
+                ...state,
+                shippingCharges: action.shipping_cost,
+            }
+
+        case 'NOT_DILEVER_ON_PINCODE':
+            return{
+                ...state,
+                coupon_msg: action.payload,
+            }
         
+        case 'CART_ITEM_SYNC':
+            let newSyncItemTotal = 0;
+            if(action.cartItem.length >0)
+            {
+                action.cartItem.map(item=>{
+                    newSyncItemTotal += parseFloat(item.selectedQtyPrice) ;
+                })
+            }
+
+            return{
+                ...state,
+                addedItems: action.cartItem,
+                total : newSyncItemTotal,
+                cartItemSync:true,
+        }
+
         case 'PRODUCT_FETCH':
         return {
             ...state,
@@ -16,14 +44,15 @@ const data = (state = initialDataState, action) => {
             activeProduct:''
         };
 
+        case 'ASYNC_LOCATION_FETCHED':
         case 'LOCATION_FETCHED':
             // console.log(action.details)
             //shipping_cost
             return {
                 ...state,
                 selectAddress : action.address,
-                shippingCharges :action.details['shipping_cost'],
-                shippingPincode :action.details['pincode'],
+                shippingCharges :action.shipping_cost,
+                shippingPincode :action.pincode,
         }; 
         
         // case 'NOT_DELIVER':
@@ -375,17 +404,52 @@ const data = (state = initialDataState, action) => {
                 }
         
         //cart reducers 
-        case "ADD_TO_CART" :
+        // case "ADD_TO_CART" :
+    
+        //     let dataSetForCart = state.productVatiation;
+            
+        //     if(action.screen == "Search"){
+        //         dataSetForCart = state.searchProductList;
+        //     }
+            
+        //     let addedItem = dataSetForCart.find(item => item.id === action.id);
+        //      //check if the action id exists in the addedItems
+        //     let existed_item= state.addedItems.find(item=> action.id === item.id)
+        //     if(existed_item)
+        //     {
+        //        addedItem.quantity += 1 
+        //         return{
+        //            ...state,
+        //            //addedItems: [...state.addedItems, addedItem], 
+        //            }
+        //    }
+        //     else{
+        //        addedItem.quantity = 1;
+        //        //calculating the total
+        //        let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
+        //        return{
+        //            ...state,
+        //            addedItems: [...state.addedItems, addedItem],
+        //            total : newTotal,
+        //        }
+               
+        // }
+
+        //New add cart item 
+        case "ADD_TO_CART":
     
             let dataSetForCart = state.productVatiation;
             
             if(action.screen == "Search"){
                 dataSetForCart = state.searchProductList;
+            }else if(action.screen == "MyWish"){
+                dataSetForCart = state.my_wish_list;
             }
-            
-            let addedItem = dataSetForCart.find(item => item.id === action.id);
+
+            console.log(dataSetForCart);
+            let addedItem = dataSetForCart.find(item => item.id === action.id && item.selectedVariationID == action.selectedVariationID);
              //check if the action id exists in the addedItems
-            let existed_item= state.addedItems.find(item=> action.id === item.id)
+            let existed_item= state.addedItems.find(item=> action.id === item.id && item.selectedVariationID == addedItem.selectedVariationID)
             if(existed_item)
             {
                addedItem.quantity += 1 
@@ -395,12 +459,26 @@ const data = (state = initialDataState, action) => {
                    }
            }
             else{
-               addedItem.quantity = 1;
+                let newCartItem = {
+                "id" : (state.addedItems.length).toString(),
+                "prod_id" : addedItem.id, // its product id
+                "prod_cat_id" : addedItem.product_id,
+                "fimage" : addedItem.fimage,
+                "cart_item_id": action.cart_item_id,
+                "selectedQty": addedItem.selectedQty,
+                "selectedVariationID": addedItem.selectedVariationID,
+                "selectedQtyPrice":addedItem.selectedQtyPrice,
+                "selectedQtyVariation": addedItem.selectedQtyVariation,
+                "selectedVariationPrice": addedItem.selectedVariationPrice,
+                "variation_details": addedItem.variation_details
+                }
+
+            //    addedItem.quantity = 1;
                //calculating the total
                let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
                return{
                    ...state,
-                   addedItems: [...state.addedItems, addedItem],
+                   addedItems: [...state.addedItems, newCartItem],
                    total : newTotal,
                }
                
@@ -447,17 +525,17 @@ const data = (state = initialDataState, action) => {
 
         case "REMOVE_QUANTITY_ITEM_FROM_CART":
             let exist_item= state.addedItems.find(item=> action.id === item.id)
-            console.log("length : "+state.addedItems.length);
+            // console.log("length : "+state.addedItems.length);
             if(exist_item && exist_item.quantity > 1)
             {
-                console.log("have");
+                // console.log("have");
                 exist_item.quantity -= 1 
                 return{
                    ...state,
                     total: state.total - parseFloat(exist_item.price) ,
                 }
             }else{
-                console.log("no have");
+                // console.log("no have");
                 let new_itemsList = state.addedItems.filter(item=> action.id !== item.id)
                 //calculating the total
                 let newTotalAmount = state.total - (exist_item.price * exist_item.quantity )
@@ -468,7 +546,26 @@ const data = (state = initialDataState, action) => {
                     total: newTotalAmount,
                 }       
             }
-        
+
+        case 'COUPON_CODE_VALIDATE':
+            return{
+                ...state,
+                coupon_msg:action.payload,
+                coupon_value:action.coopunValue
+
+            }
+
+        case 'REMOVE_COUPON_CODE_MSG':
+            return{
+                ...state,
+                coupon_msg:[],
+                coupon_value:[],    
+            }
+        case 'GET_APARTMENT':
+            return{
+                ...state,
+                apartmentList:action.apartment,
+            }
 
         default:
         return state;

@@ -19,7 +19,8 @@ import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
 // import WishList from '../component/WishList'
 import GoogleLoc from '../component/GoogleLoc'
-import TestMarquee from '../component/TestMarquee'
+import ShippingAddress from '../component/ShippingAddress'
+import add_new_address from '../component/AddNewAddress'
 
 
 
@@ -50,6 +51,24 @@ const HomeStack = ({navigation}) => (
             
             // name="ProductType" component={productVariation}/>
             name="ProductType" component={TabNavProdvariation}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="ShippingAddress" component={ShippingAddress}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="AddNewAddress" component={add_new_address}/>
 
         <RootStack.Screen 
             options={({ navigation }) => ({
@@ -137,14 +156,14 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="GoogleLocation" component={GoogleLoc}/>
-<RootStack.Screen 
+            {/* <RootStack.Screen 
                     options={({ navigation }) => ({
                         headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
                         headerTitle: () => <Header navigation={navigation} />,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="TestMarquee" component={TestMarquee}/>
+                    name="TestMarquee" component={TestMarquee}/> */}
     </RootStack.Navigator>
 );
 

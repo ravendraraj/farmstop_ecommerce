@@ -9,7 +9,7 @@ import {fristLetterCapital} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
 
 //api call
-import { getProductType,setWishListItemInLocal ,setWishListItemOnServer} from '../lib/api'
+import { getProductType,setWishListItemInLocal ,setWishListItemOnServer,addItemToCart,setCartItemLocal} from '../lib/api'
 import {Picker} from '@react-native-community/picker';
 
 //navigation function
@@ -90,10 +90,17 @@ class PorductVariation extends Component {
     }
 
     //add product in cart
-    _addInCart(prodCatId_id,ProdVariationID,Itemid,navigateToCart){
+    async _addInCart(prodCatId_id,ProdVariationID,Itemid,selectedQty){
 
         if(ProdVariationID !=''){
-            this.props.addToCart(Itemid);
+            var data = [];
+            data["id"] = Itemid;
+            data["variationId"] = ProdVariationID;
+            data["screen"] = this.props.route.name;
+            data["qty"] = selectedQty
+            // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
+            await this.props.addItemToCart(data);
+            this.props.setCartItemLocal()
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -206,7 +213,7 @@ class PorductVariation extends Component {
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10}}>
                                 <Text style={{fontSize:20,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
-                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,true)}>
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,item.selectedQty)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                     <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                                 </TouchableOpacity>
@@ -326,7 +333,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
     knowMore:(data)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:data.prodId,screen:data.screen}),
-    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
+    addItemToCart :(data)=> dispatch(addItemToCart(data)),
+    setCartItemLocal:()=>dispatch(setCartItemLocal()),
+    setCartItem:()=>dispatch(setCartItem()),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     loader:()=>dispatch({type : 'LOADING'}),
     getProductType: (data) => dispatch(getProductType(data)),

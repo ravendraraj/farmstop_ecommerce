@@ -41,45 +41,46 @@ export default function DrawerContent(props) {
         // console.log("userType")
         // console.log(userType)
         await AsyncStorage.removeItem("authData");
+        await AsyncStorage.removeItem("userCart");
         navigate('NotLogin'); 
-        if( userType== "GMAIL"){
-            console.log("ravendra");
-        //    await GoogleSignin.revokeAccess();
-        //     await GoogleSignin.signOut();
-            // await AsyncStorage.removeItem("Logined");
-            // await AsyncStorage.removeItem("Login_Type");
-            // await AsyncStorage.removeItem("name");
-            // await AsyncStorage.removeItem("profile");
-            // await AsyncStorage.removeItem("email");
-            // await AsyncStorage.removeItem("userId");
+        // if( userType== "GMAIL"){
+        //     console.log("ravendra");
+        // //    await GoogleSignin.revokeAccess();
+        // //     await GoogleSignin.signOut();
+        //     // await AsyncStorage.removeItem("Logined");
+        //     // await AsyncStorage.removeItem("Login_Type");
+        //     // await AsyncStorage.removeItem("name");
+        //     // await AsyncStorage.removeItem("profile");
+        //     // await AsyncStorage.removeItem("email");
+        //     // await AsyncStorage.removeItem("userId");
             
-            await AsyncStorage.removeItem("authData");
-            //setTimeout(function(){  
-              navigate('NotLogin');  
-            //}, 1000);
-        }
+        //     await AsyncStorage.removeItem("authData");
+        //     //setTimeout(function(){  
+        //       navigate('NotLogin');  
+        //     //}, 1000);
+        // }
     
-        if( userType== "MANUAL"){
-            console.log("ravendra manual");
-            //    await GoogleSignin.revokeAccess();
-            //     await GoogleSignin.signOut();
-                // await AsyncStorage.removeItem("Logined");
-                // await AsyncStorage.removeItem("Login_Type");
-                // await AsyncStorage.removeItem("name");
-                // await AsyncStorage.removeItem("profile");
-                // await AsyncStorage.removeItem("email");
-                // await AsyncStorage.removeItem("mobile");
-                // await AsyncStorage.removeItem("userId");
-                await AsyncStorage.removeItem("authData");
-                //setTimeout(function(){  
-                  navigate('NotLogin');  
-                //}, 1000);
+        // if( userType== "MANUAL"){
+        //     console.log("ravendra manual");
+        //     //    await GoogleSignin.revokeAccess();
+        //     //     await GoogleSignin.signOut();
+        //         // await AsyncStorage.removeItem("Logined");
+        //         // await AsyncStorage.removeItem("Login_Type");
+        //         // await AsyncStorage.removeItem("name");
+        //         // await AsyncStorage.removeItem("profile");
+        //         // await AsyncStorage.removeItem("email");
+        //         // await AsyncStorage.removeItem("mobile");
+        //         // await AsyncStorage.removeItem("userId");
+        //         await AsyncStorage.removeItem("authData");
+        //         //setTimeout(function(){  
+        //           navigate('NotLogin');  
+        //         //}, 1000);
 
-        }
+        // }
     
-        if( userType== "FACEBOOK"){
-            //fdsfds
-        }
+        // if( userType== "FACEBOOK"){
+        //     //fdsfds
+        // }
     }
     // const { signOut, toggleTheme } = React.useContext(AuthContext);
     const [userImage, setImage] = useState("null");
@@ -168,7 +169,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="My Account"
-                            onPress={() => {navigate('TestMarquee')}}
+                            onPress={() => {navigate('ShippingAddress')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (

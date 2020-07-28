@@ -26,6 +26,12 @@ const error = (state = initialErrorState, action) => {
         success: action.payload
       };
 
+      case 'ERROR_CODE':
+        return{
+          ...state,
+          codeError :action.payload
+        }
+
       default:
       return state;
     }
