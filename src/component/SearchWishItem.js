@@ -12,7 +12,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Picker} from '@react-native-community/picker';
 
 //api call
-import { getProduct, getProductType, searchProductType, getProductTypeByKeyword } from '../lib/api'
+import { addItemToCart,setCartItemLocal } from '../lib/api'
 
 
 const regular = constants.fonts.Cardo_Regular;
@@ -89,9 +89,18 @@ _manageCartProdQty = (prod ,typeaction)=>{
     }
 }
 
-_addInCart(prodCatId_id,variationId,Itemid,navigateToCart){
+async _addInCart(prodCatId_id,variationId,Itemid,selectedQty){
     if(variationId !=''){
-        this.props.addToCart(Itemid);
+        // this.props.addToCart(Itemid);
+        var data = [];
+            data["id"] = Itemid;
+            data["variationId"] = variationId;
+            data["screen"] = this.props.route.name;
+            data["qty"] = selectedQty
+            // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
+            await this.props.addItemToCart(data);
+            this.props.setCartItemLocal();
+
     }else{
         ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
     }
@@ -155,7 +164,7 @@ renederItemType () {
                         <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
                             <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                             <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
-                                onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.product_variation_id,true)}>
+                                onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
                                 <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                 <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                             </TouchableOpacity>
@@ -339,9 +348,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   removeError: () => dispatch({ type: 'REMOVE_ERROR' }),
   loader: () => dispatch({ type: 'LOADING' }),
-  addToCart :(prodId)=> dispatch({type:'ADD_WISH_ITEM_TO_CART',id:prodId}),
+  // addToCart :(prodId)=> dispatch({type:'ADD_WISH_ITEM_TO_CART',id:prodId}),
   manageCartQty:(data) =>dispatch({type:'MANAGE-WISHPROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
-  selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value})
+  selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value}),
+  addItemToCart :(data)=> dispatch(addItemToCart(data)),
+  setCartItemLocal:()=>dispatch(setCartItemLocal()),
 
 });
 

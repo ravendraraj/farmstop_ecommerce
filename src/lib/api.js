@@ -349,37 +349,6 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
     });
 }
 
-// export const getProductListForSearch = (data) => (dispatch,getState) => {
-
-//     dispatch({type : 'LOADING'});
-//     //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
-//     console.log(data.key);
-//     let url = weburl + 'api-productByKeyword?term='+data.key+'&prodId='+data.activeProd;
-//     if(getState().data.authUserID != ''){
-//         url = url + "&userId="+getState().data.authUserID;
-//     }
-//     console.log(url);
-
-//     fetch(url)
-//     .then(res =>{
-//         res.json()
-//         .then(response => {
-//             //console.log(response);
-//             if(response.status == "1"){
-//                 dispatch({ type : 'SEARCH_PRODUCT_LIST', payload : response.searchProduct});
-//             }else{
-//                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
-//             }
-//         })
-//         .catch( err => {
-//             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-//         })
-//     })
-//     .catch( err => {
-//         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-//     });
-// }
-
 /**################################# Wish List ################################################### */
 export const getWishListItem= (data) => (dispatch,getState) => {
 
@@ -638,21 +607,6 @@ export const addNewShippingAddress= (data) => (dispatch,getState) => {
 
 }
 
-/** ###################################################### START MANAGE CART SECTION #################################### **/
-//manage cart on local and server
-export const setCartItem=  (data) => async(dispatch,getState) => {
-    
-    await AsyncStorage.setItem('userCart', JSON.stringify(getState().data.addedItems));
-    
-    if(getState().data.authUserID !=''){
-        await updateCartItemsOnServer(getState().data.addedItems , getState().data.authUserID, getState().data.authEmail);
-    }
-
-}
-
-
-/** ###################################################### END MANAGE CART SECTION #################################### **/
-
 /** %%%%%%%%%%%%%%%%%%%%%%%%%%%% start server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
 export const addItemToCart = (prodData) => (dispatch,getState) => {
@@ -817,85 +771,6 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
 }
 
 
-// function updateLocalAndServerCartItem (loginedInUser ,emailId ,dispatch){
-
-//         //get cart item from async strogae
-//         if(loginedInUser != ''){
-
-//             var serverCartItem = "";
-//             let url = weburl +"api-getCartItems?userId="+loginedInUser;
-//             // console.log(url);
-//             fetch(url)
-//             .then(res =>{
-//                 res.json()
-//                 .then(response => {
-//                     //console.log(response);
-//                     if(response.status == "1"){
-//                         // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
-//                         // dispatch({type:'CART_ITEM_SYNC', cartItem:response.cart});
-//                         serverCartItem = response.cart;
-                        
-//                         getLocalSaveWishList('userCart').then((asyncCartData) => {
-//                             let serverDataLength = serverCartItem.length;
-                            
-//                             if(serverDataLength >0 && asyncCartData == null)
-//                             {
-//                                 // console.log("servere cart data");
-//                                 // console.log(serverCartItem);
-//                                 dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
-//                             }else if( asyncCartData != null){
-//                                 let updatableData = asyncCartData;
-//                                 if(serverDataLength <= 0){
-//                                     // update async item on server
-//                                     // console.log("get async only");
-//                                 }else{
-
-//                                     let cartItems = JSON.parse(asyncCartData); // asyncstroage data
-//                                     let notUpdated = []
-//                                     console.log("get async and live only");
-//                                     console.log(cartItems);
-//                                     cartItems.map(item=>{
-//                                             let find = false;
-//                                             serverCartItem.map(serverItem=>{
-//                                                 console.log(item.prod_id +"=="+ serverItem.prod_id +"&&"+ item.selectedVariationID +"=="+ serverItem.selectedVariationID)
-//                                                 if(item.prod_id == serverItem.prod_id && item.selectedVariationID == serverItem.selectedVariationID){
-//                                                     find = true;
-//                                                 }
-//                                             });
-                        
-//                                             if(!find){
-//                                                 notUpdated.push(item);
-//                                             }
-//                                     });
-                        
-//                                     updatableData = notUpdated;
-//                                 }
-                        
-//                                     //console.log("merge data");
-//                                 if(updatableData.length > 0){
-//                                     updateCartItemsOnServer(updatableData ,loginedInUser , emailId ,dispatch);
-//                                 }else{
-//                                     dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
-//                                 }
-//                             // dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
-//                     }
-                
-//                 });
-//                     }
-//                 })
-//                 .catch( err => {
-//                     dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-//                 })
-//             })
-//             .catch( err => {
-//                 // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-//                 console.log("NetWork Error");
-//             });
-//         }
-// }
-
-
-
 function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
     
     let url = weburl + 'api-setCartItems/';
@@ -971,4 +846,134 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
     });
 }
 
+//manage cart item variation
+export const setVariationInCart = (prodData) => (dispatch,getState) => {
+       // dispatch({type : 'LOADING'});
+        // console.log(prodData);
+        let product = prodData.prod_id;
+        let variationValue = prodData.variationValue;
+        let oldSelectedVariationId = prodData.selectedVariationID;
+        
+        let userId = getState().data.authUserID;
+        let emailId = getState().data.authEmail;
+        // console.log(product+ " - "+variationValue+" - "+ variationId);
+        if(userId !=''){
+            let url = weburl + 'api-setCartItemsVariation/';
+
+            //get variation id 
+            let variationId = "";
+            getState().data.addedItems.map((item,index)=>{
+                if(item.prod_id == product)
+                {
+                    item.variation_details.map(vari=>{
+                        if(vari.varition == variationValue){
+                            variationId = vari.varition_detail_id;
+                        }
+                    });
+                }
+            });
+
+            var data = new FormData();
+            data.append("product", product);
+            data.append("variation_id", variationId);
+            data.append("oldVariationId", oldSelectedVariationId);
+            data.append("userId", userId);
+            data.append("emailId", emailId);
+            
+            let post_req = {
+                method: 'POST',
+                body: data,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                }
+            }
+            console.log(url);
+            fetch(url ,post_req)
+            .then(res =>{
+                res.json()
+                .then(response => {
+                    //console.log(response);
+                    if(response.status == "1"){
+                        // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
+                        dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId});
+                    }else{
+                        dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                    }
+                })
+                .catch( err => {
+                    dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+                })
+            })
+            .catch( err => {
+                // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+                console.log("NetWork Error");
+            });
+            
+        }else{
+            // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:0});
+            dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId});
+        }  
+    }
+
+//manage cart item qty
+export const setQtyInCart = (prodData) => (dispatch,getState) => {
+     dispatch({type : 'LOADING'});
+     let product = prodData.prod_id;
+     let prodQty = prodData.qty;
+     let SelectedVariationId = prodData.selectedVariationID;
+     let userId = getState().data.authUserID;
+     let emailId = getState().data.authEmail;
+     let action = prodData.typeOfAction;
+     let totalQty = 0;
+         if(action == "add"){
+            // data.append("totalQty", parseInt(prodQty)+1);
+            totalQty = parseInt(prodQty)+1;
+         }else{
+            // data.append("totalQty", parseInt(prodQty)-1);
+            totalQty = parseInt(prodQty)-1;
+    }
+     // console.log(product+ " - "+variationValue+" - "+ variationId);
+     if(userId !='' && totalQty >0){
+         let url = weburl + 'api-manageCartItemsQty/';
+         var data = new FormData();
+         data.append("product", product);
+         data.append("variation_id", SelectedVariationId);
+         data.append("userId", userId);
+         data.append("emailId", emailId);
+         data.append("totalQty", totalQty);
+
+         let post_req = {
+             method: 'POST',
+             body: data,
+             headers: {
+                 Accept: 'application/json',
+                 'Content-Type': 'multipart/form-data',
+             }
+         }
+         console.log(post_req);
+         fetch(url ,post_req)
+         .then(res =>{
+             res.json()
+             .then(response => {
+                 //console.log(response);
+                 if(response.status == "1"){
+                    dispatch({type:'MANAGE-CART-QTY' ,activeProdId:product,actionType:action ,selectedVariationId:SelectedVariationId});
+                 }else{
+                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                 }
+             })
+             .catch( err => {
+                 dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+             })
+         })
+         .catch( err => {
+              dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            //  console.log("NetWork Error");
+         });
+         
+     }else{
+         dispatch({type:'MANAGE-CART-QTY' ,activeProdId:product,actionType:action ,selectedVariationId:SelectedVariationId});
+     }  
+ }
 /** %%%%%%%%%%%%%%%%%%%%%%%%%%%% end server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

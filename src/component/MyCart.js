@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid } from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
-import {checkCouponCode ,getCartItem} from '../lib/api'
+import {checkCouponCode ,getCartItem ,setVariationInCart,setQtyInCart,setCartItemLocal} from '../lib/api'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Loader} from '../customElement/Loader'
@@ -145,14 +145,49 @@ class MyCart extends Component {
             )
         }
     }
-    _manageCartProdQty = (prod ,typeaction)=>{
-        this.props.manageCartQty({prodId:prod,typeOfAct:typeaction});
+
+    _manageCartProdQty = async (prod ,typeaction)=>{
+        //this.props.manageCartQty({prodId:prod,typeOfAct:typeaction});
+        console.log(prod);
+        console.log(prod.selectedQty);
+        if(parseInt(prod.selectedQty) >= 1){
+            var data = [];
+            data["prod_id"] = prod.prod_id;
+            data["selectedVariationID"] = prod.selectedVariationID;
+            data["qty"] = prod.selectedQty;
+            data["typeOfAction"] = typeaction;
+
+            await this.props.setQtyInCart(data);
+            await this.props.setCartItemLocal();
+        }else{
+            ToastAndroid.showWithGravity("Quantity of product not become 0", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+        // this.props.setQtyInCart(data);
     }
 
-    setVariationType(variationValue, prod_id){
-        console.log(variationValue);
+    async setVariationType(variationValue, prod_id ,selectedVariationID){
+        // console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
-        this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+        let find = false;
+        this.props.cartData.map(item=>{
+                if(item.prod_id == prod_id && item.selectedQtyVariation == variationValue)
+                {
+                    find = true;
+                }
+        });
+
+        if(!find){
+            // this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
+            var data = [];
+            data["prod_id"] = prod_id;
+            data["variationValue"] = variationValue;
+            data["selectedVariationID"] =selectedVariationID;
+
+            await this.props.setVariationInCart(data);
+            await this.props.setCartItemLocal();
+        }else{
+            ToastAndroid.showWithGravity("Duplicate item in cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
     }
 
     variationOpt = (variation) =>{
@@ -189,7 +224,7 @@ class MyCart extends Component {
                                         selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
                                         // mode="dropdown"
                                         style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
-                                        onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID))}
                                         >
                                         <Picker.Item label="Select" value="Select"  />
                                         { this.variationOpt(item.variation_details) }
@@ -316,15 +351,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    // getItemVariation: (data) => dispatch(getProductVariation(data)),
     knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId}),
-    addToCart :(prodId)=> dispatch({type:'ADD_TO_CART',id:prodId}),
-    manageCartQty:(data) =>dispatch({type:'MANAGE-CART-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
+    setQtyInCart:(data)=>dispatch(setQtyInCart(data)),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
-    selectProdVariation :(data)=>dispatch({type:"SET_PRODUCT_VARIATION",prod_id:data.prod_id, variation:data.value}),
+    setVariationInCart: (data)=>dispatch(setVariationInCart(data)),
     checkCouponCode :(data)=>dispatch(checkCouponCode(data)),
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
+    setCartItemLocal:()=>dispatch(setCartItemLocal()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

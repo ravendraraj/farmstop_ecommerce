@@ -157,7 +157,7 @@ class WishList extends Component {
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
                                 <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
-                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.product_variation_id,item.selectedQty)}>
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                     <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                                 </TouchableOpacity>

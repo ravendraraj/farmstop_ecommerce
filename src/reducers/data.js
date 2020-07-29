@@ -297,21 +297,21 @@ const data = (state = initialDataState, action) => {
             let cartActionType = action.actionType;
             let totalPrice = parseFloat(state.total);
             let newCartItemList = state.addedItems.map(item => {
-                if(item.id == cartSelectProdId.id){
+                if(item.prod_id == cartSelectProdId && item.selectedVariationID == action.selectedVariationId){
                     let cartItemPrice = parseFloat(item.selectedQtyPrice);
-
+                    var totalProdQty = parseInt(item.selectedQty);
                      if(cartActionType === 'add'){
-                        item.selectedQty += 1;
-                        if(item.selectedQty >0){
-                            if(item.selectedQty >1){
+                        item.selectedQty = totalProdQty+1;
+                        if(parseInt(item.selectedQty) >0){
+                            if(parseInt(item.selectedQty) >1){
                               cartItemPrice += parseFloat(item.selectedVariationPrice);
                             }
                             item.selectedQtyPrice = cartItemPrice;
                             totalPrice += parseFloat(item.selectedVariationPrice);
                         }
 
-                     }else if(cartActionType === 'remove' && item.selectedQty >0){
-                        item.selectedQty -= 1;
+                     }else if(cartActionType === 'remove' && item.selectedQty >1){
+                        item.selectedQty = totalProdQty-1;
                         if(item.selectedQty >0){
                             cartItemPrice -= parseFloat(item.selectedVariationPrice);
                             item.selectedQtyPrice = cartItemPrice;
@@ -402,39 +402,8 @@ const data = (state = initialDataState, action) => {
                     ...state,
                     my_wish_list:changeMy_wish_list,
                 }
-        
-        //cart reducers 
-        // case "ADD_TO_CART" :
-    
-        //     let dataSetForCart = state.productVatiation;
-            
-        //     if(action.screen == "Search"){
-        //         dataSetForCart = state.searchProductList;
-        //     }
-            
-        //     let addedItem = dataSetForCart.find(item => item.id === action.id);
-        //      //check if the action id exists in the addedItems
-        //     let existed_item= state.addedItems.find(item=> action.id === item.id)
-        //     if(existed_item)
-        //     {
-        //        addedItem.quantity += 1 
-        //         return{
-        //            ...state,
-        //            //addedItems: [...state.addedItems, addedItem], 
-        //            }
-        //    }
-        //     else{
-        //        addedItem.quantity = 1;
-        //        //calculating the total
-        //        let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
-        //        return{
-        //            ...state,
-        //            addedItems: [...state.addedItems, addedItem],
-        //            total : newTotal,
-        //        }
-               
-        // }
 
+        
         //New add cart item 
         case "ADD_TO_CART":
     
@@ -442,7 +411,7 @@ const data = (state = initialDataState, action) => {
             
             if(action.screen == "Search"){
                 dataSetForCart = state.searchProductList;
-            }else if(action.screen == "MyWish"){
+            }else if(action.screen == "MyWish" || action.screen =="SearchWishItem"){
                 dataSetForCart = state.my_wish_list;
             }
 
@@ -484,31 +453,61 @@ const data = (state = initialDataState, action) => {
                
         }
 
-        //cart reducers for wish item 
-        case "ADD_WISH_ITEM_TO_CART" :
+        case "SET_PRODUCT_VARIATION_IN_CART":
+                let cartProdId = action.prod_id;
+                let selectedCartVariation = action.variation;
+                let changeCart = state.addedItems.map((item,index) => {
+                    if(item.prod_id == cartProdId && item.selectedVariationID == action.preVarId){
+                            item.variation_details.map(variation => {
+                                
+                            if(variation.varition === selectedCartVariation){
+                                // console.log("Select ravendra");
+                                item.selectedQtyVariation = selectedCartVariation;
+                                item.selectedQtyPrice = variation.right_price;
+                                item.selectedVariationID = variation.varition_detail_id;
+                                item.selectedVariationPrice = variation.right_price;
+                                item.selectedQty=1;
+                            }else if(selectedCartVariation === "Select"){
+                                // console.log("Not Select");
+                                item.selectedVariationID = "";
+                                item.selectedVariationPrice ="";
+                            }
+                        })
+                    }
     
-            let addedWishItem = state.my_wish_list.find(item => item.product_variation_id === action.id);
-             //check if the action id exists in the addedItems
-            let existedWishItem= state.addedItems.find(item=> action.id === item.id)
-            if(existedWishItem)
-            {
-            //    addedItem.quantity += 1 
+                    return item;
+                });
+
                 return{
-                   ...state,
-                   //addedItems: [...state.addedItems, addedItem], 
-                   }
-           }
-            else{
-            //    addedItem.quantity = 1;
-               //calculating the total
-               let newTotal = state.total + parseFloat(addedWishItem.selectedQtyPrice) 
-               return{
-                   ...state,
-                   addedItems: [...state.addedItems, addedWishItem],
-                   total : newTotal,
-               }
+                    ...state,
+                    addedItems:changeCart,
+            }
+
+        // //cart reducers for wish item 
+        // case "ADD_WISH_ITEM_TO_CART" :
+    
+        //     let addedWishItem = state.my_wish_list.find(item => item.product_variation_id === action.id);
+        //      //check if the action id exists in the addedItems
+        //     let existedWishItem= state.addedItems.find(item=> action.id === item.id)
+        //     if(existedWishItem)
+        //     {
+        //     //    addedItem.quantity += 1 
+        //         return{
+        //            ...state,
+        //            //addedItems: [...state.addedItems, addedItem], 
+        //            }
+        //    }
+        //     else{
+        //     //    addedItem.quantity = 1;
+        //        //calculating the total
+        //        let newTotal = state.total + parseFloat(addedWishItem.selectedQtyPrice) 
+        //        return{
+        //            ...state,
+        //            addedItems: [...state.addedItems, addedWishItem],
+        //            total : newTotal,
+        //        }
                
-        }
+        // }
 
 
         case "REMOVE_WHOLE_ITEM_FROM_CART":

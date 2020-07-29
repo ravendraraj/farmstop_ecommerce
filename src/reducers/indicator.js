@@ -18,6 +18,7 @@ const indicator = (state = false, action) => {
         case "NOT_DELIVER":
         case "SEARCH_PRODUCT_LIST":
         case "COUPON_CODE_VALIDATE":
+        case"MANAGE-CART-QTY":
             return false;
         default :
             return state;

@@ -12,7 +12,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { fristLetterCapital } from '../lib/helper'
 
 //api call
-import { getProduct, getProductType, setWishListItemOnServer, getProductTypeByKeyword } from '../lib/api'
+import { getProduct, getProductType, setWishListItemOnServer, getProductTypeByKeyword,addItemToCart,setCartItemLocal } from '../lib/api'
 import { Picker } from '@react-native-community/picker';
 
 const bold = constants.fonts.Cardo_Bold;
@@ -95,10 +95,18 @@ class SearchProductVariation extends Component {
 		}
 	}
 
-	_addInCart(prodCatId_id, ProdVariationID, Itemid, navigateToCart) {
+	async _addInCart(prodCatId_id, ProdVariationID, Itemid, selectedQty) {
 
 		if (ProdVariationID != '') {
-			this.props.addToCart({Itemid:Itemid ,screen: this.props.route.name});
+			// this.props.addToCart({Itemid:Itemid ,screen: this.props.route.name});
+			var data = [];
+            data["id"] = Itemid;
+            data["variationId"] = ProdVariationID;
+            data["screen"] = this.props.route.name;
+            data["qty"] = selectedQty
+            // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
+            await this.props.addItemToCart(data);
+            this.props.setCartItemLocal();
 		} else {
 			ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
 		}
@@ -196,7 +204,7 @@ class SearchProductVariation extends Component {
 									<View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 }}>
 										<Text style={{ fontSize: 20, fontFamily: bold }}>Rs. {(item.selectedVariationID != '') ? item.selectedQtyPrice : item.price}</Text>
 										<TouchableOpacity style={{ padding: 2, flexDirection: 'row', backgroundColor: constants.Colors.color_heading, width: 85, alignSelf: 'flex-end', justifyContent: 'center', borderRadius: 4 }}
-											onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, true)}>
+											onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, item.selectedQty)}>
 											<Material name="cart" size={15} color={constants.Colors.color_BLACK} />
 											<Text style={{ fontSize: 12, fontFamily: regular }}>Add to Cart</Text>
 										</TouchableOpacity>
@@ -388,7 +396,8 @@ const mapDispatchToProps = dispatch => ({
 	selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
 
 	knowMore: (data) => dispatch({ type: 'KNOW_MORE_ABOUT_PROD', prodTypeId: data.prodId, screen: data.screen }),
-	addToCart :(data)=> dispatch({type:'ADD_TO_CART',id:data.Itemid ,screen:data.screen}),
+	addItemToCart :(data)=> dispatch(addItemToCart(data)),
+    setCartItemLocal:()=>dispatch(setCartItemLocal()),
 	manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct ,screen:data.screen}),
 	setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
 	addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
