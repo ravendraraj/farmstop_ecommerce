@@ -6,12 +6,18 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 
 class shippingAddress extends Component{
-
+    openForm(){
+        if(this.props.userId !=""){
+            this.props.navigation.navigate("AddNewAddress");
+        }else{
+            this.props.navigation.navigate("SocialLogin");
+        }
+    }
     render(){
         return(
             <View style={styles.container}>
                 <ScrollView>
-                    <ButtonWithIcon onPress={()=>this.props.navigation.navigate("AddNewAddress")} buttonName={"Add New Address"}/>
+                    <ButtonWithIcon onPress={()=>this.openForm()} buttonName={"Add New Address"}/>
                 </ScrollView>
             </View>
         )
@@ -31,7 +37,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-    // itemtypeData :state.data.productVatiation,
+    userId : state.data.authUserID,
 });
 
 const mapDispatchToProps = dispatch => ({

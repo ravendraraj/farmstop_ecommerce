@@ -20,7 +20,7 @@ const WishTabNav = ({navigation}) => (
             iconName = focused ? <Image source={constants.image.searchIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.searchIcon} style={{width:35,height:35}}/>;
             // iconName = constants.image.searchIcon;
           }else if (route.name === 'MyAccount') {
-            iconName = focused ? <Image source={constants.image.profile} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.profile} style={{width:35,height:35}}/>;
+            iconName = focused ? <Image source={constants.image.userIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.profile} style={{width:35,height:35}}/>;
             // iconName = constants.image.profile;
           }
 

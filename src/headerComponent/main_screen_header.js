@@ -23,18 +23,18 @@ function main_screen_header({navigation,cartItem}){
             </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
             <TouchableOpacity style={{marginRight:20}} onPress={()=>navigate("GoogleLocation")}>
-                    <Image source={constants.image.google_location} style={{width:35,height:35}}/>
+                    <Image source={constants.image.liveLocIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{marginRight:20}} onPress={()=>cart()}>
                     <Text style={{position:'absolute',left:15,top:0,zIndex:2,color:constants.Colors.color_BLACK}}>{totalProd}</Text>
                     {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
-                    <Image source={constants.image.cart} style={{width:35,height:35}}/>
+                    <Image source={constants.image.cartIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity >
                     {/* <Icon name="user" size={28}/> */}
-                    <Image source={constants.image.profile} style={{width:40,height:40}}/>
+                    <Image source={constants.image.userIcon} style={{width:30,height:30}}/>
                 </TouchableOpacity>
             </View>
         </View>

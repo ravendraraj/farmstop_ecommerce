@@ -20,8 +20,11 @@ import ContactScreen from '../component/ContactScreen'
 import SocialLoginScreen from '../component/SocialLoginScreeen'
 import ForgetPassword from '../component/ForgetPassword'
 import GoogleLoc from '../component/GoogleLoc'
-
+import HowItWorks from '../component/HowItWorks'
 import TabNavProdvariation from './TabNavProdvariation'
+import OrderSuccuess from '../component/OrderSuccuess'
+import pageNotFound404 from '../component/pageNotFound404'
+import internetError from '../component/internetError'
 //import WishTabNav from './WishTabNav'
 
 const RootStack = createStackNavigator();
@@ -47,7 +50,51 @@ const WithoutSignInStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="ProductType" component={TabNavProdvariation}/>
+
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
             
+            // name="ProductType" component={productVariation}/>
+            name="HowItWorks" component={HowItWorks}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerTitle: null,
+                headerLeft:false,
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                // headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="OrderSuccuess" component={OrderSuccuess}/>
+            
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                // headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: null,
+                headerLeft:false,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="pageNotFound" component={pageNotFound404}/>
+
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                // headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: null,
+                headerLeft:false,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="internetError" component={internetError}/>
+
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,

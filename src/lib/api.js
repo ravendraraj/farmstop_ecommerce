@@ -3,6 +3,14 @@ import { navigate } from '../appnavigation/RootNavigation'
 import AsyncStorage from '@react-native-community/async-storage';
 
 
+export const logout = (data) => async(dispatch,getState) => {
+
+    dispatch({type : 'LOADING'});
+    await AsyncStorage.removeItem("authData");
+    await AsyncStorage.removeItem("userCart");
+
+    dispatch({type:'LOGOUT'});
+}
 /** #################################################### User  Valiadtion Section ##############################*/
 export const loginValidation = (data) => (dispatch,getState) => {
 
@@ -564,7 +572,7 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
 
 }
 
-export const addNewShippingAddress= (data) => (dispatch,getState) => {
+export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     // dispatch({type : 'LOADING'});
     let url = weburl + 'api-add-shipping-address/';
     var data = new FormData();
@@ -698,10 +706,11 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                             
                             if(serverDataLength >0 && asyncCartData == null)
                             {
-                                // console.log("servere cart data");
+                                console.log("servere cart data");
                                 // console.log(serverCartItem);
                                 dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
                             }else if( asyncCartData != null){
+                                
                                 let updatableData = asyncCartData;
                                 if(serverDataLength <= 0){
                                     // update async item on server
@@ -731,6 +740,7 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                         
                                     //console.log("merge data");
                                 if(updatableData.length > 0){
+                                    // console.log("iam cal");
                                     updateCartItemsOnServer(updatableData ,getState().data.authUserID , getState().data.authEmail,dispatch);
                                 }else{
                                     dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});

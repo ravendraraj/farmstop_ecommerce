@@ -27,12 +27,12 @@ function header({navigation,cartItem}){
                 <TouchableOpacity style={{marginRight:20}} onPress={()=>cart()}>
                     <Text style={{position:'absolute',left:15,top:0,zIndex:2,color:constants.Colors.color_BLACK}}>{totalProd}</Text>
                     {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
-                    <Image source={constants.image.cart} style={{width:35,height:35}}/>
+                    <Image source={constants.image.cartIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity >
                     {/* <Icon name="user" size={28}/> */}
-                    <Image source={constants.image.profile} style={{width:40,height:40}}/>
+                    <Image source={constants.image.userIcon} style={{width:40,height:40}}/>
                 </TouchableOpacity>
             </View>
         </View>

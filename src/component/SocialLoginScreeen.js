@@ -160,7 +160,7 @@ class SocialLoginScreen extends Component{
 
                         <Text style={{alignSelf:'center',fontSize:28,fontFamily:constants.fonts.Cardo_Regular}}>or</Text>
 
-                        <Text style={styles.text}>Register Here</Text>
+                        <Text style={styles.text}>Login Here</Text>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Email/Mobile Number" onChangeText={(text)=>this.setEmailMob(text)}/>
                         </View>
@@ -168,17 +168,20 @@ class SocialLoginScreen extends Component{
                             <PrimaryTextInput placeholder="Password" secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})} onSubmitEditing={()=>this.submitManualReg()}/>
                         </View>
 
-                        <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:10}}>
-                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this._renderSignUpScreen()}>
+                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:constants.vw(10)}} onPress={()=>this._renderSignUpScreen()}>
                                 <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Create Account</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:20}} onPress={()=>this.props.navigation.navigate('ForgetPassword')}>
+                            <TouchableOpacity style={{alignSelf:'flex-end',marginTop:constants.vw(10)}} onPress={()=>this.props.navigation.navigate('ForgetPassword')}>
                                 <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Forget Password?</Text>
                             </TouchableOpacity>
                         </View>
 
+                        <TouchableOpacity style={{alignSelf:'center',paddingRight:10,paddingLeft:10,marginTop:constants.vw(10),borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5}} onPress={()=>this.props.navigation.navigate('MainHome')}>
+                                <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
+                        </TouchableOpacity>
                         {/* <View style={{alignSelf:'center',backgroundColor:'red',alignItems:'center'}}> */}
-                            <Text style={{textAlign:'center',fontFamily:constants.fonts.Cardo_Bold,fontSize:15,marginTop:20,marginBottom:20}}>
+                            <Text style={{textAlign:'center',fontFamily:constants.fonts.Cardo_Bold,fontSize:15,marginTop:10,marginBottom:constants.vw(10)}}>
                                 Having issue ssigning up, please write to us at info@farmstop.in
                             </Text>
                         {/* </View> */}

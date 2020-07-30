@@ -1,286 +1,274 @@
-import React,{useState,useEffect} from 'react';
-import { View, StyleSheet } from 'react-native';
-import { navigate } from '../appnavigation/RootNavigation'
-import {logout} from '../lib/api'
-import {
-    useTheme,
-    Avatar,
-    Title,
-    Caption,
-    Paragraph,
-    Drawer,
-    Text,
-    TouchableRipple,
-    Switch
-} from 'react-native-paper';
-import {
-    DrawerContentScrollView,
-    DrawerItem
-} from '@react-navigation/drawer';
+import React,{Component} from 'react'
+import {ToastAndroid,View ,Text,StyleSheet, Alert ,Image,TouchableOpacity} from 'react-native'
+import {connect} from 'react-redux'
+import { ScrollView } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
+import constants from '../constants'
+import image from "../constants/Image"
+import {logout} from "../lib/api"
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Entypo from 'react-native-vector-icons/Entypo'
-import fonts from '../constants/Fonts'
-import colors from '../constants/Color'
-import constants from 'jest-haste-map/build/constants';
-import AsyncStorage from '@react-native-community/async-storage';
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-  } from '@react-native-community/google-signin';
-
-//import{ AuthContext } from '../component/context';
-
-export default function DrawerContent(props) {
-
-    const paperTheme = useTheme();
-
-    const logout = async () =>{
-        // let userType =  await AsyncStorage.getItem('Login_Type');
-        // console.log("userType")
-        // console.log(userType)
-        await AsyncStorage.removeItem("authData");
-        await AsyncStorage.removeItem("userCart");
-        navigate('NotLogin'); 
-        // if( userType== "GMAIL"){
-        //     console.log("ravendra");
-        // //    await GoogleSignin.revokeAccess();
-        // //     await GoogleSignin.signOut();
-        //     // await AsyncStorage.removeItem("Logined");
-        //     // await AsyncStorage.removeItem("Login_Type");
-        //     // await AsyncStorage.removeItem("name");
-        //     // await AsyncStorage.removeItem("profile");
-        //     // await AsyncStorage.removeItem("email");
-        //     // await AsyncStorage.removeItem("userId");
+class DrawerContent extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            userID:"null",
+            name:null,
+            profile:null,
+            displayMyOrderChild:false,
+            displayMyAccChild:false,
             
-        //     await AsyncStorage.removeItem("authData");
-        //     //setTimeout(function(){  
-        //       navigate('NotLogin');  
-        //     //}, 1000);
-        // }
-    
-        // if( userType== "MANUAL"){
-        //     console.log("ravendra manual");
-        //     //    await GoogleSignin.revokeAccess();
-        //     //     await GoogleSignin.signOut();
-        //         // await AsyncStorage.removeItem("Logined");
-        //         // await AsyncStorage.removeItem("Login_Type");
-        //         // await AsyncStorage.removeItem("name");
-        //         // await AsyncStorage.removeItem("profile");
-        //         // await AsyncStorage.removeItem("email");
-        //         // await AsyncStorage.removeItem("mobile");
-        //         // await AsyncStorage.removeItem("userId");
-        //         await AsyncStorage.removeItem("authData");
-        //         //setTimeout(function(){  
-        //           navigate('NotLogin');  
-        //         //}, 1000);
-
-        // }
-    
-        // if( userType== "FACEBOOK"){
-        //     //fdsfds
-        // }
-    }
-    // const { signOut, toggleTheme } = React.useContext(AuthContext);
-    const [userImage, setImage] = useState("null");
-    const [userEmail, setEmail] = useState("null");
-    const [userName, setName] = useState("null");
-    const [userMobile, setMobile] = useState("null");
-    
-
-    useEffect(() => {
-        // Create an scoped async function in the hoo
-        async function getUserDetails() {
-            try {
-                
-                // let image = await AsyncStorage.getItem('profile');
-                
-                // setImage(image);
-
-                // let name = await AsyncStorage.getItem('name');
-                
-                // setName(name);
-
-                // let email = await AsyncStorage.getItem('email');
-                // setEmail(email);
-                let authData = await AsyncStorage.getItem("authData");
-                let objAuthData = JSON.parse(authData);
-                setName(objAuthData.name);
-                setImage(objAuthData.profile);
-                setEmail(objAuthData.email);
-                setMobile(objAuthData.mobile);
-
-                console.log(objAuthData.name+"-"+objAuthData.profile+"-"+objAuthData.email+"-"+objAuthData.userId+"-"+objAuthData.mobile);
-            } catch(e) {
-            console.log(e);
-            }
         }
+    }
+
+    async componentDidMount() {
         // Execute the created function directly
-        getUserDetails();
-    }, []);
-     
+        this.getUserDetails();
+    }
 
-    return(
-        <View style={{flex:1}}>
-            <DrawerContentScrollView {...props}>
-                <View style={styles.drawerContent}>
-                    <View style={styles.userInfoSection}>
-                        <View style={{flexDirection:'row',marginTop: 15}}>
-                            <Avatar.Image 
-                                source={{
-                                    uri: userImage
-                                }}
-                                size={50}
-                            />
-                            <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>{userName}</Title>
-                                {/* <Caption style={styles.caption}>Singh</Caption> */}
-                            </View>
-                        </View>
+    async getUserDetails() {
+        try {
+            let authData = await AsyncStorage.getItem("authData");
+            if(authData != null){
+                let objAuthData = JSON.parse(authData);
+                 this.setState({userID:objAuthData.userId,name:objAuthData.name ,profile:objAuthData.profile});
+                console.log(objAuthData.name+"-"+objAuthData.profile+"-"+objAuthData.email+"-"+objAuthData.userId+"-"+objAuthData.mobile);
+            }
+        } catch(e) {
+        console.log(e);
+        }
+    }
 
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]} onPress={() => {navigate('SignUp')}}>Signup</Paragraph>
-                                <Paragraph style={[styles.paragraph, styles.caption,{paddingLeft:2}]} onPress={() => {navigate('LogIn')}} >/ Login</Paragraph>
-                            </View>
-                        </View>
-                    </View>
+_profileRender(){
+    // console.log("oppp  -"+this.state.profile);
+    if(this.state.profile != "null" && this.state.profile != null){
+            return(
+                <Text style={{fontSize:16,marginLeft:10}}>
+                  I am Ravendra - {this.state.profile}
+                </Text>
+            )
+    }else{
+        return(
+            <View>
+                <TouchableOpacity style={styles.uploadImage}>
 
-                    <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem 
-                          
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="home-outline" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Home"
-                            onPress={() => {navigate('MainHome')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="account-badge" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="My Account"
-                            onPress={() => {navigate('ShippingAddress')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="heart" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Wish List"
-                            onPress={() => {props.navigation.navigate('WishList')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="comment-question" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="FAQ"
-                            onPress={() => {props.navigation.navigate('SocialLogin')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="bell" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Notification"
-                            onPress={() => {props.navigation.navigate('SupportScreen')}}
-                        />
-                        <DrawerItem 
-                            label="About Us"
-                            onPress={() => {props.navigation.navigate('AboutFarm')}}
-                        />
-                        <DrawerItem 
-                            label="Our Farm"
-                            onPress={() => {props.navigation.navigate('SupportScreen')}}
-                        />
-                        <View style={styles.row}>
-                        <View style={{paddingLeft:20}}>
-                                <Entypo name="mail" color={colors.color_intro} size={40} />
-                            <Paragraph style={[ styles.contactUs,{paddingLeft:2}]} onPress={() => {navigate('ContactScreen')}} >
-                                Contact Us
-                            </Paragraph>
-                        </View>
+                    <Text style={styles.profileText}>Upload</Text>
+                    <Text style={styles.profileText}>your</Text>
+                    <Text style={styles.profileText}>image</Text>
+
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+_tabMyAccount(){
+    if(this.state.displayMyAccChild ){
+        this.setState({displayMyAccChild:false});
+    }else{
+        this.setState({displayMyAccChild:true});
+    }
+}
+
+renderMyAccTab(){
+    if(this.state.displayMyAccChild ){
+        return(
+            <View style={{marginLeft:25}}>
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('AboutFarm')}>
+                    <Text style={styles.MenueLable}>Your Profile</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('ShippingAddress')}>
+                    <Text style={styles.MenueLable}>Your Address</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+_tabMyOrderList(){
+    if(this.state.displayMyOrderChild){
+        this.setState({displayMyOrderChild:false});
+    }else{
+        this.setState({displayMyOrderChild:true});
+    }
+}
+
+_redirect(routeParam){
+    if(this.state.userID != null && this.state.userID != "null"){
+        this.props.navigation.navigate(routeParam)
+    }else{
+        ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+    }
+}
+
+renderMyOrder(){
+    if(this.state.displayMyOrderChild){
+        return(
+            <View style={{marginLeft:25}}>
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('pageNotFound')}>
+                    <Text style={styles.MenueLable}>Track Your Order</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+renderLogout(){
+    if(this.state.userID != null && this.state.userID != "null"){
+        return(
+            <TouchableOpacity style={{marginTop:constants.vh(20),marginBottom:constants.vh(20)}} onPress={() => this._logOutEvent()}>
+                <Text style={styles.withOutIcon}>Logout</Text>
+            </TouchableOpacity>
+        )
+    }
+}
+
+_renderSignUpAndLogin(){
+    if(this.state.userID == "null"){
+        return(
+            <TouchableOpacity style={{marginBottom:constants.vh(20)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
+                <Text style={styles.withOutIcon}>Singup | Login</Text>
+            </TouchableOpacity>
+        )
+    }
+}
+
+async _logOutEvent(){
+    await this.props.logout();
+    this.props.navigation.navigate('NotLogin'); 
+}
+
+ render(){
+     return(
+         <View style={{flex:1,marginLeft:10}}>
+             <ScrollView>
+                 <View style={{flexDirection:"row",marginTop:constants.vw(20),marginBottom:constants.vw(20)}}>
+                    {this._profileRender()}
+                    <View style={{marginTop:constants.vw(10),marginLeft:constants.vw(30)}}>
+                        <Text style={styles.userName}>Hello</Text>
+                        <Text style={styles.userName}>{(this.state.name != "null" && this.state.profile != null)? this.state.name: 'User'}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <View style={{paddingLeft:20}}>
-                            <Paragraph style={[ styles.contactUs,{paddingLeft:2}]} onPress={() => {logout()}} >
-                                Logout
-                            </Paragraph>
-                        </View>
-                    </View>
-                    </Drawer.Section>
                 </View>
-            </DrawerContentScrollView>
+                <View>
+                    {this._renderSignUpAndLogin()}
+                    <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
+                        <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
+                        <Text style={styles.MenueLable}>My Account</Text>
+                    </TouchableOpacity>
+                    {this.renderMyAccTab()}
+
+                    <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyOrderList()}>
+                        <Image source={constants.image.myOrderIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>My Orders</Text>
+                    </TouchableOpacity>
+                    {this.renderMyOrder()}
+                    
+                    <TouchableOpacity style={styles.menuTab} onPress={() => this._redirect('WishList')}>
+                        <Image source={constants.image.heartIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>Wish List</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('OrderSuccuess')}}>
+                        <Image source={constants.image.questionIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>FAQ</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('internetError')}}>
+                        <Image source={constants.image.notificationIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>Notifications</Text>
+                    </TouchableOpacity>
+                    <View style={{marginLeft:25}}>
+                        <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('AboutFarm')}}>
+                            <Text style={styles.MenueLable}>About Us</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('WishList')}}>
+                            <Text style={styles.MenueLable}>Our Farms</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('HowItWorks')}}>
+                        <Text style={styles.withOutIcon}>How it works</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('ContactScreen')}}>
+                        <Image source={constants.image.mailIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>Contact Us</Text>
+                    </TouchableOpacity>
+                    {this.renderLogout()}
+                </View>
+             </ScrollView>
         </View>
-    );
+     )
+ }
 }
 
 const styles = StyleSheet.create({
-    drawerContent: {
-      flex: 1,
+	MenueLable: {
+        fontFamily:constants.fonts.Cardo_Bold,
+        fontSize:constants.vw(18),
+        paddingLeft:10
+        },
+    TopMarginMenuLable:{
+        fontFamily:constants.fonts.Cardo_Bold,
+        fontSize:18,
+        marginTop:-3,
+        paddingLeft:10
     },
-    userInfoSection: {
-      paddingLeft: 20,
+    menuTab:{
+        flexDirection:'row',
+        marginTop:7,
+        marginBottom:7,
+        width:'80%'
     },
-    title: {
-      fontSize: 16,
-      marginTop: 3,
-      fontWeight: 'bold',
+    icon:{
+        width:constants.vw(30),
+        height:constants.vw(30)
     },
-    caption: {
-      fontSize: 14,
-      lineHeight: 14,
+    withOutIcon:{
+        fontFamily:constants.fonts.Cardo_Bold,
+        fontSize:constants.vw(18)
     },
-    row: {
-      marginTop: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
+    profileWraper:{
+        borderWidth:1,
+        borderColor:'red',
+        borderRadius: 50
     },
-    section: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginRight: 15,
+    profileText:{
+        alignSelf:'center',
+        fontSize:constants.vh(18)
     },
-    paragraph: {
-      fontWeight: 'bold',
-      marginRight: 3,
+    uploadImage:{
+        flex:1,
+        width:constants.vh(100),
+        height:constants.vh(100),
+        borderWidth:1,borderColor:'red',
+        borderRadius:constants.vh(50),
+        justifyContent:'center'
     },
-    drawerSection: {
-      marginTop: 15,
+    userName:{
+        fontFamily:constants.fonts.Cardo_Bold,
+        fontSize:constants.vh(22)
     },
-    bottomDrawerSection: {
-        marginBottom: 15,
-        borderTopColor: '#f4f4f4',
-        borderTopWidth: 1
-    },
-    preference: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-    },
-    contactUs:{
-        fontFamily:fonts.Cardo_Regular,
-        fontSize:16,
-        marginRight:3,
+    childMenuTab:{
+        flexDirection:'row',
+        marginBottom:10,
+        width:'80%'  
     }
-  });
+});
+const mapStateToProps = state => ({
+    // itemtypeData :state.data.productVatiation,
+    animate: state.indicator,
+    error: state.error.err,
+    authEmail :state.data.authEmail,
+});
+
+const mapDispatchToProps = dispatch => ({
+    removeError: () => dispatch({type:'REMOVE_ERROR'}),
+    // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
+    // manualLogin:(data)=>dispatch(loginValidation(data)),
+    // social_login:(data)=>dispatch(socialLogin(data)),
+    // loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
+    logout:(data)=>dispatch(logout()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);

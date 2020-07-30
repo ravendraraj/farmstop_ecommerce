@@ -9,6 +9,18 @@ const data = (state = initialDataState, action) => {
             appIntro:action.data
         };
 
+        case 'LOGOUT':
+            return{
+                ...state,
+                apartmentList:[],
+                coupon_value:'',
+                authUserID:'',
+                authEmail:'' ,
+                authMobile:'',
+                my_wish_list:[],
+            }
+        
+
         case 'DILEVER_ON_PINCODE':
             return{
                 ...state,
@@ -19,6 +31,7 @@ const data = (state = initialDataState, action) => {
             return{
                 ...state,
                 coupon_msg: action.payload,
+                shippingCharges:null,
             }
         
         case 'CART_ITEM_SYNC':

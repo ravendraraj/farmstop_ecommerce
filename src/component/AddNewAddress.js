@@ -51,7 +51,10 @@ class AddNewAddress extends Component{
     checkDelivery(){
         if(this.state.pincode !=""){
             // Alert.alert(this.state.pincode);
-            this.props.checkDeliveryOnPincode({pincode:this.state.pincode})
+            this.props.checkDeliveryOnPincode({pincode:this.state.pincode});
+            if(this.props.shippingCharges == null){
+                this.setState({pincode:''});
+            }
         }
     }
 
@@ -60,19 +63,19 @@ class AddNewAddress extends Component{
             let msg = this.props.coupon_msg;
             setTimeout(()=>{this.props.removeCouponMsg()},2000);
             ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.TOP);
-            this.setState({pincode:''});
+            // this.setState({pincode:''});
         }
     }
 
     _submitForm(){
-            let name = this.state.name;
-            let mobile = this.state.mobile;
-            let State = this.state.State;
-            let pincode = this.state.pincode;
-            let apartment =  this.state.appartment;
-            let address = this.state.address;
-            let country = this.state.country;
-            let deliverOn = this.state.deliverType;
+            // let name = this.state.name;
+            // let mobile = this.state.mobile;
+            // let State = this.state.State;
+            // let pincode = this.state.pincode;
+            // let apartment =  this.state.appartment;
+            // let address = this.state.address;
+            // let country = this.state.country;
+            // let deliverOn = this.state.deliverType;
 
             var addressObject = [];
                 addressObject["name"] = this.state.name;
@@ -188,6 +191,7 @@ const mapStateToProps = state => ({
     // itemtypeData :state.data.productVatiation,
     apartmentList : state.data.apartmentList,
     coupon_msg : state.data.coupon_msg,
+    shippingCharges:state.data.shippingCharges
 });
 
 const mapDispatchToProps = dispatch => ({

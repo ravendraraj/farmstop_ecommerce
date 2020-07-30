@@ -27,7 +27,33 @@ export default {
   scrollIcon:require('../images/scrollIcon.jpeg'),
 
   //tab navigation image
-  homeIcon:require('../images/homeIcon.jpeg'),
-  searchIcon:require('../images/searchIcon.jpeg'),
+  // homeIcon:require('../images/homeIcon.jpeg'),
+  // searchIcon:require('../images/searchIcon.jpeg'),
+ 
+
+  //farm stop images
+  mailIcon :require('../images/farmstop/mail.png'),
+  notificationIcon :require('../images/farmstop/notification.png'),
+  openMenuIcon :require('../images/farmstop/open-menu.png'),
+  questionIcon :require('../images/farmstop/question.png'),
+  searchIcon :require('../images/farmstop/search.png'),
+  userIcon :require('../images/farmstop/user-silhouette.png'),
+
+  cartIcon :require('../images/farmstop/carts.png'),
+  heartIcon :require('../images/farmstop/heart.png'),
+  liveLocIcon :require('../images/farmstop/location.png'),
+  myOrderIcon :require('../images/farmstop/myorder.png'),
+  homeIcon:require('../images/farmstop/homeIcon.png'),
+
+  //how it work 
+  orderHowItWorks:require('../images/farmstop/orderHowItWorks.png'),
+  orderHarvested:require('../images/farmstop/orderHarvested.jpg'),
+  deliverHowItWork:require('../images/farmstop/deliverHowItWork.png'),
+  arcLeft:require('../images/farmstop/arcLeft.png'),
+  arcRight:require('../images/farmstop/arcRight.png'),
+  successfullyPlaceOrder:require('../images/farmstop/successfullyPlaceOrder.png'),
+  notFoundPage:require('../images/farmstop/notFoundPage.png'),
+  noInternet:require('../images/farmstop/noInternet.png'),
+  
 };
  
