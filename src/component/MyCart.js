@@ -121,12 +121,9 @@ class MyCart extends Component {
                             <Image source={constants.image.couponImg} style={{width:60,height:40,marginTop:15}}/>
                             <CouponTextInput placeholder="Enter coupon code" value={this.state.couponCode} onChangeText={(text)=>this.setState({couponCode:text})} onSubmitEditing={()=>this.getCouponCodeDetails()}/>
                         </View>
-                        <View style={{flexDirection:'row',justifyContent:'space-between',width:'90%'}}>
-                            <TouchableOpacity>
-                                <Text style={styles.checkout}>Checkout </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text style={styles.checkout}>Rs. {total} </Text>
+                        <View style={{flex:1,alignSelf:'center',width:'90%'}}>
+                            <TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>
+                                <Text style={styles.checkout}>Checkout  Rs. {total} </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -134,6 +131,10 @@ class MyCart extends Component {
         }
     }
     
+    redirectOnPaymentPage(){
+        this.props.navigation.navigate("PaymentInfo");
+    }
+
     renderCouponMsg(){
         if(this.props.coupon_msg !=''){
             let msg = this.props.coupon_msg;
@@ -147,7 +148,7 @@ class MyCart extends Component {
     }
 
     _manageCartProdQty = async (prod ,typeaction)=>{
-        //this.props.manageCartQty({prodId:prod,typeOfAct:typeaction});
+        
         console.log(prod);
         console.log(prod.selectedQty);
         if(parseInt(prod.selectedQty) >= 1){
@@ -162,12 +163,12 @@ class MyCart extends Component {
         }else{
             ToastAndroid.showWithGravity("Quantity of product not become 0", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
-        // this.props.setQtyInCart(data);
+        
     }
 
     async setVariationType(variationValue, prod_id ,selectedVariationID){
-        // console.log(variationValue);
-        //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
+        
+        
         let find = false;
         this.props.cartData.map(item=>{
                 if(item.prod_id == prod_id && item.selectedQtyVariation == variationValue)
@@ -334,8 +335,9 @@ const styles = StyleSheet.create({
 		fontFamily:regular
     },
     checkout:{
+        textAlign:'center',
         color: constants.Colors.color_intro,
-		fontSize: 30,
+		fontSize:constants.vw(25),
 		padding: 20,
 		fontFamily:bold
     }

@@ -25,6 +25,7 @@ import TabNavProdvariation from './TabNavProdvariation'
 import OrderSuccuess from '../component/OrderSuccuess'
 import pageNotFound404 from '../component/pageNotFound404'
 import internetError from '../component/internetError'
+import PaymentInfo from '../component/PaymentInfo'
 //import WishTabNav from './WishTabNav'
 
 const RootStack = createStackNavigator();
@@ -181,6 +182,16 @@ const WithoutSignInStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="GoogleLocation" component={GoogleLoc}/>
+
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="PaymentInfo" component={PaymentInfo}/>
 
     </RootStack.Navigator>
 );

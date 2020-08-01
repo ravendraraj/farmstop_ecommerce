@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {ToastAndroid,View ,Text,StyleSheet, Alert ,Image,TouchableOpacity} from 'react-native'
+import {ToastAndroid,View ,Text,StyleSheet, Alert ,Image,TouchableOpacity,ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -22,7 +22,7 @@ class DrawerContent extends Component{
 
     async componentDidMount() {
         // Execute the created function directly
-        this.getUserDetails();
+        // await this.getUserDetails();
     }
 
     async getUserDetails() {
@@ -39,12 +39,14 @@ class DrawerContent extends Component{
     }
 
 _profileRender(){
-    // console.log("oppp  -"+this.state.profile);
-    if(this.state.profile != "null" && this.state.profile != null){
+    
+    if(this.props.profile != "null" && this.props.profile != null && this.props.profile !=''){
             return(
-                <Text style={{fontSize:16,marginLeft:10}}>
-                  I am Ravendra - {this.state.profile}
-                </Text>
+                <Image 
+                source={{ uri: this.props.profile}} 
+                style={{width:constants.vw(100),height:constants.vw(100), borderRadius:constants.vw(50)}} 
+            />
+                
             )
     }else{
         return(
@@ -94,7 +96,8 @@ _tabMyOrderList(){
 }
 
 _redirect(routeParam){
-    if(this.state.userID != null && this.state.userID != "null"){
+    
+    if(this.props.authUserID != null && this.props.authUserID != "null" && this.props.authUserID !=''){
         this.props.navigation.navigate(routeParam)
     }else{
         ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -114,7 +117,8 @@ renderMyOrder(){
 }
 
 renderLogout(){
-    if(this.state.userID != null && this.state.userID != "null"){
+    
+    if(this.props.authUserID != null && this.props.authUserID != "null" && this.props.authUserID !=''){
         return(
             <TouchableOpacity style={{marginTop:constants.vh(20),marginBottom:constants.vh(20)}} onPress={() => this._logOutEvent()}>
                 <Text style={styles.withOutIcon}>Logout</Text>
@@ -124,7 +128,8 @@ renderLogout(){
 }
 
 _renderSignUpAndLogin(){
-    if(this.state.userID == "null"){
+    
+    if(this.props.authUserID == null || this.props.authUserID == "null" || this.props.authUserID ==''){
         return(
             <TouchableOpacity style={{marginBottom:constants.vh(20)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
                 <Text style={styles.withOutIcon}>Singup | Login</Text>
@@ -135,18 +140,18 @@ _renderSignUpAndLogin(){
 
 async _logOutEvent(){
     await this.props.logout();
-    this.props.navigation.navigate('NotLogin'); 
 }
 
  render(){
+
      return(
          <View style={{flex:1,marginLeft:10}}>
              <ScrollView>
                  <View style={{flexDirection:"row",marginTop:constants.vw(20),marginBottom:constants.vw(20)}}>
                     {this._profileRender()}
-                    <View style={{marginTop:constants.vw(10),marginLeft:constants.vw(30)}}>
+                    <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
                         <Text style={styles.userName}>Hello</Text>
-                        <Text style={styles.userName}>{(this.state.name != "null" && this.state.profile != null)? this.state.name: 'User'}</Text>
+                        <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
                     </View>
                 </View>
                 <View>
@@ -247,19 +252,29 @@ const styles = StyleSheet.create({
     },
     userName:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:constants.vh(22)
+        fontSize:constants.vh(20)
     },
     childMenuTab:{
         flexDirection:'row',
         marginBottom:10,
         width:'80%'  
-    }
+    },
+    imgBackground: {
+    width: '100%',
+    height: '100%',
+    flex: 1
+  },
 });
 const mapStateToProps = state => ({
     // itemtypeData :state.data.productVatiation,
     animate: state.indicator,
     error: state.error.err,
-    authEmail :state.data.authEmail,
+    authEmail:state.data.authEmail,
+    authMobile:state.data.authMobile,
+    authUserID:state.data.authUserID,
+    login_type:state.data.login_type,
+    profile:state.data.profile,
+    userName:state.data.authName
 });
 
 const mapDispatchToProps = dispatch => ({

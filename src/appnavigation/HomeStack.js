@@ -26,7 +26,7 @@ import OrderSuccuess from '../component/OrderSuccuess'
 
 import pageNotFound404 from '../component/pageNotFound404'
 import internetError from '../component/internetError'
-
+import PaymentInfo from '../component/PaymentInfo'
 //tab navigation
 import TabNavProdvariation from './TabNavProdvariation'
 import WishTabNav from './WishTabNav'
@@ -204,14 +204,17 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="GoogleLocation" component={GoogleLoc}/>
-            {/* <RootStack.Screen 
-                    options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                        headerTitle: () => <Header navigation={navigation} />,
-                        headerStyle:{shadowOpacity:0,elevation: 0},
-                        headerTransparent:false,
-                    })}
-                    name="TestMarquee" component={TestMarquee}/> */}
+            
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="PaymentInfo" component={PaymentInfo}/>
+            
     </RootStack.Navigator>
 );
 

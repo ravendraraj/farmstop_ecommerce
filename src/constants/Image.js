@@ -1,7 +1,7 @@
 export default {
   appIntro1: require('../images/slider1.png'),
-  appIntro2: require('../images/slider2.png'),
-  appIntro3: require('../images/slider3.png'),
+  appIntro2: require('../images/farmstop/slider2.jpg'),
+  appIntro3: require('../images/farmstop/slider3.jpg'),
   // logo: require("../images/logo.png"),
 
   //brand images
@@ -14,12 +14,12 @@ export default {
 
   instagram_logo:require('../images/instagram-logo.png'),
   aboutFarm : require('../images/aboutfarm.png'),
-  couponImg : require('../images/coupncode.png'),
+  couponImg : require('../images/farmstop/food.png'),
   contactus : require('../images/contactus.png'),
 
   cart : require('../images/cart.png'),
   profile : require('../images/profile.png'),
-  social_login : require('../images/social_login.png'),
+  social_login : require('../images/farmstop/socialLoign.jpg'),
   gmail_icon : require('../images/gmail_icon.png'),
   google_location :require('../images/google-location.png'),
 
@@ -54,6 +54,12 @@ export default {
   successfullyPlaceOrder:require('../images/farmstop/successfullyPlaceOrder.png'),
   notFoundPage:require('../images/farmstop/notFoundPage.png'),
   noInternet:require('../images/farmstop/noInternet.png'),
+
+  //payment
+  visaIcon:require('../images/farmstop/visa.png'),
+  masterIcon:require('../images/farmstop/symbol.png'),
+  checkIcon:require('../images/farmstop/check.png'),
+
   
 };
  

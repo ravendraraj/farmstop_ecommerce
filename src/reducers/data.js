@@ -1,5 +1,5 @@
-const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,searchProductList:[],cartItemSync:false };
+const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,searchProductList:[],cartItemSync:false ,addressList:[]};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -12,14 +12,23 @@ const data = (state = initialDataState, action) => {
         case 'LOGOUT':
             return{
                 ...state,
+                cartItemSync:false,
                 apartmentList:[],
                 coupon_value:'',
                 authUserID:'',
                 authEmail:'' ,
                 authMobile:'',
+                login_type:'',
+                profile:'',
                 my_wish_list:[],
+                addedItems:[],
+                authName:''
             }
-        
+        case 'FETECH_ADDRESS_LIST':
+        return{
+            ...state,
+            addressList: action.addressList,
+        }
 
         case 'DILEVER_ON_PINCODE':
             return{
@@ -149,6 +158,9 @@ const data = (state = initialDataState, action) => {
             authEmail :action.email,
             authMobile: action.mobile,
             authUserID: action.userID,
+            login_type:action.login_type,
+            profile:action.profile,
+            authName:action.authName
         };
 
         case 'MY_WISHLIST':

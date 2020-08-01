@@ -8,8 +8,8 @@ export const logout = (data) => async(dispatch,getState) => {
     dispatch({type : 'LOADING'});
     await AsyncStorage.removeItem("authData");
     await AsyncStorage.removeItem("userCart");
-
     dispatch({type:'LOGOUT'});
+    navigate('NotLogin');
 }
 /** #################################################### User  Valiadtion Section ##############################*/
 export const loginValidation = (data) => (dispatch,getState) => {
@@ -38,7 +38,14 @@ export const loginValidation = (data) => (dispatch,getState) => {
                 AsyncStorage.setItem('authData', JSON.stringify(authUser));
                 AsyncStorage.setItem('Logined', 'YES');
 
-                dispatch({type:'AUTHORIZED-USER', email:response.user.email,mobile:response.user.mobile ,userID:response.user.id});
+                dispatch({type:'AUTHORIZED-USER',
+                    login_type:"MANUAL",
+                    profile:"null",
+                    email:response.user.email,
+                    mobile:response.user.mobile ,
+                    userID:response.user.id,
+                    authName:response.user.name,
+                 });
                 
             setTimeout(function(){  
                 navigate('DrawerScreen');
@@ -54,6 +61,7 @@ export const loginValidation = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -103,9 +111,18 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                 //  console.log("Login -data "+JSON.stringify(authUser));
                  AsyncStorage.setItem('authData', JSON.stringify(authUser));
 
-                dispatch({type:'AUTHORIZED-USER', email:userData["email"] ,userID:userData["id"]});
+                // dispatch({type:'AUTHORIZED-USER', email:userData["email"] ,userID:userData["id"]});
+                dispatch({
+                    type:'AUTHORIZED-USER',
+                    login_type:userData["social_type"],
+                    profile:userData["image"],
+                    email:userData["email"],
+                    mobile:'null',
+                    userID:userData["id"],
+                    authName:userData["name"],
+                });
                 
-                navigate('DrawerScreen');
+                navigate('MainHome');
                 
                 dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
             }else{
@@ -119,6 +136,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -160,6 +178,7 @@ export const signUpManual = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -199,6 +218,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
         })
         .catch( err => {
             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            navigate("internetError");
         })
     })
     .catch( err => {
@@ -232,6 +252,7 @@ export const resetPassword = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -259,6 +280,7 @@ export const getProduct = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -291,6 +313,7 @@ export const getProductType = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -318,6 +341,7 @@ export const searchProductType = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -380,7 +404,8 @@ export const getWishListItem= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -406,7 +431,8 @@ export const setWishListItemOnServer= (data) => (dispatch,getState) => {
     })
     .catch( err => {
         // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.log("NetWork Error");
+        // console.log("NetWork Error");
+        navigate("internetError");
     });
 
 }
@@ -483,8 +509,9 @@ export const checkDelivery= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.log("NetWork Error");
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        // console.log("NetWork Error");
+        navigate("internetError");
     });
 
 }
@@ -510,7 +537,7 @@ export const checkCouponCode= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
     });
 
@@ -538,12 +565,39 @@ export const getAppartment= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
     });
 
 }
 
+export const getUserAddressList= (data) => (dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    // let url = weburl + 'api-getUserAddess/'+getState().data.authUserID;
+    let url = weburl + 'api-getUserAddess/37';
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            //console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'FETECH_ADDRESS_LIST', payload : response.message, addressList:response.addressList});
+            }else{
+                dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+
+}
 
 export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
     // dispatch({type : 'LOADING'});
@@ -566,8 +620,9 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
+        navigate("internetError");
     });
 
 }
@@ -609,8 +664,9 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
+        navigate("internetError");
     });
 
 }
@@ -664,8 +720,9 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
             })
         })
         .catch( err => {
-            // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
             console.log("NetWork Error");
+            navigate("internetError");
         });
         
     }else{
@@ -758,8 +815,9 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                 })
             })
             .catch( err => {
-                // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-                console.log("NetWork Error");
+                dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+                navigate("internetError");
+                // console.log("NetWork Error");
             });
             
         }else{
@@ -916,7 +974,7 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
                 })
             })
             .catch( err => {
-                // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+                dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
                 console.log("NetWork Error");
             });
             

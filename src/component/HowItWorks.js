@@ -140,19 +140,13 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-    // itemtypeData :state.data.productVatiation,
     animate: state.indicator,
     error: state.error.err,
-    authEmail :state.data.authEmail,
 });
 
 const mapDispatchToProps = dispatch => ({
     removeError: () => dispatch({type:'REMOVE_ERROR'}),
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
-    // manualLogin:(data)=>dispatch(loginValidation(data)),
-    // social_login:(data)=>dispatch(socialLogin(data)),
-    // loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
-    // logout:(data)=>dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HowItWorks);

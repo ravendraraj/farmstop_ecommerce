@@ -7,7 +7,8 @@ const Colors = {
   color_intro:'#7F462C',
   color_facebook:'#3b5998', 
   color_youtube:'#FF0000',
-  color_linkedin:'#0e76a8'
+  color_linkedin:'#0e76a8',
+  color_blue:'#336C95',
 
 };
 export default Colors;

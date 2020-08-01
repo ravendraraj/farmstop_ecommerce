@@ -31,8 +31,8 @@ function header({navigation,cartItem}){
                 </TouchableOpacity>
 
                 <TouchableOpacity >
-                    {/* <Icon name="user" size={28}/> */}
-                    <Image source={constants.image.userIcon} style={{width:40,height:40}}/>
+                    {/* <Icon name="user" size={25}/> */}
+                    <Image source={constants.image.userIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
             </View>
         </View>

@@ -10,7 +10,7 @@ export default function OrderSuccuess(){
         return(
             <View style={styles.container}>
                     
-                <Image source={constants.image.successfullyPlaceOrder} style={{width:"70%",height:"45%",alignSelf:'center'}}/>
+                <Image source={constants.image.successfullyPlaceOrder} style={{width:constants.vw(300),height:constants.vw(300),alignSelf:'center'}}/>
                 <View style={{marginTop:constants.vw(20)}}>
                     <Text style={styles.text}>Your Order was succesfully</Text>
                     <Text style={styles.text}>submitted</Text>

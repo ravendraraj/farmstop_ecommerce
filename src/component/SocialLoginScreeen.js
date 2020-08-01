@@ -103,7 +103,9 @@ class SocialLoginScreen extends Component{
     }
 
     _signIn = async () => {
+        console.log("sigin in call");
         try {
+
             await GoogleSignin.signOut();
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
@@ -149,7 +151,7 @@ class SocialLoginScreen extends Component{
                             <Text style={styles.text}>Login Or Register</Text>
                         </View>
 
-                        <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10}}>
+                        <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:(height/35)}}>
                             <TouchableOpacity onPress={this._signIn}>
                                 <Image source={constants.image.gmail_icon} style={styles.gmaiIcon}/>
                             </TouchableOpacity>
@@ -158,7 +160,7 @@ class SocialLoginScreen extends Component{
                             </TouchableOpacity>
                         </View>
 
-                        <Text style={{alignSelf:'center',fontSize:28,fontFamily:constants.fonts.Cardo_Regular}}>or</Text>
+                        <Text style={{alignSelf:'center',fontSize:28,fontFamily:constants.fonts.Cardo_Regular,marginTop:constants.vw(10)}}>or</Text>
 
                         <Text style={styles.text}>Login Here</Text>
                         <View style={styles.inputBox}>
@@ -177,14 +179,15 @@ class SocialLoginScreen extends Component{
                             </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity style={{alignSelf:'center',paddingRight:10,paddingLeft:10,marginTop:constants.vw(10),borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5}} onPress={()=>this.props.navigation.navigate('MainHome')}>
-                                <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
-                        </TouchableOpacity>
                         {/* <View style={{alignSelf:'center',backgroundColor:'red',alignItems:'center'}}> */}
-                            <Text style={{textAlign:'center',fontFamily:constants.fonts.Cardo_Bold,fontSize:15,marginTop:10,marginBottom:constants.vw(10)}}>
-                                Having issue ssigning up, please write to us at info@farmstop.in
+                            <Text style={{textAlign:'center',fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(15),marginTop:constants.vw(10)}}>
+                                Having issue signing up, please write to us at info@farmstop.in
                             </Text>
                         {/* </View> */}
+
+                        <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5}} onPress={()=>this.props.navigation.navigate('MainHome')}>
+                                <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
+                        </TouchableOpacity>
                     </View>
             )
     }
@@ -225,6 +228,7 @@ const styles = StyleSheet.create({
         // marginTop:20
     },
     text:{
+        marginTop:(height/35),
         color:constants.Colors.color_BLACK,
         fontSize:25,
         fontFamily:constants.fonts.Cardo_Bold
@@ -232,7 +236,7 @@ const styles = StyleSheet.create({
     socialImage:{
         width:constants.vw(160),
         height:constants.vh(160),
-        marginTop:constants.vh(2),
+        marginTop:(height/35),
         alignSelf:'center'
     },
     gmaiIcon:{

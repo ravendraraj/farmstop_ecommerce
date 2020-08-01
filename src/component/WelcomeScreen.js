@@ -38,6 +38,7 @@ const slides = [
 	// },
 ];
 
+const introDoneTest = false; 
 class WelcomeScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -52,13 +53,14 @@ class WelcomeScreen extends Component {
 	async componentDidMount() {
 		const res = await AsyncStorage.getItem('introHadDone');
 		if(res === "introHadDone"){
+				this.setState({ show_Main_App: true });
 				this.getAsyncData("authData").then((authData) => {
 					console.log("I am first component");
 					if(authData != null){
-						this.setState({ show_Main_App: true });
+						// this.setState({ show_Main_App: true });
 						let objAuthData = JSON.parse(authData);
 						console.log(objAuthData);
-						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId})
+						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name})
 
 						setTimeout(function(){  
 							navigate('DrawerScreen');  
@@ -176,16 +178,16 @@ const styles = StyleSheet.create({
 	},
 	silder2: {	
 		justifyContent:'center',
-		width:"85%",
-		height:"45%",
-		marginTop:constants.vh(100)
+		width:constants.vh(400),
+		height:constants.vh(400),
+		marginTop:constants.vh(150)
 	},
 	silder3: {
 		// // flex:1,
 		justifyContent:'center',
-		width:"80%",
-		height:"50%",
-		marginTop:constants.vh(100)
+		width:constants.vh(400),
+		height:constants.vh(400),
+		marginTop:constants.vh(150)
 	},
 	paragraph: {
 		textAlign: 'center',
@@ -215,7 +217,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
-	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId})
+	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

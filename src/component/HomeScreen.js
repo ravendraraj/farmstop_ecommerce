@@ -21,6 +21,9 @@ class HomeScreen extends Component {
       productList: [],
       query: '',
     };
+
+    if(!this.props.cartItemSync)
+     this.props.getCartItem();
   }
 
   _loadLoader() {
@@ -35,7 +38,10 @@ class HomeScreen extends Component {
   async componentDidMount() {
     this.props.getItem({ start: 1, end: 6 });
     this.setState({ productList: this.props.productName });
-    await this.props.searchProductType();
+    
+    if(this.props.productName.length <= 0){
+      await this.props.searchProductType();
+    }
     
     //get fetch location
     if(this.props.selectAddress == null){
@@ -62,9 +68,10 @@ class HomeScreen extends Component {
       }catch(e){
         console.log(e);
       }
-
-      await this.props.getCartItem();
   }
+
+  if(!this.props.cartItemSync)
+    await this.props.getCartItem();
 
   }
 
@@ -288,6 +295,7 @@ const mapStateToProps = state => ({
   itemData: state.data.productData,
   productName: state.data.searchProdName,
   selectAddress:state.data.selectAddress,
+  cartItemSync:state.data.cartItemSync,
 });
 
 const mapDispatchToProps = dispatch => ({

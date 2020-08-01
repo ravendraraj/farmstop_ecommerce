@@ -23,7 +23,7 @@ export const PrimaryTextInput = (props) => {
                 <TextInput
                     {...props}
                     selectionColor={constants.Colors.color_BLACK}
-                    style={[{ fontFamily: constants.fonts.Futura_Std_Book, }, styles.text]}
+                    style={[{ fontFamily: constants.fonts.Cardo_Regular, }, styles.text]}
                 />
             </View>
         </View>
