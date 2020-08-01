@@ -573,8 +573,8 @@ export const getAppartment= (data) => (dispatch,getState) => {
 
 export const getUserAddressList= (data) => (dispatch,getState) => {
     // dispatch({type : 'LOADING'});
-    // let url = weburl + 'api-getUserAddess/'+getState().data.authUserID;
-    let url = weburl + 'api-getUserAddess/37';
+    let url = weburl + 'api-getUserAddess/'+getState().data.authUserID;
+    // let url = weburl + 'api-getUserAddess/37';
     console.log(url);
 
     fetch(url)
@@ -585,15 +585,15 @@ export const getUserAddressList= (data) => (dispatch,getState) => {
             if(response.status == "1"){
                 dispatch({ type : 'FETECH_ADDRESS_LIST', payload : response.message, addressList:response.addressList});
             }else{
-                dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+                //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
             }
         })
         .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+            //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        //dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
     });
 
@@ -616,11 +616,11 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
             }
         })
         .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+  //          dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+//        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         console.log("NetWork Error");
         navigate("internetError");
     });
@@ -629,15 +629,15 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
 
 export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     // dispatch({type : 'LOADING'});
-    let url = weburl + 'api-add-shipping-address/';
+    
+    let url = weburl + 'api-setUserAddess/';
     var data = new FormData();
-    data.append("id", userData["id"]);
-    data.append("email", userData["email"]);
     data.append("name", userData["name"]);
-    data.append("first_name", userData["first_name"]);
-    data.append("last_name", userData["last_name"]);
-    data.append("social_type", userData["social_type"]);
-    data.append("image", userData["image"]);    
+    data.append("pincode", userData["pincode"]);
+    data.append("deliverOn", userData["name"]);
+    data.append("email", getState().data.authEmail);
+    data.append("userId", getState().data.authUserID);
+    data.append("address", userData["houseOrFlat"]+","+userData["address"]);
 
     let post_req = {
         method: 'POST',
@@ -648,18 +648,21 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
         }
     }
 
+    console.log(post_req);
     fetch(url,post_req)
     .then(res =>{
         res.json()
         .then(response => {
-            //console.log(response);
+            console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'DILEVER_ON_PINCODE', shipping_cost:response.details.shipping_cost });
+                dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                navigate("ShippingAddress");
             }else{
-                dispatch({ type : 'NOT_DILEVER_ON_PINCODE', payload : response.message});
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
         })
         .catch( err => {
+            console.log(err);
             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
         })
     })
