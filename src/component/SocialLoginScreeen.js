@@ -7,6 +7,7 @@ import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation';
 import Icon from 'react-native-vector-icons/AntDesign'
 // import Material from 'react-native-vector-icons/MaterialCommunityIcons'
+import {gmail_api_key} from '../constants/key'
 //import { GoogleSignin, GoogleSigninButton,statusCodes } from 'react-native-google-signin';
 import {
     GoogleSignin,
@@ -38,7 +39,7 @@ class SocialLoginScreen extends Component{
 
     componentDidMount(){
         GoogleSignin.configure({
-            webClientId: "321830598673-ru3q3a3qro7170svm1ppeoujknj88fiq.apps.googleusercontent.com",
+            webClientId: gmail_api_key,
         });
 
         if(this.props.authEmail != "")

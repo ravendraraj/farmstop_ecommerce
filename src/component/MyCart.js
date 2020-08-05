@@ -14,6 +14,7 @@ import {Picker} from '@react-native-community/picker';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import RazorpayCheckout from 'react-native-razorpay';
+import {razor_api_key} from '../constants/key';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -140,29 +141,45 @@ class MyCart extends Component {
     }
     
     redirectOnPaymentPage(){
-        var options = {
-        description: 'Credits towards consultation',
-        image: "https://www.farmstop.in/assets/images/farmstop.png",
-        currency: 'INR',
-        key:'rzp_test_RrT5clklzb5HFt',
-        amount: 50*100,
-        name: 'FARMSTOP',
-        prefill: {
-          email: 'gaurav.kumar@example.com',
-          contact: '9191919191',
-          name: 'Gaurav Kumar'
-        },
-        theme: {color: 'white'}
-      }
 
-      RazorpayCheckout.open(options).then((data) => {
-        // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
-      }).catch((error) => {
-        // handle failure
-        console.log(error);
-        alert(`Error: ${error.code} | ${error.description}`);
-      });
+        if(this.props.authUserID != null && this.props.authUserID != ""){
+                let subtotal = this.props.subtotal;
+                let tax = 0;
+                let deliveryCharges = this.state.deliveryCharges;
+                let discount = this.state.discount;
+                let total = subtotal+parseFloat(deliveryCharges)+tax;
+
+                var options = {
+                description: 'Credits towards consultation',
+                image: "https://www.farmstop.in/assets/images/farmstop.png",
+                currency: 'INR',
+                key:razor_api_key,
+                amount: (total*100),
+                name: 'FARMSTOP',
+                prefill: {
+                  email: this.props.authEmail,
+                  contact: this.props.authMobile,
+                  name: this.props.authName,
+                },
+                theme: {color: constants.Colors.color_intro}
+              }
+
+              RazorpayCheckout.open(options).then((data) => {
+                // handle success
+                console.log(data);
+                // alert(`Success: ${data.razorpay_payment_id}`);
+                if(data.razorpay_payment_id !="")
+                {
+                    this.props.navigation.navigate("OrderSuccuess");
+                }
+              }).catch((error) => {
+                // handle failure
+                console.log(error);
+                // alert(`Error: ${error.code} | ${error.description}`);
+              });
+      }else{
+            this.props.navigation.navigate("NotLogin");
+      }
     }
 
     renderCouponMsg(){
@@ -387,6 +404,10 @@ const mapStateToProps = state => ({
     shippingCost :state.data.shippingCharges,
     coupon_msg : state.data.coupon_msg,
     coupon_value : state.data.coupon_value,
+    authEmail : state.data.authEmail,
+    authUserID :state.data.authUserID,
+    authMobile :state.data.authMobile,
+    authName :state.data.authName,
 });
 
 const mapDispatchToProps = dispatch => ({
