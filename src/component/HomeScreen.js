@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
+import { ImageBackground, View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
-import { prod_image } from '../constants/url'
+import { prod_image ,weburl } from '../constants/url'
 import constants from '../constants'
 import storeImg from '../constants/Image'
 import { navigate } from '../appnavigation/RootNavigation'
@@ -10,8 +10,8 @@ import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 //api call
-import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem} from '../lib/api'
-
+import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
+import Geolocation from 'react-native-geolocation-service';
 
 const regular = constants.fonts.Cardo_Regular;
 class HomeScreen extends Component {
@@ -20,6 +20,7 @@ class HomeScreen extends Component {
     this.state = {
       productList: [],
       query: '',
+      dilevryStatus: false,
     };
 
     if(!this.props.cartItemSync)
@@ -50,20 +51,13 @@ class HomeScreen extends Component {
         let address = await AsyncStorage.getItem("userShippingAdd");
         
         if(address == null){
-          
-          Alert.alert(
-            "Get Shipping Address",
-            "Please select shipping address",
-            [
-              { text: "OK", onPress: () => this.props.navigation.navigate("GoogleLocation") }
-            ],
-            { cancelable: false }
-          );
+			    await this.checkCurrentLocForDelivery();
 
         }else{
+		  //this.setState({dilevryStatus : true});
           let addressArray =  JSON.parse(address);
-          //console.log(addressArray.address +" "+ addressArray.postal_code +" "+addressArray.shippingCharges);
-          // this.props.shippingAddress({address:addressArray.address , shipping_cost:addressArray.shippingCharges, pincode:addressArray.postal_code});
+        //   console.log(addressArray.address +" "+ addressArray.postal_code +" "+addressArray.shippingCharges);
+          await this.props.shippingAddress({address:addressArray.address , shipping_cost:addressArray.shippingCharges, pincode:addressArray.postal_code});
         }
       }catch(e){
         console.log(e);
@@ -75,16 +69,66 @@ class HomeScreen extends Component {
 
   }
 
-  async  getLocation(params) {
-		try {
-	
-			let data = await AsyncStorage.getItem(params);
-			return data;
-	
-		}catch(e) {
-			console.log(e);
+  async  checkCurrentLocForDelivery() {
+    try {
+		  const granted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,{
+				'title': 'Location Access Required',
+				'message': 'This App needs to Access your location'
+				}
+			  );
+			  
+		  if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+			 Geolocation.getCurrentPosition(
+				(position) => {
+				    const currentLongitude = JSON.stringify(position.coords.longitude);
+					const currentLatitude = JSON.stringify(position.coords.latitude);
+				    this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});
+
+                // let url = weburl + 'api-check-delivery-loc?lat='+currentLatitude+"&lng="+currentLongitude;
+                // console.log(url);
+
+                // fetch(url)
+                // .then(res =>{
+                //     res.json()
+                //     .then(response => {
+                //         //console.log(response);
+                //         if(response.status == "1"){               
+                //             var userShipingAddress = {
+                //                 "address" : response.address,
+                //                 "postal_code":response.detail['pincode'],
+                //                 "shippingCharges":response.detail['shipping_cost']
+                //             }
+
+				// 			AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
+				// 			this.setState({dilevryStatus:true});
+				// 			this.props.shippingAddress({address:response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
+				// 		}
+                //     })
+                //     .catch( err => {
+				// 		// dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+				// 		navigate("pageNotFound");
+                //     })
+                // })
+                // .catch( err => {
+                //     navigate("internetError");
+                // });
+
+
+					},
+					(error) => {console.log(error)},
+					{ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
+			  	);
+
+		  	}else {
+				  alert("Permission Denied");
+		  	}
+		} catch (err) {
+		//   alert("err",err);
+		  console.warn(err)
 		}
 	}
+
 
   findProduct(query) {
     //method called everytime when we change the value of the input
@@ -136,12 +180,12 @@ class HomeScreen extends Component {
   }
 
   _ShowError() {
-    if (this.props.error) {
-      ToastAndroid.showWithGravity(this.props.error, ToastAndroid.SHORT, ToastAndroid.TOP);
-      setTimeout(() => {
-        this.props.removeError();
-      }, 1000);
-    }
+    // if (this.props.error) {
+    //   ToastAndroid.showWithGravity(this.props.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+    //   setTimeout(() => {
+    //    this.props.removeError();
+    //   }, 1000);
+    // }
   }
 
   seacrhProduct(key) {
@@ -157,7 +201,7 @@ class HomeScreen extends Component {
         <View style={{flex:1,justifyContent:"flex-end",marginBottom:10,}}>
           
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to your home</Text>
-                <Image source={constants.image.knowMoreSource} style={{width:constants.width-20,height:constants.width/4.5}}/>
+                <Image source={constants.image.knowMoreSource} style={{width:constants.vw(330),height:constants.vw(90),alignSelf:'center'}}/>
                 {/* <ScrollView onScroll={Alert.alert('i am call')}> */}
                   <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
                   <TouchableOpacity onPress={()=>this.props.navigation.navigate("AboutFarm")}>
@@ -166,6 +210,29 @@ class HomeScreen extends Component {
                 {/* </ScrollView> */}
         </View>
       )
+    }
+  }
+
+  renderProdOnCheckDelivery(){
+    if(this.props.shippingPincode != null){
+        return(
+			<View style={{flex:1}}>
+            	{this.renederItemType()}
+            	{this.renderSourceSection()}
+			</View>
+        )
+    }else{
+        return(
+            <View style={{flex:1,width:"90%",alignSelf:'center'}}>
+				<Image source={constants.image.delivery} style={{width:"90%",height:"50%",alignSelf:'center',marginTop:constants.vw(60)}}/>
+				<View style={{flex:2}}>
+					<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(16),textAlign:'center'}}>Sorry ,Delivery is not availbale in your selected area</Text>
+					<TouchableOpacity style={{alignSelf:'center',marginTop:20}}onPress={()=>this.props.navigation.navigate("GoogleLocation")}>
+					<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18),textAlign:'center',color:constants.Colors.color_intro}}>Check Another Area</Text>
+					</TouchableOpacity>
+				</View>
+            </View>
+        )
     }
   }
 
@@ -208,17 +275,11 @@ class HomeScreen extends Component {
               </TouchableOpacity>
             )}
           />
-          {/* </View> */}
           <View style={styles.MainContainer}>
-          
             {this._ShowError()}
             {this._loadLoader()}
-            {this.renederItemType()}
-            {/* <ScrollView style={{flex: 1}} onScroll={this._onScroll}> */}
-            {this.renderSourceSection()}
-            {/* </ScrollView> */}
+            {this.renderProdOnCheckDelivery()}
           </View>
-          {/* </ScrollView> */}
         </View>
       </ImageBackground>
     )
@@ -295,6 +356,7 @@ const mapStateToProps = state => ({
   itemData: state.data.productData,
   productName: state.data.searchProdName,
   selectAddress:state.data.selectAddress,
+  shippingPincode:state.data.shippingPincode,
   cartItemSync:state.data.cartItemSync,
 });
 
@@ -308,6 +370,7 @@ const mapDispatchToProps = dispatch => ({
   searchProductType: () => dispatch(searchProductType()),
   shippingAddress: (data) =>dispatch({ type : 'ASYNC_LOCATION_FETCHED',  address : data.address , shipping_cost:data.shipping_cost, pincode:data.pincode}),
   getCartItem:()=>dispatch(getCartItem()),
+  checkDelivery: (data) => dispatch(checkDelivery(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

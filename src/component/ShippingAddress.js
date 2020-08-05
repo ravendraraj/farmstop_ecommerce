@@ -24,6 +24,7 @@ class shippingAddress extends Component{
             country:'India',
             deliverType:'',
             displayForm:false,
+            editAddress:0,
         };
     }
 
@@ -131,7 +132,7 @@ class shippingAddress extends Component{
                         address = str;
                     }
 
-                    this.setState({displayForm:true,name:'',query:address,deliverType:'',pincode:addressItem.zipcode,houseOrFlat:house});
+                    this.setState({displayForm:true,name:'',query:address,deliverType:'',pincode:addressItem.zipcode,houseOrFlat:house,editAddress:parseInt(addressId)});
              }});
 
         }else{
@@ -253,11 +254,12 @@ class shippingAddress extends Component{
             addressObject["houseOrFlat"] = this.state.houseOrFlat;
             addressObject["country"] = this.state.country;
             addressObject["deliverOn"] = this.state.deliverType;
+            addressObject["isUpdateAddress"] = this.state.editAddress;
         
         if(this.state.name !='' && this.state.pincode !=''  && this.state.query !='' && this.state.deliverType !='' && this.state.houseOrFlat !=""){
 
             this.props.addNewAddress(addressObject);
-            this.setState({ name:'' , pincode :'', query:'' ,deliverType:'',houseOrFlat:''});
+            this.setState({ name:'' , pincode :'', query:'' ,deliverType:'',houseOrFlat:'',editAddress:0});
             
         }else if(this.state.pincode ==''){ 
             ToastAndroid.showWithGravity("Delivery not available given pincode ", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -277,7 +279,7 @@ class shippingAddress extends Component{
         return(
             <View style={styles.container}>
                 <SafeAreaView>
-                    <View style={{width:"90%",alignSelf:'center'}}>
+                    <View style={{width:"90%",alignSelf:'center',marginBottom:100}}>
                         <View style={{marginTop:10}}>
                             <TextHeading title="My account" fontsize={25}/>
                         </View>

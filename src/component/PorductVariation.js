@@ -168,7 +168,10 @@ class PorductVariation extends Component {
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         {/* <TouchableOpacity onPress={()=>this._getItemType(item.id)}> */}
                         <View>
-                            <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                            <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
+                                <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                            </TouchableOpacity>
+                            
                             <TouchableOpacity style={{position:'absolute',top:-4,right:0}}
                             onPress={()=>this._addinWishList(item)}>
                                 <Material name={item.isMyWish} color={constants.Colors.color_grey} size={25}/>

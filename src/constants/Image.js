@@ -54,7 +54,7 @@ export default {
   successfullyPlaceOrder:require('../images/farmstop/successfullyPlaceOrder.png'),
   notFoundPage:require('../images/farmstop/notFoundPage.png'),
   noInternet:require('../images/farmstop/noInternet.png'),
-
+  delivery:require('../images/farmstop/deliveryPic.png'),
   //payment
   visaIcon:require('../images/farmstop/visa.png'),
   masterIcon:require('../images/farmstop/symbol.png'),

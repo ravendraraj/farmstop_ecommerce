@@ -628,7 +628,7 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
 }
 
 export const addNewShippingAddress= (userData) => (dispatch,getState) => {
-    // dispatch({type : 'LOADING'});
+    dispatch({type : 'LOADING'});
     
     let url = weburl + 'api-setUserAddess/';
     var data = new FormData();
@@ -638,6 +638,7 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     data.append("email", getState().data.authEmail);
     data.append("userId", getState().data.authUserID);
     data.append("address", userData["houseOrFlat"]+","+userData["address"]);
+    data.append("updatable", userData["isUpdateAddress"]);
 
     let post_req = {
         method: 'POST',
@@ -649,6 +650,7 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     }
 
     console.log(post_req);
+
     fetch(url,post_req)
     .then(res =>{
         res.json()
@@ -738,8 +740,11 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
 // Note: remove this async on logout and set again when perfome login
 export const setCartItemLocal=  (data) => async(dispatch,getState) => {
 
-     await AsyncStorage.setItem('userCart', JSON.stringify(getState().data.addedItems));
-    //  console.log("Cart Local Stroage Update");
+     if(getState().data.authUserID == ""){
+         await AsyncStorage.setItem('userCart', JSON.stringify(getState().data.addedItems));
+    }else{
+     console.log("Cart Local Stroage Update");
+    }
 }
 
 export const getCartItem=  (data) => async(dispatch,getState) => {
@@ -959,7 +964,7 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
                     'Content-Type': 'multipart/form-data',
                 }
             }
-            console.log(url);
+            console.log(post_req);
             fetch(url ,post_req)
             .then(res =>{
                 res.json()

@@ -6,3 +6,11 @@ export const generateOtp =()=>{
     return (Math.floor(Math.random() * 1000000));
 }
 
+export const removeTags=(str)=> {
+	if ((str===null) || (str==='')){
+		return str;
+	}else{
+		str = str.toString();
+		return str.replace( /(<([^>]+)>)/ig, '');
+	}
+}

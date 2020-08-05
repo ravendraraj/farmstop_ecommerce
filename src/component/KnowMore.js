@@ -6,7 +6,7 @@ import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import SocialLink from './SocialLinks'
 //helper function
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,removeTags} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
 import {navigate} from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
@@ -169,7 +169,7 @@ class KnowMore extends Component {
                     </TouchableOpacity>
                     </View>
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:20}}>{prodDesc}</Text>
+                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:20}}>{removeTags(prodDesc)}</Text>
                     </View>
 
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>

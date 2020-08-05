@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid } from 'react-native'
+import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import {checkCouponCode ,getCartItem ,setVariationInCart,setQtyInCart,setCartItemLocal} from '../lib/api'
@@ -13,6 +13,7 @@ import {Picker} from '@react-native-community/picker';
 
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
+import RazorpayCheckout from 'react-native-razorpay';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -82,8 +83,12 @@ class MyCart extends Component {
     }
 
     getCouponCodeDetails(){
-        if(this.state.couponCode != ''){
-            this.props.checkCouponCode({code:this.state.couponCode});
+        
+        let coupon_Code =this.state.couponCode;
+        console.log(coupon_Code);
+        if(coupon_Code != ''){
+            this.props.checkCouponCode({code:coupon_Code});
+            // this.couponCodeText.clear();
         }else{
             ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -119,11 +124,14 @@ class MyCart extends Component {
                         <Text style={{fontFamily:bold,fontSize:20}}>You have a coupon</Text>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.couponImg} style={{width:60,height:40,marginTop:15}}/>
-                            <CouponTextInput placeholder="Enter coupon code" value={this.state.couponCode} onChangeText={(text)=>this.setState({couponCode:text})} onSubmitEditing={()=>this.getCouponCodeDetails()}/>
+                            <CouponTextInput placeholder="Enter coupon code" 
+                                value={this.state.couponCode}
+                                onChangeText={(text)=>this.setState({couponCode:text})}
+                                onSubmitEditing={()=>this.getCouponCodeDetails()}/>
                         </View>
                         <View style={{flex:1,alignSelf:'center',width:'90%'}}>
                             <TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>
-                                <Text style={styles.checkout}>Checkout  Rs. {total} </Text>
+                                <Text style={styles.checkout}>Checkout  Rs. {total} </Text> 
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -132,7 +140,29 @@ class MyCart extends Component {
     }
     
     redirectOnPaymentPage(){
-        this.props.navigation.navigate("PaymentInfo");
+        var options = {
+        description: 'Credits towards consultation',
+        image: "https://www.farmstop.in/assets/images/farmstop.png",
+        currency: 'INR',
+        key:'rzp_test_RrT5clklzb5HFt',
+        amount: 50*100,
+        name: 'FARMSTOP',
+        prefill: {
+          email: 'gaurav.kumar@example.com',
+          contact: '9191919191',
+          name: 'Gaurav Kumar'
+        },
+        theme: {color: 'white'}
+      }
+
+      RazorpayCheckout.open(options).then((data) => {
+        // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+      }).catch((error) => {
+        // handle failure
+        console.log(error);
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
     }
 
     renderCouponMsg(){
@@ -163,7 +193,6 @@ class MyCart extends Component {
         }else{
             ToastAndroid.showWithGravity("Quantity of product not become 0", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
-        
     }
 
     async setVariationType(variationValue, prod_id ,selectedVariationID){
@@ -178,7 +207,6 @@ class MyCart extends Component {
         });
 
         if(!find){
-            // this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
             var data = [];
             data["prod_id"] = prod_id;
             data["variationValue"] = variationValue;
@@ -205,6 +233,7 @@ class MyCart extends Component {
                 <View>
                 <FlatList
                 data={ItemList}
+                keyboardShouldPersistTaps="handled"
                 renderItem={({ item }) => (
                     <View style={{marginBottom:10}}>
                         <View style={{flexDirection:'row',justifyContent:'space-around'}} >
@@ -258,16 +287,19 @@ class MyCart extends Component {
                     <View style={{width:'100%',height:20,marginBottom:10}}>
                     </View>
                 )}
+
                 ItemSeparatorComponent={()=>(
                     <View style={{alignSelf:'center',height: 2,width: "90%",backgroundColor: "#000",marginBottom:10,
                     backgroundColor:constants.Colors.color_grey}}>
                     </View>
                 )}
-                ListFooterComponent={()=>(
-                    this.renederCartDetails()
-                )}
                 
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => (item.id).toString()}
+
+                ListFooterComponent={
+                    this.renederCartDetails()
+                }
+                
                 />
                 </View>
             )
@@ -340,6 +372,11 @@ const styles = StyleSheet.create({
 		fontSize:constants.vw(25),
 		padding: 20,
 		fontFamily:bold
+    },
+    couponText:{
+        fontFamily:constants.fonts.Cardo_Regular,
+        paddingTop: constants.vh(25),
+        fontSize: constants.vw(18)
     }
   });
 

@@ -1,5 +1,5 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,searchProductList:[],cartItemSync:false ,addressList:[]};
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -22,9 +22,20 @@ const data = (state = initialDataState, action) => {
                 profile:'',
                 my_wish_list:[],
                 addedItems:[],
-                authName:''
+                authName:'',
+                total:0,
+                selectAddress:null,
+                shippingCharges:null,
+                shippingPincode:null,
             }
+        
         case 'FETECH_ADDRESS_LIST':
+        return{
+            ...state,
+            addressList: action.addressList,
+        }
+
+        case 'NEW_ADDRESS_SAVED':
         return{
             ...state,
             addressList: action.addressList,

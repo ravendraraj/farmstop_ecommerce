@@ -96,6 +96,7 @@ export const PasscodeTextInput = (props) => {
     return (
         <View>
             <TextInput
+                 {...props}
                 ref={(r) => { props.inputRef && props.inputRef(r) }} />
         </View>
     );
