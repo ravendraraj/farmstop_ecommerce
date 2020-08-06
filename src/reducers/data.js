@@ -1,5 +1,6 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]};
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
+,defaultShipingAddress:null,coupon_id:null};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -8,6 +9,14 @@ const data = (state = initialDataState, action) => {
             ...state,
             appIntro:action.data
         };
+
+        case 'ORDER_SUCCESSFULL':
+        return{
+            ...state,
+            total:0,
+            shippingCharges:null,
+            addedItems:[]
+        }
 
         case 'LOGOUT':
             return{
@@ -27,12 +36,20 @@ const data = (state = initialDataState, action) => {
                 selectAddress:null,
                 shippingCharges:null,
                 shippingPincode:null,
+                defaultShipingAddress:null,
             }
         
         case 'FETECH_ADDRESS_LIST':
         return{
             ...state,
             addressList: action.addressList,
+        }
+
+        case 'SAVED_DEFAULT_SHIPPING_ADDRESS':
+        return{
+            ...state,
+            defaultShipingAddress: action.addressId,
+            shippingCharges:action.shipping_cost,
         }
 
         case 'NEW_ADDRESS_SAVED':
@@ -586,7 +603,8 @@ const data = (state = initialDataState, action) => {
             return{
                 ...state,
                 coupon_msg:action.payload,
-                coupon_value:action.coopunValue
+                coupon_value:action.coopunValue,
+                coupon_id:action.coupon_id,
 
             }
 

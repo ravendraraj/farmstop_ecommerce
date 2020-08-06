@@ -5,8 +5,9 @@ import Autocomplete from 'react-native-autocomplete-input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
-import {getAppartment ,checkDeliveryOnPincode ,getUserAddressList ,addNewShippingAddress} from '../lib/api'
+import {getAppartment ,checkDeliveryOnPincode ,getUserAddressList ,addNewShippingAddress ,selectShippingAddress} from '../lib/api'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Loader } from '../customElement/Loader'
 
 class shippingAddress extends Component{
     
@@ -46,6 +47,15 @@ class shippingAddress extends Component{
         }
     }
 
+
+    _loadLoader() {
+    if (this.props.animate) {
+      return (
+        <Loader />
+      )
+    }
+  }
+
     findAppartment(query) {
 		//method called everytime when we change the value of the input
 		if (query === '' || query.length <= 2) {
@@ -71,21 +81,32 @@ class shippingAddress extends Component{
 		//this.props.navigation.navigate('ProductType',{keyword:key});
 	}
 
+    setDilevryAddress(addressId){
+        if(addressId !=""){
+            this.props.selectShippingAddress(addressId);
+        }else{
+            ToastAndroid.showWithGravity("Something went wrong,Please try again", ToastAndroid.SHORT, ToastAndroid.TOP);    
+        }
+    }
+
     renderAddresList(){
         if(this.props.addressList.length >0){
 
             let userAddressList = this.props.addressList;
             return(
-                userAddressList.map((addressRow,index)=>{
+                userAddressList.map((addressRow,id)=>{
                     return (
-                        <View style={styles.addressContainer}>
+                        <View style={this.props.defaultShipingAddress == null ?styles.addressContainer :styles.defaultAddress}>
                             <Text style={styles.addressLine}>
                                 {addressRow.address},
                             </Text>
                             <Text style={styles.addressLine}>
                                 {addressRow.district},{addressRow.zipcode},{addressRow.country}
                             </Text>
-                            <View style={{width:constants.vw(110),alignSelf:'flex-end'}}>
+                            <View style={{flexDirection:'row',justifyContent:'space-between',alignSelf:'flex-end'}}>
+                                <TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
+                                    <Text style={styles.deliveryBtntext}>Delivery at this Address</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.editBtn} onPress={()=>this.editAddress(addressRow.id)}>
                                     <Text style={styles.editBtntext}>Edit Address</Text>
                                 </TouchableOpacity>
@@ -287,6 +308,7 @@ class shippingAddress extends Component{
                         {this.renderFormOnKeyEvent()}
                         {this.renderAddAnotherAddressBtn()}
                         {this.renderAddresList()}
+                        {this._loadLoader()}
                         </ScrollView>
                     </View>
                 </SafeAreaView>
@@ -305,6 +327,14 @@ const styles = StyleSheet.create({
         borderWidth:2,
         borderRadius:5,
         borderColor:constants.Colors.color_grey,
+        marginTop:10,
+        marginBottom:10,
+        padding:10
+    },
+    defaultAddress:{
+        borderWidth:2,
+        borderRadius:5,
+        borderColor:constants.Colors.color_heading,
         marginTop:10,
         marginBottom:10,
         padding:10
@@ -373,15 +403,28 @@ const styles = StyleSheet.create({
         fontFamily:constants.fonts.Cardo_Bold,
         color:constants.Colors.color_BLACK,
         fontSize:constants.vw(20)
+    },
+    deliveryBtntext:{
+        fontFamily:constants.fonts.Cardo_Bold,
+        color:constants.Colors.color_BLACK,
+        fontSize:constants.vw(16)
+    },
+    deliveryBtn:{
+        paddingLeft:constants.vw(10),
+        paddingRight:constants.vw(10),
+        marginTop:constants.vw(15)  
     }
 })
 
 const mapStateToProps = state => ({
+    animate: state.indicator,
+    error: state.error.err,
     authUserID : state.data.authUserID,
     addressList:state.data.addressList,
     coupon_msg : state.data.coupon_msg,
     shippingCharges:state.data.shippingCharges,
     apartmentList : state.data.apartmentList,
+    defaultShipingAddress : state.data.defaultShipingAddress
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -390,6 +433,7 @@ const mapDispatchToProps = dispatch => ({
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
     checkDeliveryOnPincode:(data)=>dispatch(checkDeliveryOnPincode(data)),
     addNewAddress:(data)=>dispatch(addNewShippingAddress(data)),
+    selectShippingAddress:(data)=>dispatch(selectShippingAddress(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(shippingAddress);

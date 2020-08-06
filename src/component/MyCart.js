@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
-import {checkCouponCode ,getCartItem ,setVariationInCart,setQtyInCart,setCartItemLocal} from '../lib/api'
+import {checkCouponCode ,getCartItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Loader} from '../customElement/Loader'
@@ -142,43 +142,53 @@ class MyCart extends Component {
     
     redirectOnPaymentPage(){
 
-        if(this.props.authUserID != null && this.props.authUserID != ""){
+        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != null){
                 let subtotal = this.props.subtotal;
                 let tax = 0;
                 let deliveryCharges = this.state.deliveryCharges;
                 let discount = this.state.discount;
                 let total = subtotal+parseFloat(deliveryCharges)+tax;
-
-                var options = {
-                description: 'Credits towards consultation',
-                image: "https://www.farmstop.in/assets/images/farmstop.png",
-                currency: 'INR',
-                key:razor_api_key,
-                amount: (total*100),
-                name: 'FARMSTOP',
-                prefill: {
-                  email: this.props.authEmail,
-                  contact: this.props.authMobile,
-                  name: this.props.authName,
-                },
-                theme: {color: constants.Colors.color_intro}
-              }
-
-              RazorpayCheckout.open(options).then((data) => {
-                // handle success
-                console.log(data);
-                // alert(`Success: ${data.razorpay_payment_id}`);
-                if(data.razorpay_payment_id !="")
-                {
-                    this.props.navigation.navigate("OrderSuccuess");
+                let userType = "";
+                
+                if(this.props.login_type == "MANUAL"){
+                    userType = 1;
+                }else if(this.props.login_type == "FACEBOOK"){
+                    userType = 2;
+                }else{
+                    userType = 3;
                 }
-              }).catch((error) => {
-                // handle failure
-                console.log(error);
-                // alert(`Error: ${error.code} | ${error.description}`);
-              });
+
+                var orderDetails = [];
+                    orderDetails['user_id'] = this.props.authUserID;
+                    orderDetails['user_type'] = userType;
+                    orderDetails['address_id'] = this.props.shippingAddress;
+                    orderDetails['usr_mob'] = this.props.authMobile;
+
+                    orderDetails['subtotal'] = subtotal;
+                    orderDetails['shhipingCost'] = deliveryCharges;
+                    
+                    if(this.props.coupon_id != null){
+                        orderDetails['coupon_id'] = this.props.coupon_id;
+                    }else{
+                        orderDetails['coupon_id'] = "";
+                    }
+
+                    orderDetails['total_cost'] = total;
+                    orderDetails['paymentOption'] = "";
+                    orderDetails['status'] = 0;
+
+                    orderDetails['email'] = this.props.authEmail;
+                    orderDetails['contact'] = this.props.authMobile;
+                    orderDetails['username'] = this.props.authName;
+
+                    this.props.checkOut(orderDetails);
+                
       }else{
-            this.props.navigation.navigate("NotLogin");
+            if(this.props.authUserID == null && this.props.authUserID == "" ){
+                this.props.navigation.navigate("NotLogin");
+            }else if(this.props.shippingAddress == null){
+                this.props.navigation.navigate("ShippingAddress");
+            }
       }
     }
 
@@ -408,6 +418,9 @@ const mapStateToProps = state => ({
     authUserID :state.data.authUserID,
     authMobile :state.data.authMobile,
     authName :state.data.authName,
+    shippingAddress : state.data.defaultShipingAddress,
+    login_type : state.data.login_type,
+    coupon_id: state.data.coupon_id
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -419,6 +432,7 @@ const mapDispatchToProps = dispatch => ({
     checkCouponCode :(data)=>dispatch(checkCouponCode(data)),
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
+    checkOut:(data)=>dispatch(checkOut(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

@@ -21,6 +21,13 @@ const indicator = (state = false, action) => {
         case "MANAGE-CART-QTY":
         case "LOGOUT":
         case "NEW_ADDRESS_SAVED":
+        case "NETWORK_ERROR":
+        case "EXCEPTION_ERROR_SUBMIT":
+        case"SAVED_DEFAULT_SHIPPING_ADDRESS":
+        case "ORDER_SUCCESSFULL":
+        case "FETECH_ADDRESS_LIST":
+        case "NOT_DILEVER_ON_PINCODE":
+        case "DILEVER_ON_PINCODE":
             return false;
         default :
             return state;

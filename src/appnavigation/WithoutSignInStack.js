@@ -27,7 +27,7 @@ import pageNotFound404 from '../component/pageNotFound404'
 import internetError from '../component/internetError'
 import PaymentInfo from '../component/PaymentInfo'
 import ShippingAddress from '../component/ShippingAddress'
-//import WishTabNav from './WishTabNav'
+import WishTabNav from './WishTabNav'
 
 const RootStack = createStackNavigator();
 
@@ -52,6 +52,15 @@ const WithoutSignInStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="ProductType" component={TabNavProdvariation}/>
+
+            <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="WishList" component={WishTabNav}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({

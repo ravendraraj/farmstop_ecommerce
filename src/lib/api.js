@@ -1,7 +1,10 @@
 import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import AsyncStorage from '@react-native-community/async-storage';
-
+import constStrings from '../constants/constStrings'
+import RazorpayCheckout from 'react-native-razorpay';
+import {razor_api_key} from '../constants/key';
+import constants from '../constants'
 
 export const logout = (data) => async(dispatch,getState) => {
 
@@ -527,7 +530,7 @@ export const checkCouponCode= (data) => (dispatch,getState) => {
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value});
+                dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value,coupon_id:response.coupon_id});
             }else{
                 dispatch({ type : 'ERROR_CODE', payload : response.message});
             }
@@ -572,7 +575,7 @@ export const getAppartment= (data) => (dispatch,getState) => {
 }
 
 export const getUserAddressList= (data) => (dispatch,getState) => {
-    // dispatch({type : 'LOADING'});
+    dispatch({type : 'LOADING'});
     let url = weburl + 'api-getUserAddess/'+getState().data.authUserID;
     // let url = weburl + 'api-getUserAddess/37';
     console.log(url);
@@ -586,21 +589,25 @@ export const getUserAddressList= (data) => (dispatch,getState) => {
                 dispatch({ type : 'FETECH_ADDRESS_LIST', payload : response.message, addressList:response.addressList});
             }else{
                 //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
             }
         })
         .catch( err => {
             //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'});
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+
         })
     })
     .catch( err => {
         //dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         console.log("NetWork Error");
     });
 
 }
 
 export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
-    // dispatch({type : 'LOADING'});
+    dispatch({type : 'LOADING'});
     let url = weburl + 'api-check-delivery-on-pincode/'+data.pincode;
     console.log(url);
 
@@ -617,11 +624,12 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
         })
         .catch( err => {
   //          dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
         })
     })
     .catch( err => {
 //        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.log("NetWork Error");
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         navigate("internetError");
     });
 
@@ -674,6 +682,51 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
         navigate("internetError");
     });
 
+}
+
+export const selectShippingAddress =(address)=>(dispatch,getState)=>{
+    let url = weburl + 'api-check-deliveryByZipcode?zipcode=';
+    dispatch({type : 'LOADING'});
+    console.log(address);
+    var userShipingAddress =[];
+        userShipingAddress["defualtShippingAdd"] = address;
+    var pincode = "";
+
+    if(getState().data.addressList.length >0){
+        getState().data.addressList.map((item)=>{
+            if(item.id == address)
+            {
+                pincode = item.zipcode;
+            }
+        })
+    }
+    
+    if(pincode != ""){
+        url +=pincode;
+        console.log(url);
+        fetch(url).then(res =>{
+            res.json()
+            .then(response => {
+                //console.log(response);
+                if(response.status == "1"){
+                    AsyncStorage.setItem('defualtShippingAdd', JSON.stringify(userShipingAddress));
+                    dispatch({type:'SAVED_DEFAULT_SHIPPING_ADDRESS',addressId :address,shipping_cost:response.result["shipping_cost"]});
+                }else{
+                    dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.ADDRESS_UPDATE_FAILED});
+                }
+            })
+            .catch( err => {
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+            })
+        })
+        .catch( err => {
+            dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+            console.log("NetWork Error");
+            navigate("internetError");
+        });
+    }else{
+        dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.ADDRESS_UPDATE_FAILED});
+    }
 }
 
 /** %%%%%%%%%%%%%%%%%%%%%%%%%%%% start server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -1053,3 +1106,131 @@ export const setQtyInCart = (prodData) => (dispatch,getState) => {
      }  
  }
 /** %%%%%%%%%%%%%%%%%%%%%%%%%%%% end server and locat cart %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+
+/***************************************Check out *********************************************/
+export const checkOut= (checkOutData) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let orderCreateUrl = weburl + 'api-create-order-id/';
+    console.log(orderCreateUrl);
+    console.log(checkOutData);
+
+    var checkOutFormData = new FormData();
+         checkOutFormData.append("user_id", checkOutData['user_id']);
+         checkOutFormData.append("user_type", checkOutData['user_type']);
+         checkOutFormData.append("address_id", checkOutData['address_id']);
+         checkOutFormData.append("usr_mob", checkOutData['usr_mob']);
+         checkOutFormData.append("subtotal", checkOutData['subtotal']);
+         checkOutFormData.append("shhipingCost", checkOutData['shhipingCost']);
+         checkOutFormData.append("coupon_id", checkOutData['coupon_id']);
+         checkOutFormData.append("total_cost", checkOutData['total_cost']);
+
+         checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
+         checkOutFormData.append("status", checkOutData['status']);
+
+         let post_req = {
+             method: 'POST',
+             body: checkOutFormData,
+             headers: {
+                 Accept: 'application/json',
+                 'Content-Type': 'multipart/form-data',
+             }
+        }
+
+    fetch(orderCreateUrl,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                console.log("order created");
+                console.log(response.orderData)
+                // dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value,coupon_id:response.coupon_id});
+                    var options = {
+                        description: 'Credits towards consultation',
+                        image: "https://www.farmstop.in/assets/images/farmstop.png",
+                        currency: 'INR',
+                        key:razor_api_key,
+                        amount: response.orderData["amount"],
+                        name: 'FARMSTOP',
+                        order_id: response.orderData['razor_orderId'],
+                        prefill: {
+                        email: checkOutData['email'],
+                        contact: checkOutData['contact'],
+                        name: checkOutData['username'],
+                    },
+                    theme: {color: constants.Colors.color_intro,
+                            fontFamily:constants.fonts.Cardo_Regular,
+                            backgroundColor:'white',
+                        }
+                    }
+
+                    RazorpayCheckout.open(options).then((data) => {
+                    // handle success
+                    console.log(data);
+                    // alert(`Success: ${data.razorpay_payment_id}`);
+
+                    if(data.razorpay_payment_id !="")
+                    {
+                        // this.props.navigation.navigate("OrderSuccuess");
+                        let orderVerifyUrl = weburl + 'api-verify-order/';
+                        
+                        let verifyData= new FormData();
+                        verifyData.append("user_id", checkOutData['user_id']);
+                        verifyData.append("razorpay_order_id", data.razorpay_order_id);
+                        verifyData.append("razorpay_signature", data.razorpay_signature);
+                        verifyData.append("razorpay_payment_id", data.razorpay_payment_id);
+                        verifyData.append("foramstopOrderId", response.orderData['razor_orderId']);
+            
+                        let verify_post_req = {
+                             method: 'POST',
+                             body:verifyData,
+                             headers: {
+                                 Accept: 'application/json',
+                                 'Content-Type': 'multipart/form-data',
+                             }
+                        }                                  
+                            console.log(orderVerifyUrl);
+                            fetch(orderVerifyUrl ,verify_post_req).then(res =>{
+                                res.json()
+                                .then(response => {
+                                    console.log(response);
+                                    if(response.status == "1"){
+                                        dispatch({type:'ORDER_SUCCESSFULL'});
+                                        navigate("OrderSuccuess");        
+                                    }else{
+                                        dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.PAYMENT_FAILE_MESSAGE});
+                                    }
+                                })
+                                .catch( err => {
+                                    dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+
+                                })
+                            })
+                            .catch( err => {
+                                dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+                                console.log("NetWork Error");
+                                navigate("internetError");
+                            });
+
+                    }
+                  }).catch((error) => {
+                    // handle failure
+                    console.log(error);
+                    // alert(`Error: ${error.code} | ${error.description}`);
+                  });
+
+            }else{
+                dispatch({ type : 'ERROR_CODE', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        console.log("NetWork Error");
+    });
+
+}

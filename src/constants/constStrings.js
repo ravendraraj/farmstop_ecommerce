@@ -7,5 +7,7 @@ const constStrings = {
   OTP_CONFIRM_HEADER: `Awesome!`,
   OTP_CONFIRM_TEXT: `Your account has been verified successfully.`,
   PAYMENT_SUCCESS_MESSAGE: `Your transaction has been confirmed.`,
+  PAYMENT_FAILE_MESSAGE: `Your transaction has been failed.`,
+  ADDRESS_UPDATE_FAILED:'Address is not saved ,Please try again',
 }
 export default constStrings;
