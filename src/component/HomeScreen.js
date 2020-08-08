@@ -164,7 +164,7 @@ class HomeScreen extends Component {
         <FlatList
           data={ItemList}
           renderItem={({ item }) => (
-            <View style={{ flex: 1, flexDirection: 'column', margin: 4, alignItems: 'center' }}>
+            <View style={styles.homeProdCat}>
               <TouchableOpacity onPress={() => this._getItemType(item.id)}>
                 <Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />
                 <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold }}>{item.title}</Text>
@@ -295,6 +295,19 @@ const styles = StyleSheet.create({
     // margin: 10,
     backgroundColor: constants.Colors.color_WHITE,
     opacity: .9
+  },
+  homeProdCat:{
+    flex: 1, 
+    flexDirection: 'column', 
+    marginTop: constants.vw(6),
+    marginLeft: constants.vw(16), 
+    marginRight: constants.vw(16), 
+    marginBottom: constants.vw(6),
+    alignItems: 'center',
+    borderWidth:2,
+    borderColor:'#D1D0CE',
+    borderRadius:10,
+    paddingBottom:constants.vw(10)
   },
   MainContainer: {
     justifyContent: 'center',

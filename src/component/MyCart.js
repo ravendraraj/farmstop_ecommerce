@@ -39,7 +39,7 @@ class MyCart extends Component {
     componentDidMount(){
         //console.log("I am Call")
         //this.props.getItemVariation({start:0,end:((totalprod-1)*2)});
-        this.props.removeloader();
+        // this.props.removeloader();
         
         if(this.props.shippingCost != null){
             // console.log("dfsfdfdsfsdfdsfdsfsdf");

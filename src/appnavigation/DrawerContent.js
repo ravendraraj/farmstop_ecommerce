@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 import constants from '../constants'
 import image from "../constants/Image"
 import {logout} from "../lib/api"
+import ImagePicker from 'react-native-image-picker';
+import {weburl} from '../constants/url'
 
 class DrawerContent extends Component{
     constructor(props){
@@ -16,9 +18,78 @@ class DrawerContent extends Component{
             profile:null,
             displayMyOrderChild:false,
             displayMyAccChild:false,
-            
+            imageUri:''
         }
     }
+
+     chooseFile = () => {
+        var options = {
+          title: 'Select Image',
+          customButtons: [
+            { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+          ],
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.showImagePicker(options, response => {
+          console.log('Response = ', response);
+    
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            let source = response;
+            // You can also display the image using data:
+            // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+            // this.setState({
+            //   filePath: source,
+            // });
+            this.setState({imageUri:source.uri})
+            // console.log(source);
+
+            let photo={
+                temp_name:response.uri,
+                type:'image/jpeg',
+                name:response.fileName
+            }
+
+            var formData = new FormData(); 
+            formData.append("file", photo);
+
+            let post_req = {
+                method: 'POST',
+                body: photo,
+                headers: {
+                  Accept: 'application/json',
+                 'Content-Type': 'multipart/form-data',
+                }
+            }
+
+            let url = weburl+'api-uploadProfile';
+            
+            console.log("post req" ,post_req);
+            console.log(url);
+
+            fetch(url,post_req)
+                .then(response => response.json())
+                .then(success => {
+                  console.log(response)
+                })
+                .catch(error => console.log(error)
+              );
+            }
+
+
+            
+        });
+      };
+    
 
     async componentDidMount() {
         // Execute the created function directly
@@ -51,12 +122,11 @@ _profileRender(){
     }else{
         return(
             <View>
-                <TouchableOpacity style={styles.uploadImage}>
-
+                <TouchableOpacity style={styles.uploadImage} onPress={this.chooseFile.bind(this)}>
+                    
                     <Text style={styles.profileText}>Upload</Text>
                     <Text style={styles.profileText}>your</Text>
                     <Text style={styles.profileText}>image</Text>
-
                 </TouchableOpacity>
             </View>
         )
@@ -108,7 +178,7 @@ renderMyOrder(){
     if(this.state.displayMyOrderChild){
         return(
             <View style={{marginLeft:25}}>
-                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('pageNotFound')}>
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('MyOrderTab')}>
                     <Text style={styles.MenueLable}>Track Your Order</Text>
                 </TouchableOpacity>
             </View>
@@ -145,17 +215,20 @@ async _logOutEvent(){
  render(){
 
      return(
-         <View style={{flex:1,marginLeft:10}}>
+         <View style={{flex:1}}>
              <ScrollView>
-                 <View style={{flexDirection:"row",marginTop:constants.vw(20),marginBottom:constants.vw(20)}}>
+                 <View style={{flexDirection:"row",paddingTop:constants.vw(20),paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_intro,paddingLeft:10}}>
                     {this._profileRender()}
                     <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
                         <Text style={styles.userName}>Hello</Text>
                         <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
                     </View>
                 </View>
-                <View>
+                <View style={{paddingLeft:0,paddingTop:10}}>
+                    <View style={{borderBottomWidth:2,borderColor:constants.Colors.color_intro,paddingLeft:10}}>
                     {this._renderSignUpAndLogin()}
+                    </View>
+                    <View style={{paddingLeft:10}}>
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
                         <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
                         <Text style={styles.MenueLable}>My Account</Text>
@@ -200,6 +273,7 @@ async _logOutEvent(){
                         <Text style={styles.MenueLable}>Contact Us</Text>
                     </TouchableOpacity>
                     {this.renderLogout()}
+                    </View>
                 </View>
              </ScrollView>
         </View>
@@ -246,13 +320,16 @@ const styles = StyleSheet.create({
         flex:1,
         width:constants.vh(100),
         height:constants.vh(100),
-        borderWidth:1,borderColor:'red',
+        borderWidth:1,borderColor:constants.Colors.color_WHITE,
         borderRadius:constants.vh(50),
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor:constants.Colors.color_WHITE,
+
     },
     userName:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:constants.vh(20)
+        fontSize:constants.vh(20),
+        color:constants.Colors.color_WHITE
     },
     childMenuTab:{
         flexDirection:'row',

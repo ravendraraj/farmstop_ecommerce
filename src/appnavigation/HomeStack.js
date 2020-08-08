@@ -30,6 +30,9 @@ import PaymentInfo from '../component/PaymentInfo'
 //tab navigation
 import TabNavProdvariation from './TabNavProdvariation'
 import WishTabNav from './WishTabNav'
+import MyOrderTab from './MyOrderTab'
+import TrackOrder from '../component/TrackOrder'
+
 const RootStack = createStackNavigator();
 
 const HomeStack = ({navigation}) => (
@@ -77,6 +80,15 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="OrderSuccuess" component={OrderSuccuess}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="TrackOrder" component={TrackOrder}/>
 
         <RootStack.Screen 
             options={({ navigation }) => ({
@@ -196,6 +208,16 @@ const HomeStack = ({navigation}) => (
                         headerTransparent:false,
                     })}
                     name="WishList" component={WishTabNav}/>
+
+        <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="MyOrderTab" component={MyOrderTab}/>
+                    
         <RootStack.Screen 
                     options={({ navigation }) => ({
                         headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,

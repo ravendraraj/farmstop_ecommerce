@@ -28,6 +28,8 @@ import internetError from '../component/internetError'
 import PaymentInfo from '../component/PaymentInfo'
 import ShippingAddress from '../component/ShippingAddress'
 import WishTabNav from './WishTabNav'
+import MyOrderTab from './MyOrderTab'
+import TrackOrder from '../component/TrackOrder'
 
 const RootStack = createStackNavigator();
 
@@ -83,6 +85,17 @@ const WithoutSignInStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="OrderSuccuess" component={OrderSuccuess}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerTitle: null,
+                headerLeft:false,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="TrackOrder" component={TrackOrder}/>
             
             <RootStack.Screen 
             options={({ navigation }) => ({
@@ -94,6 +107,15 @@ const WithoutSignInStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="pageNotFound" component={pageNotFound404}/>
+
+            <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="MyOrderTab" component={MyOrderTab}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({

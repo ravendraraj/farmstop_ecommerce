@@ -9,6 +9,7 @@ const Colors = {
   color_youtube:'#FF0000',
   color_linkedin:'#0e76a8',
   color_blue:'#336C95',
+  color_lineGrey:'#B6B6B4'
 
 };
 export default Colors;

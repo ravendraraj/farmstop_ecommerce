@@ -1,6 +1,6 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
     knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
-,defaultShipingAddress:null,coupon_id:null};
+,defaultShipingAddress:null,coupon_id:null,orderList:[]};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -16,6 +16,12 @@ const data = (state = initialDataState, action) => {
             total:0,
             shippingCharges:null,
             addedItems:[]
+        }
+
+        case 'FETCH_ORDER_LIST':
+        return{
+            ...state,
+            orderList :action.orederList,
         }
 
         case 'LOGOUT':

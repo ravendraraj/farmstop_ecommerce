@@ -182,7 +182,26 @@ class PorductVariation extends Component {
 
                         {/** Select Option */}
                         <View style={{width:'50%'}}>
-                            <View style={{flexDirection:'row'}}>
+                            <Text style={{fontSize:constants.vw(14),fontFamily:regular,marginLeft:5,marginBottom:4}}>
+                                {fristLetterCapital(item.attribute_name)}
+                            </Text>
+                            <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
+                                <Picker
+                                        selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                        // mode="dropdown"
+                                        style={{height: 50, width: constants.vw(190),marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
+                                        onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                        >
+                                        {/*<Picker.Item label="Select" value="Select"  />*/}
+                                        { this.variationOpt(item.variation_details) }
+                                </Picker>
+                            </View>
+                
+                            {/*this.selectQtyDetail(item)*/}
+                            {/**Price section */}
+                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
+                                <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove')}>
                                     <Material 
@@ -191,17 +210,7 @@ class PorductVariation extends Component {
                                         size={25}
                                     />
                                 </TouchableOpacity>
-
-                                <Picker
-                                    selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
-                                    // mode="dropdown"
-                                    style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
-                                    onValueChange={ (value) => ( this.setVariationType(value,item.id))}
-                                    >
-                                    <Picker.Item label="Select" value="Select"  />
-                                    { this.variationOpt(item.variation_details) }
-                                </Picker>
-                                {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text> */}
+                                <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
                                 <TouchableOpacity style={{marginLeft:8}}
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add')}>
                                     <Material 
@@ -211,17 +220,15 @@ class PorductVariation extends Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            {this.selectQtyDetail(item)}
-                            {/**Price section */}
-                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10}}>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
+                            </View>
+
+                            <View>
+                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4}}
                                     onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,item.selectedQty)}>
                                     <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
                                     <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
                                 </TouchableOpacity>
                             </View>
-
                             {/**Know More  section */}
                             {/* <TouchableOpacity style={{alignSelf:'center',marginTop:15}} onPress={()=>this._knowMore(item.id)}>
                                 <Text style={{fontFamily:bold}}>Know More</Text>
@@ -229,9 +236,6 @@ class PorductVariation extends Component {
                         </View>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                        <View style={{width:"40%"}}>
-                        <Text style={{fontSize:12,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text>
-                        </View>
                         <View style={{width:"50%"}}>
                         <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
                                 <Text style={{fontFamily:bold}}>Know More</Text>

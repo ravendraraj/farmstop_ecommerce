@@ -59,7 +59,7 @@ export default {
   visaIcon:require('../images/farmstop/visa.png'),
   masterIcon:require('../images/farmstop/symbol.png'),
   checkIcon:require('../images/farmstop/check.png'),
-
+  dotedline:require('../images/farmstop/dotedline.png'),
   
 };
  

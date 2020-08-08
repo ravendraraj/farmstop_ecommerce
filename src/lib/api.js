@@ -1234,3 +1234,33 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
     });
 
 }
+
+/********************************* Get order List***************************************/
+export const getOrderList= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-getOrderList?user_id='+getState().data.authUserID;
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'FETCH_ORDER_LIST', orederList:response.orderList });
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+  //          dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+//        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}

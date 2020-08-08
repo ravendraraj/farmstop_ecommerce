@@ -21,6 +21,7 @@ const indicator = (state = false, action) => {
         case "MANAGE-CART-QTY":
         case "LOGOUT":
         case "NEW_ADDRESS_SAVED":
+        case "FETCH_ORDER_LIST":
         case "NETWORK_ERROR":
         case "EXCEPTION_ERROR_SUBMIT":
         case"SAVED_DEFAULT_SHIPPING_ADDRESS":

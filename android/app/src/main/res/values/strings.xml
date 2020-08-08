@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">farmstop</string>
+    <string name="facebook_app_id">574402469889085</string>
+	 <string name="fb_login_protocol_scheme">fb574402469889085</string>
 </resources>

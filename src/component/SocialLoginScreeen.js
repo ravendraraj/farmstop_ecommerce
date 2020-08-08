@@ -8,7 +8,7 @@ import { navigate } from '../appnavigation/RootNavigation';
 import Icon from 'react-native-vector-icons/AntDesign'
 // import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {gmail_api_key} from '../constants/key'
-//import { GoogleSignin, GoogleSigninButton,statusCodes } from 'react-native-google-signin';
+import { LoginButton, AccessToken,LoginManager } from 'react-native-fbsdk';
 import {
     GoogleSignin,
     GoogleSigninButton,
@@ -156,9 +156,10 @@ class SocialLoginScreen extends Component{
                             <TouchableOpacity onPress={this._signIn}>
                                 <Image source={constants.image.gmail_icon} style={styles.gmaiIcon}/>
                             </TouchableOpacity>
-                            <TouchableOpacity >
+                            <TouchableOpacity onPress={()=>this.fbsignIn()}>
                                 <Icon name="facebook-square" size={constants.vh(60)} color={constants.Colors.color_facebook}/>
                             </TouchableOpacity>
+
                         </View>
 
                         <Text style={{alignSelf:'center',fontSize:28,fontFamily:constants.fonts.Cardo_Regular,marginTop:constants.vw(10)}}>or</Text>
@@ -191,6 +192,25 @@ class SocialLoginScreen extends Component{
                         </TouchableOpacity>
                     </View>
             )
+    }
+
+    fbsignIn(){
+            
+            LoginManager.logInWithPermissions(["public_profile"]).then(
+            function(result) {
+                if (result.isCancelled) {
+                console.log("Login cancelled");
+            } else {
+              console.log(
+                    "Login success with permissions: " +
+                  result.grantedPermissions.toString()
+                );
+                }
+            },
+            function(error) {
+                console.log("Login fail with error: " + error);
+            }
+        );
     }
 
     _ShowError() {
