@@ -86,7 +86,7 @@ class MyCart extends Component {
     getCouponCodeDetails(){
         
         let coupon_Code =this.state.couponCode;
-        console.log(coupon_Code);
+        
         if(coupon_Code != ''){
             this.props.checkCouponCode({code:coupon_Code});
             // this.couponCodeText.clear();
@@ -131,7 +131,8 @@ class MyCart extends Component {
                                 onSubmitEditing={()=>this.getCouponCodeDetails()}/>
                         </View>
                         <View style={{flex:1,alignSelf:'center',width:'90%'}}>
-                            <TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>
+                            {/*<TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>*/}
+                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("PaymentOption")}>
                                 <Text style={styles.checkout}>Checkout  Rs. {total} </Text> 
                             </TouchableOpacity>
                         </View>
@@ -256,9 +257,6 @@ class MyCart extends Component {
     renederItemType () {
         let ItemList = this.props.cartData;
         if(ItemList.length > 0){
-            ItemList.map((addressRow,id)=>{
-                console.log(addressRow.fimage);
-            });
             return(
                 <View>
                 <FlatList
@@ -287,7 +285,7 @@ class MyCart extends Component {
                                 </View>
 
                                 <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                    <Text style={{fontSize:constants.vw(18),fontFamily:bold}}>Rs. {item.selectedQtyPrice}</Text>
+                                    <Text style={{fontSize:constants.vw(18),fontFamily:bold,paddingLeft:10}}>Rs. {item.selectedQtyPrice}</Text>
                                     <View style={{flexDirection:'row'}}>
                                         <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                                         onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -323,7 +321,7 @@ class MyCart extends Component {
                 //Setting the number of column
                 numColumns={1}
                 ListHeaderComponent={()=>(
-                    <View style={{width:'100%',height:20,marginBottom:10}}>
+                    <View style={{width:'100%',height:1,marginBottom:10}}>
                     </View>
                 )}
                 
@@ -352,8 +350,8 @@ class MyCart extends Component {
 
                 <View style={styles.container}>
                         <View style={styles.MainContainer}>
-                            <View>
-                                <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
+                            <View style={styles.headContainer}>
+                                <Text style={styles.mainHeading}>
                                     My Cart
                                 </Text>
                             </View>
@@ -415,15 +413,21 @@ const styles = StyleSheet.create({
     },
     prodBlock:{
         alignSelf:'center',
-        width:"95%",
-        marginBottom:10,
-        borderColor:constants.Colors.color_platnium,
-        overflow: 'hidden',
-        shadowColor: constants.Colors.color_platnium,
-        shadowRadius: 10,
-        shadowOpacity: .1,
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:10,
+        elevation:10,
         padding:10,
-        elevation: 2
+        marginBottom:10,
+    },
+    mainHeading:{
+        fontSize:20,
+        color:constants.Colors.color_heading,
+        fontFamily:italic,
+        paddingLeft:15,
+    },
+    headContainer:{
+        // backgroundColor:constants.Colors.color_lineGrey,
     }
   });
 

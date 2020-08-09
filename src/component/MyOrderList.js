@@ -153,7 +153,7 @@ _trackOrder(){
         return(
             <View style={styles.container}>
                 <View style={{width:'100%',alignSelf:"center"}}>
-                	<Text style={{fontSize:25,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,paddingLeft:15,marginBottom:constants.vw(20)}}>
+                	<Text style={{fontSize:20,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,paddingLeft:15,marginBottom:constants.vw(20)}}>
                         My Orders
                     </Text>
                 	{this.renederItemType()}

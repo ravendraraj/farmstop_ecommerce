@@ -25,7 +25,7 @@ import TabNavProdvariation from './TabNavProdvariation'
 import OrderSuccuess from '../component/OrderSuccuess'
 import pageNotFound404 from '../component/pageNotFound404'
 import internetError from '../component/internetError'
-import PaymentInfo from '../component/PaymentInfo'
+import PaymentOption from '../component/PaymentOption'
 import ShippingAddress from '../component/ShippingAddress'
 import WishTabNav from './WishTabNav'
 import MyOrderTab from './MyOrderTab'
@@ -231,7 +231,7 @@ const WithoutSignInStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            name="PaymentInfo" component={PaymentInfo}/>
+            name="PaymentOption" component={PaymentOption}/>
 
     </RootStack.Navigator>
 );

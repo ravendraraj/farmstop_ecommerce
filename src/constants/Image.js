@@ -61,5 +61,6 @@ export default {
   checkIcon:require('../images/farmstop/check.png'),
   dotedline:require('../images/farmstop/dotedline.png'),
   welcomeLogo:require('../images/farmstop/welcomeLogo.jpg'),
+  razorpay:require('../images/farmstop/razorpay.png'),
 };
  

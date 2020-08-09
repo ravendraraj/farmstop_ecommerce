@@ -206,7 +206,7 @@ class PorductVariation extends Component {
                             {/**Price section */}
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
                                 <Text style={{fontSize:18,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
-                                
+
                                 <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove')}>
@@ -325,16 +325,12 @@ const styles = StyleSheet.create({
     },
     prodBlock:{
         alignSelf:'center',
-        width:"95%",
-        marginBottom:10,
-        borderColor:constants.Colors.color_platnium,
-        overflow: 'hidden',
-        shadowColor: constants.Colors.color_platnium,
-        shadowRadius: 10,
-        shadowOpacity: .1,
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:10,
+        elevation:10,
         padding:10,
-        elevation: 3
-
+        marginBottom:10,
     }
   });
 
