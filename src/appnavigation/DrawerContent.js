@@ -217,7 +217,7 @@ async _logOutEvent(){
      return(
          <View style={{flex:1}}>
              <ScrollView>
-                 <View style={{flexDirection:"row",paddingTop:constants.vw(20),paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_intro,paddingLeft:10}}>
+                 <View style={{flexDirection:"row",paddingTop:constants.vw(20),paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
                     {this._profileRender()}
                     <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
                         <Text style={styles.userName}>Hello</Text>
@@ -225,7 +225,7 @@ async _logOutEvent(){
                     </View>
                 </View>
                 <View style={{paddingLeft:0,paddingTop:10}}>
-                    <View style={{borderBottomWidth:2,borderColor:constants.Colors.color_intro,paddingLeft:10}}>
+                    <View style={{paddingLeft:10}}>
                     {this._renderSignUpAndLogin()}
                     </View>
                     <View style={{paddingLeft:10}}>
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     userName:{
         fontFamily:constants.fonts.Cardo_Bold,
         fontSize:constants.vh(20),
-        color:constants.Colors.color_WHITE
+        color:constants.Colors.color_BLACK
     },
     childMenuTab:{
         flexDirection:'row',

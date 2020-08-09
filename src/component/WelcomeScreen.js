@@ -136,12 +136,11 @@ class WelcomeScreen extends Component {
 	};
 
 	render() {
-		if (this.state.show_Main_App) {
-			// console.log("I am first view");
-			return (
+		if (this.state.show_Main_App){
+			return(
 				<View style={styles.container}>
 					<View style={{flex:1,justifyContent:'center'}}>
-					<Image source={constants.image.appIntro1} style={{alignSelf:'center'}}/>
+					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
 					<Text style={styles.welcomText}>Welcome in Farmstop</Text>
 					</View>
 				</View>

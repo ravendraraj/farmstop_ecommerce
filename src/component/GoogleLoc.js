@@ -93,10 +93,13 @@ class GoogleLoc extends Component {
 		return (
 			<View style={{flex:1,backgroundColor:"white"}}>
 			<View style={styles.container}>
-				<TouchableOpacity onPress={()=>this.requestLocationPermission()} style={{width:30,height:30,marginTop:14}}>
-					<Icon name="my-location" size={25} color={constants.Colors.color_BLACK}/>
-				</TouchableOpacity>
-				<View style={{ flex: 1, flexDirection: "column" }}>
+				<View>
+					<TouchableOpacity onPress={()=>this.requestLocationPermission()} style={{flexDirection:'row',justifyContent:'center',borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginTop:14,padding:5}}>
+						<Icon name="my-location" size={25} color={"grey"}/>
+						<Text style={{paddingLeft:10,fontSize: 16,fontFamily: constants.fonts.Cardo_Regular,color:"grey"}}>Get Current Location</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={{ flex: 1}}>
 					<GooglePlacesAutocomplete
 						placeholder={"Enter Address"}
 						placeholderTextColor="gray"
@@ -121,36 +124,6 @@ class GoogleLoc extends Component {
 							this.setState({ currentLongitude:geometry.location['lng'] });
 							this.setState({ currentLatitude:geometry.location['lat'] });
 							this.props.checkDelivery({lat:geometry.location['lat'],lng:geometry.location['lng']});
-
-
-
-							// const countryName = addressDetails.filter(function (data) { if (data.types[0]) { return data.types[0] == "country" } });
-							// const stateName = addressDetails.filter(function (data) { if (data.types[0]) { return data.types[0] == "administrative_area_level_1" } });
-							// const cityName = addressDetails.filter(function (data) { if (data.types[0]) { return data.types[0] == "locality" } });
-							// const { lat, lng } = details.geometry.location;
-							// let countryNameVal = ''
-							// let stateNameVal = ''
-							// let cityNameVal = ''
-							// if (countryName.length > 0) {
-							// 	countryNameVal = countryName[0].long_name;
-							// }
-							// if (stateName.length > 0) {
-							// 	stateNameVal = stateName[0].long_name;
-							// }
-							// if (cityName.length > 0) {
-							// 	cityNameVal = cityName[0].long_name;
-							// }
-
-							// var addressData = {
-							// 	businessCountry: countryNameVal,
-							// 	businessState: stateNameVal,
-							// 	businessCity: cityNameVal,
-							// 	businessAddress: data.description,
-							// 	businessLongitude: lng,
-							// 	businesslatitude: lat
-							// }
-							//        this.props.navigation.state.params.onAddressSelect(addressData);
-							//this.props.navigation.goBack();
 						}}
 
 						getDefaultValue={() => ''}
@@ -168,7 +141,7 @@ class GoogleLoc extends Component {
 							textInputContainer: {
 								backgroundColor: "#fff",
 								borderBottomWidth:0,
-								borderTopWidth:0,
+								borderWidth:0,
 								fontSize: 20,
 								fontFamily: constants.fonts.Cardo_Bold,
 							},
@@ -184,6 +157,8 @@ class GoogleLoc extends Component {
 								height: 38,
 								fontSize: 16,
 								fontFamily: constants.fonts.Cardo_Regular,
+								borderWidth:1,
+								borderColor:constants.Colors.color_lineGrey
 							},
 						}}
 
@@ -203,7 +178,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
-		flexDirection:'row',
 		justifyContent:'space-between',
 		width:'90%',
 		alignSelf:'center'

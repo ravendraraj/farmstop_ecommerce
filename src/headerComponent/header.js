@@ -17,7 +17,7 @@ function header({navigation,cartItem}){
         navigate("MyCart");
     }
 
-    let totalProd = cartItem.length > 0 ? cartItem.length:"";
+    let totalProd = cartItem.length > 0 ? cartItem.length:0;
     return(
         <View style = {styles.head}>
             {/* <TouchableOpacity style={{marginLeft:4}} >
@@ -25,14 +25,16 @@ function header({navigation,cartItem}){
             </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
                 <TouchableOpacity style={{marginRight:20}} onPress={()=>cart()}>
-                    <Text style={{position:'absolute',left:15,top:0,zIndex:2,color:constants.Colors.color_BLACK}}>{totalProd}</Text>
+                    <View style={styles.cartTextContainer}>
+                        <Text style={styles.cartText}>{totalProd}</Text>
+                    </View>
                     {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
-                    <Image source={constants.image.cartIcon} style={{width:35,height:35}}/>
+                    <Image source={constants.image.cartIcon} style={{width:30,height:30}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity >
                     {/* <Icon name="user" size={25}/> */}
-                    <Image source={constants.image.userIcon} style={{width:35,height:35}}/>
+                    <Image source={constants.image.userIcon} style={{width:30,height:30}}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -50,6 +52,22 @@ const styles = StyleSheet.create({
     },
     headText:{
         color:'black',
+    },cartTextContainer:{
+        position:'absolute',
+        left:25,
+        top:-5,
+        zIndex:2,
+    },cartText:{
+        paddingLeft:5,
+        paddingRight:5,
+        textAlign:'center',
+        fontFamily:constants.fonts.Cardo_Regular,
+        fontSize:10,
+        color:constants.Colors.color_WHITE,
+        backgroundColor:constants.Colors.color_cartText,
+        borderWidth:1,
+        borderColor:constants.Colors.color_cartText,
+        borderRadius:8,
     }
 });
 

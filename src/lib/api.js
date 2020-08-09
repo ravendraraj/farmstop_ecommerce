@@ -774,11 +774,11 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
                 }
             })
             .catch( err => {
-                dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
             })
         })
         .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
             console.log("NetWork Error");
             navigate("internetError");
         });

@@ -489,6 +489,8 @@ const data = (state = initialDataState, action) => {
             else{
                 let newCartItem = {
                 "id" : (state.addedItems.length).toString(),
+                "attribute_name":addedItem.attribute_name,
+                "price":addedItem.price,
                 "prod_id" : addedItem.id, // its product id
                 "prod_cat_id" : addedItem.product_id,
                 "fimage" : addedItem.fimage,

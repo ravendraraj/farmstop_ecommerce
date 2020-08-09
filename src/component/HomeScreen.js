@@ -21,6 +21,7 @@ class HomeScreen extends Component {
       productList: [],
       query: '',
       dilevryStatus: false,
+      checkedShippingArea : false,
     };
 
     if(!this.props.cartItemSync)
@@ -82,39 +83,9 @@ class HomeScreen extends Component {
 			 Geolocation.getCurrentPosition(
 				(position) => {
 				    const currentLongitude = JSON.stringify(position.coords.longitude);
-					const currentLatitude = JSON.stringify(position.coords.latitude);
+					 const currentLatitude = JSON.stringify(position.coords.latitude);
 				    this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});
-
-                // let url = weburl + 'api-check-delivery-loc?lat='+currentLatitude+"&lng="+currentLongitude;
-                // console.log(url);
-
-                // fetch(url)
-                // .then(res =>{
-                //     res.json()
-                //     .then(response => {
-                //         //console.log(response);
-                //         if(response.status == "1"){               
-                //             var userShipingAddress = {
-                //                 "address" : response.address,
-                //                 "postal_code":response.detail['pincode'],
-                //                 "shippingCharges":response.detail['shipping_cost']
-                //             }
-
-				// 			AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
-				// 			this.setState({dilevryStatus:true});
-				// 			this.props.shippingAddress({address:response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
-				// 		}
-                //     })
-                //     .catch( err => {
-				// 		// dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-				// 		navigate("pageNotFound");
-                //     })
-                // })
-                // .catch( err => {
-                //     navigate("internetError");
-                // });
-
-
+            this.setState({checkedShippingArea:true})
 					},
 					(error) => {console.log(error)},
 					{ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
@@ -198,10 +169,10 @@ class HomeScreen extends Component {
     let ItemList = this.props.itemData;
     if (ItemList != "undefined" && ItemList != null) {
       return(
-        <View style={{flex:1,justifyContent:"flex-end",marginBottom:10,}}>
+        <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(2),}}>
           
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to your home</Text>
-                <Image source={constants.image.knowMoreSource} style={{width:constants.vw(330),height:constants.vw(90),alignSelf:'center'}}/>
+                <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
                 {/* <ScrollView onScroll={Alert.alert('i am call')}> */}
                   <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
                   <TouchableOpacity onPress={()=>this.props.navigation.navigate("AboutFarm")}>
@@ -214,26 +185,24 @@ class HomeScreen extends Component {
   }
 
   renderProdOnCheckDelivery(){
-    if(this.props.shippingPincode != null){
-        return(
-			<View style={{flex:1}}>
-            	{this.renederItemType()}
-            	{this.renderSourceSection()}
-			</View>
-        )
-    }else{
-        return(
-            <View style={{flex:1,width:"90%",alignSelf:'center'}}>
-				<Image source={constants.image.delivery} style={{width:"90%",height:"50%",alignSelf:'center',marginTop:constants.vw(60)}}/>
-				<View style={{flex:2}}>
-					<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(16),textAlign:'center'}}>Sorry ,Delivery is not availbale in your selected area</Text>
-					<TouchableOpacity style={{alignSelf:'center',marginTop:20}}onPress={()=>this.props.navigation.navigate("GoogleLocation")}>
-					<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18),textAlign:'center',color:constants.Colors.color_intro}}>Check Another Area</Text>
-					</TouchableOpacity>
-				</View>
-            </View>
-        )
-    }
+    if(this.props.shippingPincode == null && this.state.checkedShippingArea == true){
+        Alert.alert(
+          'Location Alert',
+          'Delivery is not avaliable on your current address ,please select another location Location',
+          [
+            {
+              text: 'Select',
+              onPress: () => this.props.navigation.navigate("GoogleLocation")
+            },
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel'
+            },
+          ],
+          { cancelable: false }
+        );
+    }        
   }
 
   render() {
@@ -278,6 +247,8 @@ class HomeScreen extends Component {
           <View style={styles.MainContainer}>
             {this._ShowError()}
             {this._loadLoader()}
+            {this.renederItemType()}
+              {this.renderSourceSection()}
             {this.renderProdOnCheckDelivery()}
           </View>
         </View>
@@ -299,20 +270,14 @@ const styles = StyleSheet.create({
   homeProdCat:{
     flex: 1, 
     flexDirection: 'column', 
-    marginTop: constants.vw(6),
-    marginLeft: constants.vw(16), 
-    marginRight: constants.vw(16), 
-    marginBottom: constants.vw(6),
+    margin: constants.vw(4), 
     alignItems: 'center',
-    borderWidth:2,
-    borderColor:'#D1D0CE',
-    borderRadius:10,
     paddingBottom:constants.vw(10)
   },
   MainContainer: {
     justifyContent: 'center',
     flex: 1,
-    // marginTop:60,
+    marginTop:constants.vw(5),
     padding: 10,
   },
   imageThumbnail: {

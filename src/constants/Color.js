@@ -9,7 +9,8 @@ const Colors = {
   color_youtube:'#FF0000',
   color_linkedin:'#0e76a8',
   color_blue:'#336C95',
-  color_lineGrey:'#B6B6B4'
-
+  color_lineGrey:'#B6B6B4',
+  color_platnium:'#DCDBD9',
+  color_cartText:"#80b435",
 };
 export default Colors;

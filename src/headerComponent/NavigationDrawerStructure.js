@@ -13,7 +13,7 @@ const NavigationDrawerStructure = (props)=> {
     return (
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity onPress={()=> toggleDrawer()}>
-          <Image source={constants.image.openMenuIcon} style={{marginLeft:10,width:constants.vw(32),height:constants.vw(32)}}/>
+          <Image source={constants.image.openMenuIcon} style={{marginLeft:10,width:constants.vw(30),height:constants.vw(30)}}/>
         </TouchableOpacity>
       </View>
     );
