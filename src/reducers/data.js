@@ -14,7 +14,6 @@ const data = (state = initialDataState, action) => {
         return{
             ...state,
             total:0,
-            shippingCharges:null,
             addedItems:[]
         }
 
@@ -82,7 +81,7 @@ const data = (state = initialDataState, action) => {
             if(action.cartItem.length >0)
             {
                 action.cartItem.map(item=>{
-                    newSyncItemTotal += parseFloat(item.selectedQtyPrice) ;
+                    newSyncItemTotal += parseFloat(item.selectedVariationPrice) ;
                 })
             }
 
@@ -488,7 +487,7 @@ const data = (state = initialDataState, action) => {
            }
             else{
                 let newCartItem = {
-                "id" : (state.addedItems.length).toString(),
+                "id" : (state.addedItems.length+1).toString(),
                 "attribute_name":addedItem.attribute_name,
                 "price":addedItem.price,
                 "prod_id" : addedItem.id, // its product id
@@ -505,7 +504,7 @@ const data = (state = initialDataState, action) => {
 
             //    addedItem.quantity = 1;
                //calculating the total
-               let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
+               let newTotal = state.total + parseFloat(addedItem.selectedVariationPrice) 
                return{
                    ...state,
                    addedItems: [...state.addedItems, newCartItem],
@@ -517,6 +516,8 @@ const data = (state = initialDataState, action) => {
         case "SET_PRODUCT_VARIATION_IN_CART":
                 let cartProdId = action.prod_id;
                 let selectedCartVariation = action.variation;
+                var totalOnChangeVari = state.total;
+                let oldPriceOnPicker = action.oldPrice;
                 let changeCart = state.addedItems.map((item,index) => {
                     if(item.prod_id == cartProdId && item.selectedVariationID == action.preVarId){
                             item.variation_details.map(variation => {
@@ -526,8 +527,8 @@ const data = (state = initialDataState, action) => {
                                 item.selectedQtyVariation = selectedCartVariation;
                                 item.selectedQtyPrice = variation.right_price;
                                 item.selectedVariationID = variation.varition_detail_id;
-                                item.selectedVariationPrice = variation.right_price;
-                                item.selectedQty=1;
+                                item.selectedVariationPrice = (parseInt(item.selectedQty)*parseFloat(variation.right_price));
+                                totalOnChangeVari=(totalOnChangeVari-parseFloat(oldPriceOnPicker)+ parseFloat(item.selectedVariationPrice));
                             }else if(selectedCartVariation === "Select"){
                                 // console.log("Not Select");
                                 item.selectedVariationID = "";
@@ -539,9 +540,11 @@ const data = (state = initialDataState, action) => {
                     return item;
                 });
 
+                console.log(state.total + "  m-"+totalOnChangeVari);
                 return{
                     ...state,
                     addedItems:changeCart,
+                    total:totalOnChangeVari
             }
 
         // //cart reducers for wish item 

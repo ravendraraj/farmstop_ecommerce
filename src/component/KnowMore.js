@@ -10,6 +10,7 @@ import {fristLetterCapital,removeTags} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
 import {navigate} from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
+import Swiper from 'react-native-swiper'
 import {setWishListItemOnServer ,addItemToCart,setCartItemLocal} from '../lib/api'
 
 const width = Dimensions.get('window').width;
@@ -98,6 +99,29 @@ class KnowMore extends Component {
         }));
     }
 
+    _swiper(){
+        return(
+            this.props.itemtypeData.map((item,id)=>{
+                if(this.props.prodId != item.id){
+                    return (
+                        <View style={styles.prodBlock}>
+                            <View>
+                                <TouchableOpacity style={{alignSelf:'center',marginTop:constants.vh(40)}}>
+                                    <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{marginTop:constants.vh(40)}}>
+                                <Text style={styles.sliderTextComp}>Farm Fresh</Text>
+                                <Text style={styles.sliderTextProd}>{fristLetterCapital(item.attribute_name)}</Text>
+                                <Text style={styles.sliderTextPrice}>Rs.{item.price}</Text>
+                            </View>
+                        </View>
+                    )
+                }
+            })
+        )
+    }
+
     renederItemType () {
         let ItemList = null;
         
@@ -118,8 +142,8 @@ class KnowMore extends Component {
             }
 
             return(
-                <View style={{alignItems:'center'}}>
-                    <View style={{marginTop:constants.vw(2)}}>
+                <View style={{alignItems:'center',marginTop:constants.vh(30)}}>
+                    <View>
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
                         <TouchableOpacity style={{alignSelf:'flex-end',marginTop:-20,marginRight:-30}}
                         onPress={()=>this._addinWishList(prodDetails)}>
@@ -172,6 +196,12 @@ class KnowMore extends Component {
                         <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:20}}>{removeTags(prodDesc)}</Text>
                     </View>
 
+                    <View style={styles.wrapper}>
+                        <Swiper style={{height:constants.vh(200)}} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
+                            {this._swiper()}
+                        </Swiper>
+                    </View>
+
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
                         <Text style={{fontSize:constants.vw(25),fontFamily:bold}}>Know your source</Text>
                         <Text style={{fontSize:20,fontFamily:regular}}>check out our farms and follow us on</Text>
@@ -203,10 +233,6 @@ class KnowMore extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // paddingTop:30,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // margin: 10,
         backgroundColor:constants.Colors.color_WHITE
       },
     MainContainer: {
@@ -223,6 +249,45 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between',
         margin:1
+    },
+    slide: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: constants.Colors.color_WHITE,
+    },
+    imageThumbnail: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width:constants.vw(120),
+      height:constants.vw(110),
+    },
+    sliderTextComp:{
+        fontSize:constants.vw(18),
+        fontFamily:constants.fonts.Cardo_Bold,
+        color:constants.Colors.color_grey
+    },
+    sliderTextProd:{
+        fontSize:constants.vw(18),
+        fontFamily:constants.fonts.Cardo_Bold,
+        color:"#357c2a"
+    },
+    sliderTextPrice:{
+        fontSize:constants.vw(18),
+        fontFamily:constants.fonts.Cardo_Bold,
+        color:"#357c2a"
+    },
+
+    prodBlock:{
+        flex:1,
+        flexDirection:'row',
+        justifyContent:'space-evenly',
+    },
+    wrapper:{
+        width:"90%",
+        height:constants.vw(200),
+        borderRadius:4,
+        elevation:10,
+        backgroundColor:"white",
     }
   });
 
@@ -233,6 +298,7 @@ const mapStateToProps = state => ({
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
     searchProductList: state.data.searchProductList,
+
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -8,7 +8,7 @@ import { navigate } from '../appnavigation/RootNavigation';
 import Icon from 'react-native-vector-icons/AntDesign'
 // import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {gmail_api_key} from '../constants/key'
-import { LoginButton, AccessToken,LoginManager } from 'react-native-fbsdk';
+import { LoginManager, LoginButton,AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk'
 import {
     GoogleSignin,
     GoogleSigninButton,
@@ -196,15 +196,46 @@ class SocialLoginScreen extends Component{
 
     fbsignIn(){
             
-            LoginManager.logInWithPermissions(["public_profile"]).then(
+            LoginManager.logInWithPermissions(["public_profile","email"]).then(
             function(result) {
                 if (result.isCancelled) {
                 console.log("Login cancelled");
             } else {
-              console.log(
-                    "Login success with permissions: " +
-                  result.grantedPermissions.toString()
-                );
+              console.log(result)
+
+              AccessToken.getCurrentAccessToken().then((data)=>{
+                const { accessToken} = data
+                console.log('accessToken',accessToken); 
+                const infoRequest = new GraphRequest(
+                '/me?fields=email,name,first_name,id,last_name',
+                null,
+                async (error, result) => {
+                    if (error) {
+                        console.log('Error fetching data: ' + error.toString());
+                    } else {
+                            console.log(result);
+                        // if(result.email == undefined)
+                        // {
+                        //   console.log('Resultemail: ' + result.email,result.name,result.first_name,result.id,result.last_name);
+                        //       Alert.alert('Please verify your Email address');
+                        // }else
+                        {
+                    
+                      
+                            console.log('Resultemail: ' + result.email,result.name,result.first_name,result.id,result.last_name);
+                            //https://graph.facebook.com/1650578358457019/picture?type=normal
+                         
+                          
+                        } 
+                  }
+              });
+            // Start the graph request.
+            new GraphRequestManager().addRequest(infoRequest).start();
+
+          })
+
+
+
                 }
             },
             function(error) {

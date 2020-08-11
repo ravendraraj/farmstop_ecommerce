@@ -9,7 +9,8 @@ import image from "../constants/Image"
 import RadioButton from '../customElement/RadioButton'
 import RazorpayCheckout from 'react-native-razorpay'
 import {razor_api_key} from '../constants/key'
-import {checkOut} from '../lib/api'
+import {checkOut,checkOutOnCOD} from '../lib/api'
+import {Loader} from '../customElement/Loader'
 
 class PaymentOption extends Component{
     constructor(props){
@@ -32,6 +33,14 @@ _radioHandler(){
         this.setState({option2:"notselect"})
     }
 }
+
+_loadLoader() {
+        if(this.props.animate) {
+            return(
+                <Loader />
+            )
+        }
+    }
 
     _renderView(){
         
@@ -93,11 +102,10 @@ _radioHandler(){
     render(){
         return(
             <View style={styles.container}>
-                <SafeAreaView>
-                    <ScrollView>
-                        {this._renderView()}
-                    </ScrollView>
-                </SafeAreaView>
+                {this._loadLoader()}
+                <View style={{flex:1,width:"98%",alignSelf:'center'}}>
+                    {this._renderView()}
+                </View>
             </View>
         )
     }
@@ -137,20 +145,29 @@ _radioHandler(){
                     }
 
                     orderDetails['total_cost'] = total;
-                    orderDetails['paymentOption'] = "";
                     orderDetails['status'] = 0;
 
                     orderDetails['email'] = this.props.authEmail;
                     orderDetails['contact'] = this.props.authMobile;
                     orderDetails['username'] = this.props.authName;
 
-                    this.props.checkOut(orderDetails);
-                
+                    if(this.state.option1 == "select"){
+
+                        orderDetails['paymentOption'] = "4";
+                        this.props.checkOut(orderDetails);
+                    }else{
+                        orderDetails['paymentOption'] = "2";
+                        this.props.checkOutOnCOD(orderDetails);
+                    }
+                    
+                    console.log(orderDetails);
       }else{
             if(this.props.authUserID == null && this.props.authUserID == "" ){
                 this.props.navigation.navigate("NotLogin");
             }else if(this.props.shippingAddress == null){
-                this.props.navigation.navigate("ShippingAddress");
+                this.props.navigation.navigate('ShippingAddress', {
+                    screen_name: "cart",
+                });
             }
       }
     }
@@ -216,7 +233,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     // getItemVariation: (data) => dispatch(getProductVariation(data)),
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
-    checkOut:(data)=>dispatch(checkOut(data))
+    checkOut:(data)=>dispatch(checkOut(data)),
+    checkOutOnCOD:(data)=>dispatch(checkOutOnCOD(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentOption);

@@ -982,7 +982,6 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
         let product = prodData.prod_id;
         let variationValue = prodData.variationValue;
         let oldSelectedVariationId = prodData.selectedVariationID;
-        
         let userId = getState().data.authUserID;
         let emailId = getState().data.authEmail;
         // console.log(product+ " - "+variationValue+" - "+ variationId);
@@ -1025,7 +1024,7 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
                     //console.log(response);
                     if(response.status == "1"){
                         // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
-                        dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId});
+                        dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId ,oldPrice:prodData.oldSelectedPrice});
                     }else{
                         dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
                     }
@@ -1180,7 +1179,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         verifyData.append("razorpay_order_id", data.razorpay_order_id);
                         verifyData.append("razorpay_signature", data.razorpay_signature);
                         verifyData.append("razorpay_payment_id", data.razorpay_payment_id);
-                        verifyData.append("foramstopOrderId", response.orderData['razor_orderId']);
+                        verifyData.append("foramstopOrderId", response.orderData['receipt']);
             
                         let verify_post_req = {
                              method: 'POST',
@@ -1190,7 +1189,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                                  'Content-Type': 'multipart/form-data',
                              }
                         }                                  
-                            console.log(orderVerifyUrl);
+                            console.log(verify_post_req);
                             fetch(orderVerifyUrl ,verify_post_req).then(res =>{
                                 res.json()
                                 .then(response => {
@@ -1218,6 +1217,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                     // handle failure
                     console.log(error);
                     // alert(`Error: ${error.code} | ${error.description}`);
+                    dispatch({ type : 'ERROR_CODE', payload : response.message});
                   });
 
             }else{
@@ -1234,6 +1234,61 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
     });
 
 }
+
+/*********************************** Cash on Delivery ************************************/
+export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let orderCreateUrl = weburl + 'api-place-cod-order/';
+    console.log(orderCreateUrl);
+    console.log(checkOutData);
+
+    var checkOutFormData = new FormData();
+         checkOutFormData.append("user_id", checkOutData['user_id']);
+         checkOutFormData.append("user_type", checkOutData['user_type']);
+         checkOutFormData.append("address_id", checkOutData['address_id']);
+         checkOutFormData.append("usr_mob", checkOutData['usr_mob']);
+         checkOutFormData.append("subtotal", checkOutData['subtotal']);
+         checkOutFormData.append("shhipingCost", checkOutData['shhipingCost']);
+         checkOutFormData.append("coupon_id", checkOutData['coupon_id']);
+         checkOutFormData.append("total_cost", checkOutData['total_cost']);
+
+         checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
+         checkOutFormData.append("status", checkOutData['status']);
+
+         let post_req = {
+             method: 'POST',
+             body: checkOutFormData,
+             headers: {
+                 Accept: 'application/json',
+                 'Content-Type': 'multipart/form-data',
+             }
+        }
+
+        console.log("COD" ,post_req);
+        fetch(orderCreateUrl,post_req)
+        .then(res =>{
+            console.log(res);
+            res.json()
+            .then(response => {
+                console.log(response);
+                if(response.status == "1"){
+                    navigate("OrderSuccuess");
+                    dispatch({type:'ORDER_SUCCESSFULL'});
+                }else{
+                    dispatch({type : 'NETWORK_ERROR', payload : response.message});
+                    navigate("pageNotFound");
+                }
+            })
+            .catch( err => {
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+            })
+        })
+        .catch( err => {
+            dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+            navigate("internetError");
+        });
+}
+
 
 /********************************* Get order List***************************************/
 export const getOrderList= (data) => (dispatch,getState) => {

@@ -29,7 +29,7 @@ const Styles = StyleSheet.create({
       backgroundColor: 'white',
     //   height: Dimensions.get('window').width,
     //   width: Dimensions.get('window').width,
-      zIndex: 1,
+      zIndex: 10,
       opacity: 0.5,
 
     },

@@ -168,7 +168,10 @@ _tabMyOrderList(){
 _redirect(routeParam){
     
     if(this.props.authUserID != null && this.props.authUserID != "null" && this.props.authUserID !=''){
-        this.props.navigation.navigate(routeParam)
+        {/***this.props.navigation.navigate(routeParam);***/}
+        this.props.navigation.navigate(routeParam, {
+            screen_name: "side_menu_bar",
+        });
     }else{
         ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
     }

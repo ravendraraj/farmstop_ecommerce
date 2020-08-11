@@ -10,7 +10,7 @@ import {CouponTextInput ,PrimaryTextInput} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import {Picker} from '@react-native-community/picker';
-
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import RazorpayCheckout from 'react-native-razorpay';
@@ -132,12 +132,52 @@ class MyCart extends Component {
                         </View>
                         <View style={{flex:1,alignSelf:'center',width:'90%'}}>
                             {/*<TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>*/}
-                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("PaymentOption")}>
+                            <TouchableOpacity onPress={()=>this.checkProceed()}>
                                 <Text style={styles.checkout}>Checkout  Rs. {total} </Text> 
                             </TouchableOpacity>
                         </View>
                     </View>
                 )
+        }
+    }
+
+    checkProceed(){
+
+        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != null){
+            
+            let subtotal = this.props.subtotal;
+            let tax = 0;
+            let deliveryCharges = this.state.deliveryCharges;
+            let discount = this.state.discount;
+            let total = subtotal+parseFloat(deliveryCharges)+tax;
+            let userType = ""; 
+
+            if(subtotal > 360){ 
+                this.props.navigation.navigate("PaymentOption");
+            }else{
+                Alert.alert(
+          'Farmstop',
+          'Please order more or equal to 360.',
+          [
+            {
+              text: 'Ok',
+              onPress: () => console.log('OkPressed'),
+            },
+          ],
+          { cancelable: false }
+        );
+            }
+
+        }else{
+
+            if(this.props.authUserID == null && this.props.authUserID == "" ){
+                this.props.navigation.navigate("NotLogin");
+            }else if(this.props.shippingAddress == null){
+                {/**this.props.navigation.navigate("ShippingAddress");**/}
+                this.props.navigation.navigate('ShippingAddress', {
+                    screen_name: "cart",
+                });
+            }
         }
     }
     
@@ -223,7 +263,7 @@ class MyCart extends Component {
         }
     }
 
-    async setVariationType(variationValue, prod_id ,selectedVariationID){
+    async setVariationType(variationValue, prod_id ,selectedVariationID,oldSelectedPrice){
         
         
         let find = false;
@@ -239,6 +279,7 @@ class MyCart extends Component {
             data["prod_id"] = prod_id;
             data["variationValue"] = variationValue;
             data["selectedVariationID"] =selectedVariationID;
+            data["oldSelectedPrice"] = oldSelectedPrice;
 
             await this.props.setVariationInCart(data);
             await this.props.setCartItemLocal();
@@ -254,8 +295,25 @@ class MyCart extends Component {
         }));
     }
 
+    onSwipeLeft(gestureState){
+        this.setState({delete: false});
+    }
+ 
+    onSwipeRight(gestureState){
+        this.setState({delete: true});
+        Alert.alert("Hii");
+    }
+    
+
+
     renederItemType () {
         let ItemList = this.props.cartData;
+        
+        const config = {
+            velocityThreshold: 0.1,
+            directionalOffsetThreshold: 8
+        };
+
         if(ItemList.length > 0){
             return(
                 <View>
@@ -264,7 +322,13 @@ class MyCart extends Component {
                 keyboardShouldPersistTaps="handled"
                 renderItem={({ item }) => (
                     <View style={styles.prodBlock}>
-                        <View style={{flexDirection:'row',justifyContent:'space-around'}} >
+                        {/**<View style={{flexDirection:'row',justifyContent:'space-around'}} >**/}
+                        <GestureRecognizer
+                                onSwipeLeft={(state) => this.onSwipeLeft(state)}
+                                onSwipeRight={(state) => this.onSwipeRight(state)}
+                                config={config}
+                                style={{flexDirection:'row',justifyContent:'space-around'}}
+                            >
                             <View style={{alignSelf:'center',marginTop:10}}>
                                 <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                             </View>
@@ -277,7 +341,7 @@ class MyCart extends Component {
                                         selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
                                         // mode="dropdown"
                                         style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
-                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID))}
+                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID,item.selectedVariationPrice))}
                                         >
                                         {/**<Picker.Item label="Select" value="Select"  />*/}
                                         { this.variationOpt(item.variation_details) }
@@ -311,10 +375,9 @@ class MyCart extends Component {
                                 {/* <View style={{alignSelf:'center',marginBottom:10,marginTop:10,backgroundColor:'red',width:'100%'}}> */}
                                 {/** new commited<Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>Total- Rs. {item.selectedQtyPrice}</Text>*/}
                                 {/* </View> */}
-
-                
                             </View>
-                        </View>
+                            </GestureRecognizer>
+                        {/**</View>**/}
                     </View>
                 )}
 

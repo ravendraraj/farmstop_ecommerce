@@ -3,7 +3,7 @@ import {View ,TouchableOpacity,StyleSheet} from 'react-native'
 import constants from '../constants'
 
 const RadioButton = props => {
-console.log("radio" ,props.checked);
+
 	return (
 		<TouchableOpacity style={styles.circle} onPress={props.onPress}>
 			{props.checked == "select" ? (<View style={styles.checkedCircle} />) : (<View />)}

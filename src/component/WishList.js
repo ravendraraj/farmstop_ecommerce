@@ -117,7 +117,7 @@ class WishList extends Component {
             <FlatList
             data={ItemList}
             renderItem={({ item }) => (
-                <View style={{marginBottom:10}}>
+                <View style={styles.prodBlock}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View>
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
@@ -175,12 +175,6 @@ class WishList extends Component {
                 <View style={{width:'100%',height:20,marginBottom:10}}>
                 </View>
             )}
-            ItemSeparatorComponent={()=>(
-                <View style={{alignSelf:'center',height: 2,width: "90%",backgroundColor: "#000",marginBottom:10,
-                backgroundColor:constants.Colors.color_grey}}>
-                </View>
-            )}
-            
             
             keyExtractor={(item) => item.id}
             />
@@ -268,6 +262,15 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         margin: 2,
       },
+      prodBlock:{
+        alignSelf:'center',
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:10,
+        elevation:10,
+        padding:10,
+        marginBottom:10,
+    }
   });
 
 const mapStateToProps = state => ({

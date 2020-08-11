@@ -93,10 +93,11 @@ class shippingAddress extends Component{
         if(this.props.addressList.length >0){
 
             let userAddressList = this.props.addressList;
+            
             return(
                 userAddressList.map((addressRow,id)=>{
                     return (
-                        <View style={this.props.defaultShipingAddress == null ?styles.addressContainer :styles.defaultAddress}>
+                        <View style={this.props.defaultShipingAddress == addressRow.id ?styles.defaultAddress:styles.addressContainer}>
                             <Text style={styles.addressLine}>
                                 {addressRow.address},
                             </Text>
@@ -104,9 +105,9 @@ class shippingAddress extends Component{
                                 {addressRow.district},{addressRow.zipcode},{addressRow.country}
                             </Text>
                             <View style={{flexDirection:'row',justifyContent:'space-between',alignSelf:'flex-end'}}>
-                                <TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
-                                    <Text style={styles.deliveryBtntext}>Delivery at this Address</Text>
-                                </TouchableOpacity>
+                                {this.props.route.params.screen_name == "cart" ?(<TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
+                                                                    <Text style={styles.deliveryBtntext}>Delivery at this Address</Text>
+                                                                </TouchableOpacity>):<View/>}
                                 <TouchableOpacity style={styles.editBtn} onPress={()=>this.editAddress(addressRow.id)}>
                                     <Text style={styles.editBtntext}>Edit Address</Text>
                                 </TouchableOpacity>
@@ -300,15 +301,17 @@ class shippingAddress extends Component{
         return(
             <View style={styles.container}>
                 <SafeAreaView>
-                    <View style={{width:"90%",alignSelf:'center',marginBottom:100}}>
+                    <View style={{width:"100%",alignSelf:'center',marginBottom:100}}>
                         <View style={{marginTop:10}}>
                             <TextHeading title="My account" fontsize={25}/>
                         </View>
                         <ScrollView>
-                        {this.renderFormOnKeyEvent()}
-                        {this.renderAddAnotherAddressBtn()}
-                        {this.renderAddresList()}
-                        {this._loadLoader()}
+                        <View style={{width:"95%",alignSelf:'center'}}>
+                            {this.renderFormOnKeyEvent()}
+                            {this.renderAddAnotherAddressBtn()}
+                            {this.renderAddresList()}
+                            {this._loadLoader()}
+                        </View>
                         </ScrollView>
                     </View>
                 </SafeAreaView>
@@ -321,7 +324,9 @@ class shippingAddress extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:constants.Colors.color_WHITE
+        backgroundColor:constants.Colors.color_WHITE,
+        width:"95%",
+        alignSelf:'center'
     },
     addressContainer:{
         borderWidth:2,

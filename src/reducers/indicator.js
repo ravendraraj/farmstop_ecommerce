@@ -20,6 +20,7 @@ const indicator = (state = false, action) => {
         case "COUPON_CODE_VALIDATE":
         case "MANAGE-CART-QTY":
         case "LOGOUT":
+        case "ERROR_CODE":
         case "NEW_ADDRESS_SAVED":
         case "FETCH_ORDER_LIST":
         case "NETWORK_ERROR":

@@ -42,9 +42,9 @@ _loadLoader() {
 
           	ListHeaderComponent={()=>(
                 <View style={{flexDirection:'row'}}>
-                    <View style={{width:constants.vw(20)}}>
+                    {/*<View style={{width:constants.vw(20)}}>
                 	   <Text style={styles.headerText}></Text>
-                    </View>
+                    </View>*/}
 
                     <View style={{width:constants.vw(80)}}>
                 	   <Text style={styles.headerText}>Date</Text>
@@ -67,9 +67,9 @@ _loadLoader() {
           	renderItem={({ item }) => (
                 <View style ={{width:'95%',alignSelf:'center',marginBottom:8}}>
             	<View style={{flexDirection:'row'}}>
-                    <View style={{width:constants.vw(20)}}>
-                	   <Text style={styles.contentText}>{i++ +"."}</Text>
-                    </View>
+                    {/*<View style={{width:constants.vw(20)}}>
+                	   <Text style={styles.contentText}>{}.</Text>
+                    </View>*/}
 
                     <View style={{width:constants.vw(70)}}>
                 	   <Text style={styles.contentText}>{item.date}</Text>
