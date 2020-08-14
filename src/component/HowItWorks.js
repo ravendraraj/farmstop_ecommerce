@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import SocialLinks from '../component/SocialLinks'
+import {TextHeading} from '../customElement/Input'
 
 const width = Dimensions.get('window').width;
 class HowItWorks extends Component{
@@ -12,9 +13,9 @@ class HowItWorks extends Component{
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.section}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_heading ,fontSize:25}}>
-                            How it works
-                        </Text>
+        
+                        <TextHeading title="How it works"/>
+
                         <View style={{flex:1,flexDirection:'row'}}>
                             <View style={{width:"15%"}}>
                                 <Text style={styles.numConatiner}>1</Text>

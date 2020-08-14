@@ -5,7 +5,7 @@ import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Loader} from '../customElement/Loader'
-import {CouponTextInput} from '../customElement/Input'
+import {CouponTextInput ,TextHeading,EmptyComp} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import {getWishListItem ,addItemToCart,setCartItemLocal} from  '../lib/api'
@@ -14,7 +14,6 @@ import { navigate } from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -119,11 +118,26 @@ class WishList extends Component {
             renderItem={({ item }) => (
                 <View style={styles.prodBlock}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
-                        <View>
+                        <View style={{marginTop:constants.vw(20)}}>
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
-                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(13),alignSelf:'center'}}>{item.attribute_name}</Text>
                         </View>
                         <View style={{width:'50%'}}>
+                            <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
+                                {item.attribute_name}
+                            </Text>
+                            <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
+                                <Picker
+                                    selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                    // mode="dropdown"
+                                    style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
+                                    onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                    >
+                                    <Picker.Item label="Select" value="Select"  />
+                                    { this.variationOpt(item.variation_details) }
+                                </Picker>
+                            </View>
+                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                            <Text style={{fontSize:18,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                                 onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -133,16 +147,7 @@ class WishList extends Component {
                                         size={25}
                                     />
                                 </TouchableOpacity>
-                                <Picker
-                                    selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
-                                    // mode="dropdown"
-                                    style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
-                                    onValueChange={ (value) => ( this.setVariationType(value,item.id))}
-                                    >
-                                    <Picker.Item label="Select" value="Select"  />
-                                    { this.variationOpt(item.variation_details) }
-                                </Picker>
-                                {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text> */}
+                                    <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
                                 <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                     <Material 
                                         name="plus-circle-outline"
@@ -151,15 +156,15 @@ class WishList extends Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            {this.selectQtyDetail(item)}
+                            </View>
+                            {/*this.selectQtyDetail(item)*/}
                             {/**Price section */}
                             {/**Price section */}
-                            <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{fontSize:20,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
+                            <View>
+                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
                                     onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
-                                    <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                                    <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
+                                    <Material name="cart" size={19} color={constants.Colors.color_BLACK}/>
+                                    <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -181,13 +186,13 @@ class WishList extends Component {
             </View>
         )
         }else{
-            if(this.props.route.name != "SearchWishItem" ){
+            if(this.props.animate == false && this.props.route.name != "SearchWishItem" ){
                 return(
-                    <View style={{flex:1}}>
-                        <Text style={{alignSelf:'center',fontSize:16,fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_intro,marginTop:constants.vh(20)}}>
-                            Not found any item
-                        </Text>
-                    </View>
+                    <EmptyComp imageName={constants.image.emptyCart} 
+                        welcomText={"Looks like you haven’t added anything to your Wish List yet!"}
+                        redirectText={"Add Now"}
+                        onPress={()=>this.props.navigation.navigate("MainHome")}
+                    />
                 )
             }
         }
@@ -197,12 +202,8 @@ class WishList extends Component {
         return (
 
                 <View style={styles.container}>
+                    <TextHeading title="My Wish List"/>
                         <View style={styles.MainContainer}>
-                            <View>
-                                <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,paddingLeft:15}}>
-                                    Wish List
-                                </Text>
-                            </View>
                             {/* {this.searchComonent()} */}
                             {this._loadLoader()}
                             {this.renederItemType()}
@@ -266,8 +267,8 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         width:'95%',
         backgroundColor:"white",
-        borderRadius:10,
-        elevation:10,
+        borderRadius:2,
+        elevation:4,
         padding:10,
         marginBottom:10,
     }

@@ -42,6 +42,7 @@ const data = (state = initialDataState, action) => {
                 shippingCharges:null,
                 shippingPincode:null,
                 defaultShipingAddress:null,
+                activeProduct:''
             }
         
         case 'FETECH_ADDRESS_LIST':
@@ -81,7 +82,7 @@ const data = (state = initialDataState, action) => {
             if(action.cartItem.length >0)
             {
                 action.cartItem.map(item=>{
-                    newSyncItemTotal += parseFloat(item.selectedVariationPrice) ;
+                    newSyncItemTotal += parseFloat(item.selectedQtyPrice);
                 })
             }
 
@@ -574,12 +575,13 @@ const data = (state = initialDataState, action) => {
         // }
 
 
-        case "REMOVE_WHOLE_ITEM_FROM_CART":
-            let itemToRemove= state.addedItems.find(item=> action.id === item.id)
-            let new_items = state.addedItems.filter(item=> action.id !== item.id)
+        case "REMOVE_ITEM":
+            let itemToRemove= state.addedItems.find(item=> (action.id === item.prod_id && action.selectedVariationID == item.selectedVariationID));
+
+            let new_items = state.addedItems.filter(item=> (action.cart_id != item.id ));
             
             //calculating the total
-            let newTotal = state.total - (itemToRemove.price * itemToRemove.quantity )
+            let newTotal = state.total - parseFloat(itemToRemove.selectedQtyPrice);
             return{
                 ...state,
                 addedItems: new_items,

@@ -52,9 +52,16 @@ class PorductVariation extends Component {
         }
     };
     
-    _manageProdQty = (prod ,variationId,typeaction)=>{
+    _manageProdQty = (prod ,variationId,typeaction,selectedQty)=>{
         if(variationId !=""){
-            this.props.manageQty({ prodId: prod, typeOfAct: typeaction ,screen: this.props.route.name});
+            
+            if(typeaction == "add"){
+                this.props.manageQty({ prodId: prod, typeOfAct: typeaction ,screen: this.props.route.name});
+            }else{
+                if(selectedQty >1)
+                this.props.manageQty({ prodId: prod, typeOfAct: typeaction ,screen: this.props.route.name});
+            }
+
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -91,6 +98,15 @@ class PorductVariation extends Component {
 
     //add product in cart
     async _addInCart(prodCatId_id,ProdVariationID,Itemid,selectedQty){
+        let existProd = false;
+        this.props.cart.map( cartItems=>{
+            if(Itemid == cartItems.prod_id && ProdVariationID == cartItems.selectedVariationID)
+            {
+                existProd = true;
+            }
+        })
+
+        console.log("add in cart ",existProd);
 
         if(ProdVariationID !=''){
             var data = [];
@@ -99,8 +115,15 @@ class PorductVariation extends Component {
             data["screen"] = this.props.route.name;
             data["qty"] = selectedQty
             // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
-            await this.props.addItemToCart(data);
-            this.props.setCartItemLocal()
+          if(!existProd)
+            {
+                this.props.loading()
+                await this.props.addItemToCart(data);
+                this.props.setCartItemLocal()
+            }else{
+                ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -111,7 +134,7 @@ class PorductVariation extends Component {
         this.props.removeFromCart(itemId);
     }
 
-    renderItemTitle(){
+    renderItemTitleOld(){
         const Auto=this.props.productData.length>0?<AutoScrollListview itemList= {this.props.productData} totalProd={totalprod} scrollPosition={5} /> :null;
         return (
             <View style={{paddingBottom:0,marginBottom:-70}}>
@@ -122,8 +145,44 @@ class PorductVariation extends Component {
         )
     }
 
+    _selectCat(prod_cat_id){
+        console.log(prod_cat_id);
+        this.props.selectCat(prod_cat_id);
+        this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+    }
+
+    renderItemTitle(){
+        let catName = this.props.productData;
+        return (
+                <View style={{width:'95%',alignSelf:'center'}}>
+                    <FlatList
+                        data={catName}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => (
+                            <View>
+                                {
+                                    this.props.activeProdCat == item.id?(
+                                        <Text style={styles.notActiveItem}>
+                                            {fristLetterCapital(item.title)}
+                                        </Text>
+                                ):(
+                                    <TouchableOpacity onPress={()=>this._selectCat(item.id)}>
+                                        <Text style={styles.activeItem}>
+                                            {fristLetterCapital(item.title)}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                                }
+                            </View>
+                        )}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+        )
+    }
+
     setVariationType(variationValue, prod_id){
-        console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
         this.props.selectProdVariation({ prod_id: prod_id, value: variationValue ,screen: this.props.route.name});
     }
@@ -209,7 +268,7 @@ class PorductVariation extends Component {
 
                                 <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
-                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove')}>
+                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove',item.selectedQty)}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -218,7 +277,7 @@ class PorductVariation extends Component {
                                 </TouchableOpacity>
                                 <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
                                 <TouchableOpacity style={{marginLeft:8}}
-                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add')}>
+                                onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add',item.selectedQty)}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -327,10 +386,24 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         width:'95%',
         backgroundColor:"white",
-        borderRadius:10,
-        elevation:10,
+        borderRadius:2,
+        elevation:4,
         padding:10,
         marginBottom:10,
+    },
+    activeItem:{
+        fontSize:16,
+        color:constants.Colors.color_active_cat,
+        fontFamily:constants.fonts.Cardo_Italic,
+        paddingRight:15,
+        paddingTop:4,
+        opacity:0.5
+    },
+    notActiveItem:{
+        fontSize:20,
+        color:constants.Colors.color_heading,
+        fontFamily:constants.fonts.Cardo_Italic,
+        paddingRight:15,
     }
   });
 
@@ -342,6 +415,8 @@ const mapStateToProps = state => ({
     authMobile :state.data.authMobile,
     no_more_data: state.data.no_more_data,
     productData : state.data.productData,
+    activeProdCat:state.data.activeProduct,
+    cart: state.data.addedItems
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -350,13 +425,14 @@ const mapDispatchToProps = dispatch => ({
     addItemToCart :(data)=> dispatch(addItemToCart(data)),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
-    loader:()=>dispatch({type : 'LOADING'}),
+    loading:()=>dispatch({type : 'LOADING'}),
     getProductType: (data) => dispatch(getProductType(data)),
     addInWish:(data) => dispatch({type:'ADD-WISH', activeProdId:data}),
     manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct ,screen:data.screen}),
     setWishInLocal :(data)=>dispatch(setWishListItemInLocal(data)),
     setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
     selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
+    selectCat: (data)=>dispatch({type:'ACTIVE-PROD' ,id: data}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorductVariation);

@@ -55,11 +55,11 @@ class WelcomeScreen extends Component {
 		if(res === "introHadDone"){
 				this.setState({ show_Main_App: true });
 				this.getAsyncData("authData").then((authData) => {
-					console.log("I am first component");
+					
 					if(authData != null){
 						// this.setState({ show_Main_App: true });
 						let objAuthData = JSON.parse(authData);
-						console.log(objAuthData);
+						
 						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name})
 
 						setTimeout(function(){  

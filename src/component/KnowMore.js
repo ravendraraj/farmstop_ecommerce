@@ -86,7 +86,6 @@ class KnowMore extends Component {
     }
 
     setVariationType(variationValue, prod_id){
-        console.log(variationValue);
         //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
         //this.props.selectProdVariation({prod_id:prod_id ,value:variationValue});
         this.props.selectProdVariation({ prod_id: prod_id, value: variationValue ,screen: this.props.screen});

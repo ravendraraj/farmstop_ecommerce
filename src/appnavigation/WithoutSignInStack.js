@@ -30,6 +30,7 @@ import ShippingAddress from '../component/ShippingAddress'
 import WishTabNav from './WishTabNav'
 import MyOrderTab from './MyOrderTab'
 import TrackOrder from '../component/TrackOrder'
+import MyProfile from '../component/MyProfile'
 
 const RootStack = createStackNavigator();
 
@@ -45,7 +46,16 @@ const WithoutSignInStack = ({navigation}) => (
             })}
             
             name="MainHome" component={HomeScreen}/>
-        
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                // headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: null,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="MyProfile" component={MyProfile}/>
+
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -200,8 +210,10 @@ const WithoutSignInStack = ({navigation}) => (
                     name="ContactScreen" component={ContactScreen}/>
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                        headerTitle: () => <Header navigation={navigation} />,
+                        // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        // headerTitle: () => <Header navigation={navigation} />,
+                        headerTitle: null,
+                        headerLeft:false,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}

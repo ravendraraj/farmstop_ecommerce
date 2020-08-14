@@ -6,6 +6,7 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation';
 import image from "../constants/Image"
+import {TextHeading} from '../customElement/Input'
 
 class PaymentInfo extends Component{
     constructor(props){
@@ -61,6 +62,7 @@ class PaymentInfo extends Component{
         return(
             <View style={styles.container}>
                 <SafeAreaView>
+                    <TextHeading title="My Profile"/>
                     <ScrollView>
                         {this._renderView()}
                     </ScrollView>

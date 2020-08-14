@@ -33,7 +33,7 @@ _loadLoader() {
  renederItemTrackList() {
         let orderId = this.props.route.params['orderId'];
         let orderDetails = this.props.orderList.find((item)=> item.id == orderId);
-            console.log(orderDetails);
+            
       return (
             <View>
                 <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>

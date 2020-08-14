@@ -11,8 +11,8 @@ function main_screen_header({navigation,cartItem}){
         navigation.openDrawer()
     }
 
-    const cart = ()=>{
-        navigate("MyCart");
+    const nav = (route)=>{
+        navigate(route);
     }
 
     let totalProd = cartItem.length > 0 ? cartItem.length:0;
@@ -22,11 +22,11 @@ function main_screen_header({navigation,cartItem}){
                 <Icon name="menu" size={30} onPress={openMenue} color={constants.Colors.color_BLACK}/>
             </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
-            <TouchableOpacity style={{marginRight:20}} onPress={()=>navigate("GoogleLocation")}>
+            <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("GoogleLocation")}>
                     <Image source={constants.image.liveLocIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{marginRight:20}} onPress={()=>cart()}>
+                <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("MyCart")}>
                     <View style={styles.cartTextContainer}>
                         <Text style={styles.cartText}>{totalProd}</Text>
                     </View>
@@ -34,7 +34,7 @@ function main_screen_header({navigation,cartItem}){
                     <Image source={constants.image.cartIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity >
+                <TouchableOpacity onPress={()=>nav("MyProfile")}>
                     {/* <Icon name="user" size={25}/> */}
                     <Image source={constants.image.userIcon} style={{width:35,height:35}}/>
                 </TouchableOpacity>

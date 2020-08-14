@@ -84,7 +84,7 @@ class ForgetPassword extends Component{
         if(this.props.otp === ""){
             return(
                 <View style={{width:'80%',alignSelf:"center"}}>
-                        <TextHeading title="forgot password?" fontsize={25}/>
+                        <TextHeading title="Forgot Password?"/>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Email Id" onChangeText={(text) => this.setState({emailId:text})}/>
                         </View>

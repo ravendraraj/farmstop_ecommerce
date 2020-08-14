@@ -5,6 +5,7 @@ import productVariation from '../component/PorductVariation'
 import MyCart from '../component/MyCart'
 import SearchProductVariation from '../component/SearchProductVariation'
 import constants from '../constants'
+import MyProfile from '../component/MyProfile'
 
 const Tab = createBottomTabNavigator();
 const TabNavProdvariation = ({navigation}) => (
@@ -19,7 +20,7 @@ const TabNavProdvariation = ({navigation}) => (
           } else if (route.name === 'Search') {
             iconName = focused ? <Image source={constants.image.searchIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.searchIcon} style={{width:35,height:35}}/>;
             // iconName = constants.image.searchIcon;
-          }else if (route.name === 'MyAccount') {
+          }else if (route.name === 'MyProfile') {
             iconName = focused ? <Image source={constants.image.profile} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.profile} style={{width:35,height:35}}/>;
             // iconName = constants.image.profile;
           }
@@ -40,7 +41,7 @@ const TabNavProdvariation = ({navigation}) => (
     >
         <Tab.Screen name="productVariation" component={productVariation} />
         <Tab.Screen name="Search" component={SearchProductVariation} />
-        <Tab.Screen name="MyAccount" component={MyCart} />
+        <Tab.Screen name="MyProfile" component={MyProfile} />
     </Tab.Navigator>
 )
 

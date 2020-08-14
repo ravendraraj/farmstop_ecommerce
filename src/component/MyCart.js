@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
-import {checkCouponCode ,getCartItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
+import {checkCouponCode ,getCartItem,deleteItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import {Loader} from '../customElement/Loader'
-import {CouponTextInput ,PrimaryTextInput} from '../customElement/Input'
+import {CouponTextInput ,PrimaryTextInput,EmptyComp} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import {Picker} from '@react-native-community/picker';
@@ -15,6 +16,7 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { navigate } from '../appnavigation/RootNavigation'
 import RazorpayCheckout from 'react-native-razorpay';
 import {razor_api_key} from '../constants/key';
+import {TextHeading} from '../customElement/Input'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -99,12 +101,12 @@ class MyCart extends Component {
         if(this.props.cartData.length >0){
             let subtotal = this.props.subtotal;
             let tax = 0;
-            let deliveryCharges = this.state.deliveryCharges;
+            let deliveryCharges = ( this.props.shippingCost== null ? 0 :this.props.shippingCost);
             let discount = this.state.discount;
             let total = subtotal+parseFloat(deliveryCharges)+tax;
             // if(subtotal >0){
                 return(
-                    <View style={{width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
+                    <View style={{flex:1,width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
                         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                             <Text style={styles.fonts}>Sub Total</Text>
                             <Text style={styles.fonts}>{subtotal}</Text>
@@ -143,7 +145,7 @@ class MyCart extends Component {
 
     checkProceed(){
 
-        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != null){
+        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingCost != null){
             
             let subtotal = this.props.subtotal;
             let tax = 0;
@@ -247,8 +249,6 @@ class MyCart extends Component {
 
     _manageCartProdQty = async (prod ,typeaction)=>{
         
-        console.log(prod);
-        console.log(prod.selectedQty);
         if(parseInt(prod.selectedQty) >= 1){
             var data = [];
             data["prod_id"] = prod.prod_id;
@@ -293,18 +293,20 @@ class MyCart extends Component {
         return( variation.map( (item,index) => { 
               return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
         }));
-    }
+    }   
 
-    onSwipeLeft(gestureState){
-        this.setState({delete: false});
-    }
- 
-    onSwipeRight(gestureState){
-        this.setState({delete: true});
-        Alert.alert("Hii");
-    }
-    
+    async deleteItem(prod_id , selectedVariationID, cart_item_id,cart_id){
+        
+        var data = [];
+        data["id"] = prod_id;
+        data["variationId"] = selectedVariationID;
+        data["cart_item_id"] =cart_item_id;
+        data["cart_id"] = cart_id;
 
+        await this.props.deleteItem(data);
+        this.props.setCartItemLocal();
+
+    } 
 
     renederItemType () {
         let ItemList = this.props.cartData;
@@ -322,20 +324,26 @@ class MyCart extends Component {
                 keyboardShouldPersistTaps="handled"
                 renderItem={({ item }) => (
                     <View style={styles.prodBlock}>
-                        {/**<View style={{flexDirection:'row',justifyContent:'space-around'}} >**/}
-                        <GestureRecognizer
-                                onSwipeLeft={(state) => this.onSwipeLeft(state)}
-                                onSwipeRight={(state) => this.onSwipeRight(state)}
-                                config={config}
-                                style={{flexDirection:'row',justifyContent:'space-around'}}
-                            >
+                        <View style={{flexDirection:'row',justifyContent:'space-around'}} >
+                        
                             <View style={{alignSelf:'center',marginTop:10}}>
                                 <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                             </View>
                             <View style={{width:'50%'}}>
+                                <View style={{flexDirection:'row'}}>
                                 <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
                                     {fristLetterCapital(item.attribute_name)}
                                 </Text>
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={{position:'absolute',right:0,bottom:4,zIndex:1}} onPress={()=>this.deleteItem(item.prod_id ,item.selectedVariationID,item.cart_item_id,item.id)}>
+                                        <Icon 
+                                            name="trash-o"
+                                            color={constants.Colors.color_BLACK}
+                                            size={25}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                </View>
                                 <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
                                     <Picker
                                         selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
@@ -369,15 +377,9 @@ class MyCart extends Component {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-
-                                {/** new commited<Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>{item.selectedQtyVariation} | QTY:{item.selectedQty} </Text>*/}
-                                {/**Price section */}
-                                {/* <View style={{alignSelf:'center',marginBottom:10,marginTop:10,backgroundColor:'red',width:'100%'}}> */}
-                                {/** new commited<Text style={{fontSize:16,fontFamily:regular,marginLeft:10}}>Total- Rs. {item.selectedQtyPrice}</Text>*/}
-                                {/* </View> */}
                             </View>
-                            </GestureRecognizer>
-                        {/**</View>**/}
+                            
+                        </View>
                     </View>
                 )}
 
@@ -399,11 +401,11 @@ class MyCart extends Component {
             )
         }else{
             return(
-                <View style={{alignSelf:'center'}}>
-                    <Text style={styles.welcomText}>
-                        Not found any product
-                    </Text>
-                </View>
+                <EmptyComp imageName={constants.image.emptyCart} 
+                    welcomText={"Looks like you haven’t added anything to your cart yet!"}
+                    redirectText={"Shop Now"}
+                    onPress={()=>this.props.navigation.navigate("MainHome")}
+                />
             )
         }
     }
@@ -414,14 +416,10 @@ class MyCart extends Component {
                 <View style={styles.container}>
                         <View style={styles.MainContainer}>
                             <View style={styles.headContainer}>
-                                <Text style={styles.mainHeading}>
-                                    My Cart
-                                </Text>
+                                <TextHeading title="My Cart"/>
                             </View>
                             {this._loadLoader()}
                             {this.renederItemType()}
-                            {/* {this.renederCartDetails()} */}
-                            {/* {this.renederCartDetails()} */}
                         </View>
                 </View>
             )
@@ -457,7 +455,8 @@ const styles = StyleSheet.create({
 		color: constants.Colors.color_intro,
 		textAlign: 'center',
 		fontSize: 18,
-		padding: 20,
+        paddingLeft:10,
+        paddingRight:10,
 		fontFamily:regular
     },
 
@@ -478,8 +477,8 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         width:'95%',
         backgroundColor:"white",
-        borderRadius:10,
-        elevation:10,
+        borderRadius:2,
+        elevation:4,
         padding:10,
         marginBottom:10,
     },
@@ -491,6 +490,11 @@ const styles = StyleSheet.create({
     },
     headContainer:{
         // backgroundColor:constants.Colors.color_lineGrey,
+        paddingLeft:10
+    },
+    deleteIcon:{
+        width:20,
+        height:20
     }
   });
 
@@ -519,7 +523,8 @@ const mapDispatchToProps = dispatch => ({
     checkCouponCode :(data)=>dispatch(checkCouponCode(data)),
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
-    checkOut:(data)=>dispatch(checkOut(data))
+    checkOut:(data)=>dispatch(checkOut(data)),
+    deleteItem:(data)=>dispatch(deleteItem(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

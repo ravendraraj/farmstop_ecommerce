@@ -300,13 +300,11 @@ class shippingAddress extends Component{
     render(){
         return(
             <View style={styles.container}>
+                <TextHeading title="My Account"/>
                 <SafeAreaView>
-                    <View style={{width:"100%",alignSelf:'center',marginBottom:100}}>
-                        <View style={{marginTop:10}}>
-                            <TextHeading title="My account" fontsize={25}/>
-                        </View>
+                    <View style={{width:"100%",alignSelf:'center'}}>
                         <ScrollView>
-                        <View style={{width:"95%",alignSelf:'center'}}>
+                        <View style={{width:"95%",alignSelf:'center',marginBottom:30}}>
                             {this.renderFormOnKeyEvent()}
                             {this.renderAddAnotherAddressBtn()}
                             {this.renderAddresList()}
@@ -325,7 +323,7 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         backgroundColor:constants.Colors.color_WHITE,
-        width:"95%",
+        width:"100%",
         alignSelf:'center'
     },
     addressContainer:{

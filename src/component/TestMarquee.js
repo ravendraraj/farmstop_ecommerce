@@ -1,34 +1,52 @@
-import React ,{Component} from 'react'
-import {View,Text } from 'react-native'
-import { connect } from 'react-redux';
-import AutoScrollListview from '../customElement/Auto'
-import Marquee from '../customElement/marquee'
+import React from 'react'
+import {
+ SafeAreaView,
+ StyleSheet,
+ View,
+ Text,
+ StatusBar,
+ FlatList
+} from 'react-native'
 
-class TestMarquee extends Component{
- render() {
-    const Auto=this.props.productData.length>0?<AutoScrollListview itemList= {this.props.productData} scrollPosition={5} /> :null;
-    return (
-            <View>
-                    <Marquee duration={18*1000} >
-                            {Auto}
-                    </Marquee>
-            </View>
-        )
-    }
+const mockDataList = [
+ { id: '1', text: 'Swipe me left!' },
+ { id: '2', text: 'Swipe me right!' },
+ { id: '3', text: 'Try swiping in both directions' }
+]
+
+const Separator = () => <View style={styles.itemSeparator} />
+
+const ListItem = ({ text }) => (
+ <View style={{ paddingVertical: 20 }}>
+   <Text style={{ fontSize: 24 }}>{text}</Text>
+ </View>
+)
+
+const TestMarquee = () => {
+ return (
+    <>
+     <StatusBar barStyle='dark-content' />
+     <SafeAreaView style={styles.container}>
+       <FlatList
+         data={mockDataList}
+         keyExtractor={item => item.id}
+         renderItem={({ item }) => <ListItem {...item} />}
+         ItemSeparatorComponent={() => <Separator />}
+       />
+     </SafeAreaView>
+   </>
+ )
 }
 
-const mapStateToProps = state => ({
-    // my_wish_list :state.data.my_wish_list,
-    productData : state.data.productData,
-});
+const styles = StyleSheet.create({
+ container: {
+   flex: 1
+ },
+ itemSeparator: {
+   flex: 1,
+   height: 1,
+   backgroundColor: '#444'
+ }
+})
 
-const mapDispatchToProps = dispatch => ({
-//     getWishListItem: ()=>dispatch(getWishListItem()),
-//     addToCart :(prodId)=> dispatch({type:'ADD_WISH_ITEM_TO_CART',id:prodId}),
-//     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
-//     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
-//     manageCartQty:(data) =>dispatch({type:'MANAGE-WISHPROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
-//     selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value})
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TestMarquee);
+export default TestMarquee

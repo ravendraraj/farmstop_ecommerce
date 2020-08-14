@@ -11,6 +11,7 @@ export const logout = (data) => async(dispatch,getState) => {
     dispatch({type : 'LOADING'});
     await AsyncStorage.removeItem("authData");
     await AsyncStorage.removeItem("userCart");
+    await AsyncStorage.removeItem("userShippingAdd");
     dispatch({type:'LOGOUT'});
     navigate('NotLogin');
 }
@@ -92,21 +93,20 @@ export const socialLogin = (userData) => (dispatch,getState) => {
         'Content-Type': 'multipart/form-data',
         }
     }
-
+    
     fetch(url,post_req)
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response)
             if(response.status == "1"){
-                
+                // console.log(response);
                 var authUser = {
                     'Login_Type' :userData["social_type"],
                     'name' :userData["name"],
                     'profile' :userData["image"],
-                    'email' :userData["email"],
+                    'email' :response.user_info["email"],
                     'userId' :userData["id"],
-                    'mobile' :'null'
+                    'mobile' :response.user_info["mobile"],
                 };
 
                  AsyncStorage.setItem('Logined', 'YES');
@@ -119,8 +119,8 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                     type:'AUTHORIZED-USER',
                     login_type:userData["social_type"],
                     profile:userData["image"],
-                    email:userData["email"],
-                    mobile:'null',
+                    email:response.user_info["email"],
+                    mobile:response.user_info["mobile"],
                     userID:userData["id"],
                     authName:userData["name"],
                 });
@@ -196,7 +196,6 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
             if(data.username == 'forget'){
                 if(response.status == "1"){
                     dispatch({ type : 'OTP_SEND', payload : response.message});
@@ -241,7 +240,6 @@ export const resetPassword = (data) => (dispatch,getState) => {
     .then(res =>{
         //console.log(res);
         res.json().then(response => {
-            console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'SUCCESS', payload : response.message});
             }else{
@@ -302,7 +300,7 @@ export const getProductType = (data) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
+            
             if(response.status == "1"){
                 dispatch({ type : 'PRODUCT_VARIATION', payload : response.product});
             }else{
@@ -331,7 +329,7 @@ export const searchProductType = (data) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
+            
             if(response.status == "1"){
                 dispatch({ type : 'AUTO_COMPLETE_PROD', payload : response.searchProduct});
             }else{
@@ -352,7 +350,7 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
 
     dispatch({type : 'LOADING'});
     //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
-    console.log(data);
+    
     let url = weburl + 'api-productByKeyword?term='+data.prodKey;
     if(getState().data.authUserID != ''){
         url = url + "&userId="+getState().data.authUserID;
@@ -416,7 +414,6 @@ export const setWishListItemOnServer= (data) => (dispatch,getState) => {
 
     let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID;
     console.log(url);
-    console.log(getState().data);
     fetch(url)
     .then(res =>{
         res.json()
@@ -480,7 +477,7 @@ async function getLocalSaveWishList(DataType) {
 }
 
 
-export const checkDelivery= (data) => (dispatch,getState) => {
+export const checkDelivery= (data) => async(dispatch,getState) => {
     dispatch({type : 'LOADING'});
     let url = weburl + 'api-check-delivery-loc?lat='+data.lat+"&lng="+data.lng;
     console.log(url);
@@ -502,18 +499,19 @@ export const checkDelivery= (data) => (dispatch,getState) => {
                     AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
                     dispatch({type:'SUCCESS',payload:response.message+" "+response.address});
                     dispatch({ type : 'LOCATION_FETCHED',  address : response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
+                    navigate("MainHome");
+
                 
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
         })
         .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        // console.log("NetWork Error");
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         navigate("internetError");
     });
 
@@ -557,7 +555,7 @@ export const getAppartment= (data) => (dispatch,getState) => {
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                console.log(response.apartment);
+                
                 dispatch({ type : 'GET_APARTMENT', apartment:response.apartment});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -601,6 +599,7 @@ export const getUserAddressList= (data) => (dispatch,getState) => {
     .catch( err => {
         //dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        
         console.log("NetWork Error");
     });
 
@@ -663,7 +662,6 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
                 navigate("ShippingAddress");
@@ -733,7 +731,7 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
 
 export const addItemToCart = (prodData) => (dispatch,getState) => {
 // export const addItemToCart = (data) => (dispatch,getState) => {
-    dispatch({type : 'LOADING'});
+    // dispatch({type : 'LOADING'});
     // console.log(prodData);
     let product = prodData.id;
     let variationId = prodData.variationId;
@@ -789,6 +787,65 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
 
 }
 
+
+export const deleteItem = (prodData) => (dispatch,getState) => {
+// export const addItemToCart = (data) => (dispatch,getState) => {
+    // dispatch({type : 'LOADING'});
+    // console.log(prodData);
+    let product = prodData.id;
+    let variationId = prodData.variationId;
+    let cart_id = prodData.cart_id;
+
+    let userId = getState().data.authUserID;
+    let emailId = getState().data.authEmail;
+    
+    if(userId !=''){
+        let url = weburl + 'api-deleteCartItems/';
+        // console.log(url);
+        var data = new FormData();
+        data.append("product", product);
+        data.append("variation_id", variationId);
+        data.append("cart_item_id",prodData.cart_item_id);
+        data.append("userId", userId);
+        data.append("emailId", emailId);
+
+        // console.log(userId+"--"+emailId);
+        let post_req = {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            }
+        }
+
+        console.log(post_req);
+        fetch(url ,post_req)
+        .then(res =>{
+            res.json()
+            .then(response => {
+                //console.log(response);
+                if(response.status == "1"){
+                    dispatch({ type : 'REMOVE_ITEM' ,id:product ,selectedVariationID: variationId,cart_id:cart_id});
+                }else{
+                    dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                }
+            })
+            .catch( err => {
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+            })
+        })
+        .catch( err => {
+            dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+            console.log("NetWork Error");
+            navigate("internetError");
+        });
+        
+    }else{
+        dispatch({ type : 'REMOVE_ITEM' ,id:product ,selectedVariationID: variationId,cart_id:cart_id});
+    }
+
+}
 //set cart item in asyncstorage 
 // Note: remove this async on logout and set again when perfome login
 export const setCartItemLocal=  (data) => async(dispatch,getState) => {
@@ -1079,7 +1136,7 @@ export const setQtyInCart = (prodData) => (dispatch,getState) => {
                  'Content-Type': 'multipart/form-data',
              }
          }
-         console.log(post_req);
+         
          fetch(url ,post_req)
          .then(res =>{
              res.json()
@@ -1111,9 +1168,7 @@ export const setQtyInCart = (prodData) => (dispatch,getState) => {
 export const checkOut= (checkOutData) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     let orderCreateUrl = weburl + 'api-create-order-id/';
-    console.log(orderCreateUrl);
-    console.log(checkOutData);
-
+    
     var checkOutFormData = new FormData();
          checkOutFormData.append("user_id", checkOutData['user_id']);
          checkOutFormData.append("user_type", checkOutData['user_type']);
@@ -1140,10 +1195,10 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
+            
             if(response.status == "1"){
                 console.log("order created");
-                console.log(response.orderData)
+                
                 // dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value,coupon_id:response.coupon_id});
                     var options = {
                         description: 'Credits towards consultation',
@@ -1166,7 +1221,6 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
 
                     RazorpayCheckout.open(options).then((data) => {
                     // handle success
-                    console.log(data);
                     // alert(`Success: ${data.razorpay_payment_id}`);
 
                     if(data.razorpay_payment_id !="")
@@ -1239,8 +1293,6 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
 export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     let orderCreateUrl = weburl + 'api-place-cod-order/';
-    console.log(orderCreateUrl);
-    console.log(checkOutData);
 
     var checkOutFormData = new FormData();
          checkOutFormData.append("user_id", checkOutData['user_id']);
@@ -1300,7 +1352,6 @@ export const getOrderList= (data) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'FETCH_ORDER_LIST', orederList:response.orderList });
             }else{

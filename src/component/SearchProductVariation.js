@@ -376,6 +376,15 @@ const styles = StyleSheet.create({
 		height: '100%',
 		flex: 1
 	},
+	prodBlock:{
+        alignSelf:'center',
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:2,
+        elevation:4,
+        padding:10,
+        marginBottom:10,
+    }
 });
 
 const mapStateToProps = state => ({

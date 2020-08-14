@@ -6,6 +6,8 @@ import {
     Platform,
     StyleSheet,
     Dimensions,
+    Image,
+    TouchableOpacity
 } from 'react-native';
 import constants from "../constants";
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -75,7 +77,7 @@ export const SearchBox =(props)=>{
 export const TextHeading = (props) => {
     return (
         <View>
-            <Text style={styles.textInputTitle,{color:constants.Colors.color_heading,fontFamily:italic,fontSize:props.fontsize}}>{props.title}</Text>
+            <Text style={{color:constants.Colors.color_heading,fontFamily:italic,fontSize:20,paddingLeft:10}}>{props.title}</Text>
         </View>
     );
 }
@@ -91,6 +93,30 @@ export const TextView = (props) => {
         </View>
     );
 }
+
+export const EmptyComp = (props) => {
+    return (
+        <View style={{alignSelf:'center',marginTop:constants.vw(60)}}>
+            <Image 
+                source={props.imageName}
+                style={{width:constants.vw(220),height:constants.vw(220),alignSelf:"center"}}
+            />
+                    
+            <Text style={styles.welcomText}>
+                {props.welcomText}
+            </Text>
+
+            <View style={{width:100,alignSelf:"center"}}>
+                <TouchableOpacity style={{alignSelf:"center"}} onPress={props.onPress}>
+                    <Text style={{fontFamily: constants.fonts.Cardo_Regular, textAlignVertical: "top", fontSize: 16,color:constants.Colors.color_heading}}>
+                        {props.redirectText}
+                    </Text>
+                </TouchableOpacity>
+            </View>        
+        </View>
+    );
+}
+
 
 export const PasscodeTextInput = (props) => {
     return (
@@ -155,4 +181,12 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
         alignItems: 'center',
       },
+      welcomText:{
+        color: constants.Colors.color_intro,
+        textAlign: 'center',
+        fontSize: 18,
+        paddingLeft:10,
+        paddingRight:10,
+        fontFamily:regular
+      }
 });

@@ -7,7 +7,7 @@ import SocialLinks from '../component/SocialLinks'
 import { prod_image ,weburl } from '../constants/url'
 import {getOrderList} from '../lib/api'
 import {Loader} from '../customElement/Loader'
-import {CouponTextInput ,PrimaryTextInput} from '../customElement/Input'
+import {CouponTextInput ,PrimaryTextInput,TextHeading,EmptyComp} from '../customElement/Input'
 
 const width = Dimensions.get('window').width;
 class MyOrderList extends Component{
@@ -120,13 +120,16 @@ _loadLoader() {
         />
       )
     }else{
-    	return(
-    		<View>
-    			<Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(18),color:constants.Colors.color_intro}}>
-    				Not Found Order
-    			</Text>
-    		</View>
-    	)
+    	
+    		if(this.props.animate == false){
+                return(
+                    <EmptyComp imageName={constants.image.emptyCart} 
+                        welcomText={"Not found any order"}
+                        redirectText={"SHOP NOW"}
+                        onPress={()=>this.props.navigation.navigate("MainHome")}
+                    />
+                )
+            }
     }
   }
 
@@ -153,9 +156,7 @@ _trackOrder(){
         return(
             <View style={styles.container}>
                 <View style={{width:'100%',alignSelf:"center"}}>
-                	<Text style={{fontSize:20,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,paddingLeft:15,marginBottom:constants.vw(20)}}>
-                        My Orders
-                    </Text>
+                    <TextHeading title="My Orders"/>
                 	{this.renederItemType()}
                 	{this._loadLoader()}
                 </View>

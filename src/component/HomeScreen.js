@@ -83,9 +83,57 @@ class HomeScreen extends Component {
 			 Geolocation.getCurrentPosition(
 				(position) => {
 				    const currentLongitude = JSON.stringify(position.coords.longitude);
-					 const currentLatitude = JSON.stringify(position.coords.latitude);
-				    this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});
-            this.setState({checkedShippingArea:true})
+					  const currentLatitude = JSON.stringify(position.coords.latitude);
+				    // this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});
+            let url = weburl + 'api-check-delivery-loc?lat='+currentLatitude+"&lng="+currentLongitude;
+            console.log(url);
+
+            fetch(url)
+            .then(res =>{
+                res.json()
+                .then(response => {
+                    //console.log(response);
+                    if(response.status == "1"){
+                            var userShipingAddress = {
+                                "address" : response.address,
+                                "postal_code":response.detail['pincode'],
+                                "shippingCharges":response.detail['shipping_cost'],
+                            }
+
+                            AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
+                            this.props.shippingAddress({address:response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
+                        
+                    }else{
+                        // dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                        Alert.alert(
+                          'Location Alert',
+                          'Delivery is not avaliable on your current address ,please select another location Location',
+                          [
+                            {
+                              text: 'Select',
+                              onPress: () => this.props.navigation.navigate("GoogleLocation")
+                            },
+                            {
+                              text: 'Cancel',
+                              onPress: () => console.log('Cancel Pressed'),
+                              style: 'cancel'
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                    }
+                })
+                .catch( err => {
+                    // dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+                })
+            })
+            .catch( err => {
+                // dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+                navigate("internetError");
+            });
+
+
+
 					},
 					(error) => {console.log(error)},
 					{ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
@@ -248,8 +296,7 @@ class HomeScreen extends Component {
             {this._ShowError()}
             {this._loadLoader()}
             {this.renederItemType()}
-              {this.renderSourceSection()}
-            {this.renderProdOnCheckDelivery()}
+            {this.renderSourceSection()}
           </View>
         </View>
       </ImageBackground>

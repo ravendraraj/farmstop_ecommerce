@@ -32,6 +32,7 @@ import TabNavProdvariation from './TabNavProdvariation'
 import WishTabNav from './WishTabNav'
 import MyOrderTab from './MyOrderTab'
 import TrackOrder from '../component/TrackOrder'
+import MyProfile from '../component/MyProfile'
 
 const RootStack = createStackNavigator();
 
@@ -100,6 +101,15 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="pageNotFound" component={pageNotFound404}/>
+
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0.1,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="MyProfile" component={MyProfile}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({
@@ -194,8 +204,10 @@ const HomeStack = ({navigation}) => (
                     name="ContactScreen" component={ContactScreen}/>
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                        headerTitle: () => <Header navigation={navigation} />,
+                        // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        // headerTitle: () => <Header navigation={navigation} />,
+                        headerTitle: null,
+                        headerLeft:false,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}

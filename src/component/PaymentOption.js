@@ -160,7 +160,7 @@ _loadLoader() {
                         this.props.checkOutOnCOD(orderDetails);
                     }
                     
-                    console.log(orderDetails);
+                    
       }else{
             if(this.props.authUserID == null && this.props.authUserID == "" ){
                 this.props.navigation.navigate("NotLogin");

@@ -72,17 +72,7 @@ class GoogleLoc extends Component {
 
 	_showMessage(){
 		console.log(this.props.success+"  -  "+this.props.error)
-		if(this.props.success != null){
-			Alert.alert(
-				"Address Alert",
-				this.props.success,
-				[
-				{ text: "OK", onPress: () => this.props.navigation.navigate("MainHome") }
-				],
-				{ cancelable: false }
-			);
-			this.props.removeError();
-		}else if(this.props.error){
+		if(this.props.error != null){
 			ToastAndroid.showWithGravity(this.props.error, ToastAndroid.SHORT, ToastAndroid.TOP);
 			this.props.removeError();
 		}

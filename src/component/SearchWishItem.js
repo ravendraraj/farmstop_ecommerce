@@ -69,7 +69,7 @@ componentDidMount() {
 
 
 setVariationType(variationValue, prod_id){
-    console.log(variationValue);
+    
     //ToastAndroid.showWithGravity(variationValue+" - "+prod_id, ToastAndroid.SHORT, ToastAndroid.TOP);
     this.props.selectProdVariationInWish({prod_id:prod_id ,value:variationValue});
 }
@@ -124,13 +124,31 @@ renederItemType () {
         <FlatList
         data={ItemList}
         renderItem={({ item }) => (
-            <View style={{marginBottom:10}}>
+            <View style={styles.prodBlock}>
                 <View style={{flexDirection:'row',justifyContent:'space-around'}} >
-                    <View>
+                    <View style={{marginTop:constants.vw(20)}}>
                         <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
-                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(13),alignSelf:'center'}}>{item.attribute_name}</Text>
                     </View>
+
                     <View style={{width:'50%'}}>
+                        <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
+                            {item.attribute_name}
+                        </Text>
+                        
+                        <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
+                          <Picker
+                                selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                // mode="dropdown"
+                                style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
+                                onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                >
+                                <Picker.Item label="Select" value="Select"  />
+                                { this.variationOpt(item.variation_details) }
+                            </Picker>
+                        </View>
+
+                        <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                        <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                         <View style={{flexDirection:'row'}}>
                             <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                             onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -140,16 +158,7 @@ renederItemType () {
                                     size={25}
                                 />
                             </TouchableOpacity>
-                            <Picker
-                                selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
-                                // mode="dropdown"
-                                style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
-                                onValueChange={ (value) => ( this.setVariationType(value,item.id))}
-                                >
-                                <Picker.Item label="Select" value="Select"  />
-                                { this.variationOpt(item.variation_details) }
-                            </Picker>
-                            {/* <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text> */}
+                            <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
                             <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                 <Material 
                                     name="plus-circle-outline"
@@ -158,15 +167,15 @@ renederItemType () {
                                 />
                             </TouchableOpacity>
                         </View>
-                        {this.selectQtyDetail(item)}
+                        </View>
+                        
                         {/**Price section */}
                         {/**Price section */}
-                        <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                            <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
-                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:85,alignSelf:'flex-end',justifyContent:'center',borderRadius:4}}
+                        <View>
+                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
                                 onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
-                                <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                                <Text style={{fontSize:12,fontFamily:regular}}>Add to Cart</Text>
+                                <Material name="cart" size={19} color={constants.Colors.color_BLACK}/>
+                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -291,8 +300,8 @@ const styles = StyleSheet.create({
   },
   imageThumbnail: {
     alignSelf: 'center',
-    width: constants.vw(70),
-    height: constants.vw(70),
+    width: constants.vw(90),
+    height: constants.vw(90),
   },
   autocompleteContainer: {
     position: 'absolute',
@@ -335,6 +344,15 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1
   },
+  prodBlock:{
+        alignSelf:'center',
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:2,
+        elevation:4,
+        padding:10,
+        marginBottom:10,
+    }
 });
 
 const mapStateToProps = state => ({

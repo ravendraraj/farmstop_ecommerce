@@ -145,7 +145,7 @@ renderMyAccTab(){
     if(this.state.displayMyAccChild ){
         return(
             <View style={{marginLeft:25}}>
-                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('AboutFarm')}>
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('MyProfile')}>
                     <Text style={styles.MenueLable}>Your Profile</Text>
                 </TouchableOpacity>
 
@@ -263,7 +263,7 @@ async _logOutEvent(){
                             <Text style={styles.MenueLable}>About Us</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('WishList')}}>
+                        <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('AboutFarm')}}>
                             <Text style={styles.MenueLable}>Our Farms</Text>
                         </TouchableOpacity>
                     </View>
