@@ -40,83 +40,43 @@ _loadLoader() {
         <FlatList
           	data={orderList}
 
-          	ListHeaderComponent={()=>(
-                <View style={{flexDirection:'row'}}>
-                    {/*<View style={{width:constants.vw(20)}}>
-                	   <Text style={styles.headerText}></Text>
-                    </View>*/}
-
-                    <View style={{width:constants.vw(80)}}>
-                	   <Text style={styles.headerText}>Date</Text>
-                    </View>
-
-                    <View style={{width:constants.vw(90)}}>
-                	   <Text style={styles.headerText}>order number</Text>
-                    </View>
-
-                    <View style={{width:constants.vw(90)}}>
-                	   <Text style={styles.headerText}>Status</Text>
-                    </View>
-
-                    <View style={{width:constants.vw(90)}}>
-                	   <Text style={styles.headerText}>Details</Text>
-                    </View>
-                </View>
-            )}
-
           	renderItem={({ item }) => (
-                <View style ={{width:'95%',alignSelf:'center',marginBottom:8}}>
-            	<View style={{flexDirection:'row'}}>
-                    {/*<View style={{width:constants.vw(20)}}>
-                	   <Text style={styles.contentText}>{}.</Text>
-                    </View>*/}
-
-                    <View style={{width:constants.vw(70)}}>
-                	   <Text style={styles.contentText}>{item.date}</Text>
+                <View style ={styles.prodBlock}>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={styles.heading}>Order Date:</Text>
+                        <Text style={styles.date}>
+                             {item.date}
+                        </Text>
                     </View>
 
-                    <View style={{width:constants.vw(90)}}>
-                	   <Text style={styles.contentText}>{item.order_no}</Text>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={styles.heading}>Order No:</Text>
+                        <Text style={styles.date}>
+                            {item.order_no}
+                        </Text>
                     </View>
-
-                    <View style={{width:constants.vw(90)}}>
-                	   <Text style={styles.contentText}>{item.order_status == "0" ? "Pending" :"Delivered"}</Text>
+                   
+                   <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:10}}>
+                       <View>
+                            <TouchableOpacity onPress={()=>this._trackOrderOnpress(item.order_no)}>
+                                <Text style={styles.moreDetails}>
+                                    Track Order
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity onPress={()=>this._orderDetails(item.order_no)}>
+                                <Text style={styles.moreDetails}>
+                                    Order Details
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-
-                    <View style={{width:constants.vw(90)}}>
-                    	<TouchableOpacity>
-                    		<Text style={styles.contentDetailText}>
-                    			Download Invoice
-                    		</Text>
-                    	</TouchableOpacity>
-                    </View>
-                </View>
-
-                <View style={{width:constants.vw(100) ,paddingLeft:constants.vw(10)}}>
-                    <TouchableOpacity onPress={()=>this._trackOrderOnpress(item.id)}>
-                        <Text style={styles.moreDetails}>More details</Text>
-                    </TouchableOpacity>
-                </View>
                 </View>
           	)}
           
           	numColumns={1}
             keyExtractor={item => item.id}
-
-          	ListFooterComponent={
-                <View style={{marginTop:constants.vw(20),marginBottom:constants.vw(100)}}>
-                	<Text style={{fontSize:20,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,paddingLeft:15,marginTop:constants.vw(20)}}>
-                			Track Your Order
-                	</Text>
-                	<View style={styles.inputBox}>
-                		
-                            <TextInput placeholder="Enter coupon code" 
-                                value={this.state.trackOrderId}
-                                onChangeText={(text)=>this.setState({trackOrderId:text})}
-                            />
-                	</View>
-                </View>
-            }
         />
       )
     }else{
@@ -134,10 +94,19 @@ _loadLoader() {
   }
 
 
-_trackOrderOnpress(orderId){
+_trackOrderOnpress(order_number){
     // let orderID = this.state.trackOrderId;
-    if( orderId!= ""){
-        this.props.navigation.navigate('TrackOrder', {orderId: orderId});
+    if( order_number!= ""){
+        this.props.navigation.navigate('TrackOrder', {order_no: order_number});
+    }else{
+        ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
+    }
+}
+
+_orderDetails(order_number){
+    // let orderID = this.state.trackOrderId;
+    if( order_number!= ""){
+        this.props.navigation.navigate('OrderDetails', {order_no: order_number});
     }else{
         ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
     }
@@ -170,33 +139,27 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor:constants.Colors.color_WHITE
     },
-    inputBox:{
-    	marginLeft:10,
-    	borderWidth:1,
-    	borderColor:"red",
-    	width:constants.vw(200)
-    },
-    headerText:{
-    	color:constants.Colors.color_heading,
-    	fontFamily:constants.fonts.Cardo_Regular,
-    	fontSize:constants.vw(18)
-    },
-    contentText:{
-        color:constants.Colors.color_Black,
-        fontFamily:constants.fonts.Cardo_Regular,
-        fontSize:constants.vw(18)  
-    },
     moreDetails:{
         color:'red',
-        fontFamily:constants.fonts.Cardo_Italic,
-        fontSize:constants.vw(18)    
-    },
-    contentDetailText:{
-
-        color:constants.Colors.color_Black,
         fontFamily:constants.fonts.Cardo_Regular,
-        fontSize:constants.vw(18),  
-        textAlign:'center'
+        fontSize:constants.vw(18)    
+    },prodBlock:{
+        alignSelf:'center',
+        width:'95%',
+        backgroundColor:"white",
+        borderRadius:2,
+        elevation:4,
+        padding:10,
+        marginBottom:10,
+        marginTop:10,
+    },date:{
+        fontFamily:constants.fonts.Cardo_Regular,
+        fontSize:16
+    },
+    heading:{
+        fontFamily:constants.fonts.Cardo_Regular,
+        fontSize:16,
+        width:"40%"
     }
 })
 

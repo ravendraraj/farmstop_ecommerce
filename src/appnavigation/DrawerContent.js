@@ -8,6 +8,7 @@ import image from "../constants/Image"
 import {logout} from "../lib/api"
 import ImagePicker from 'react-native-image-picker';
 import {weburl} from '../constants/url'
+import { navigate } from '../appnavigation/RootNavigation'
 
 class DrawerContent extends Component{
     constructor(props){
@@ -220,6 +221,7 @@ async _logOutEvent(){
      return(
          <View style={{flex:1}}>
              <ScrollView>
+
                  <View style={{flexDirection:"row",paddingTop:constants.vw(20),paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
                     {this._profileRender()}
                     <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
@@ -232,6 +234,13 @@ async _logOutEvent(){
                     {this._renderSignUpAndLogin()}
                     </View>
                     <View style={{paddingLeft:10}}>
+
+
+                    <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
+                        <Image source={constants.image.homeIcon} style={styles.icon}/>
+                        <Text style={styles.MenueLable}>Home</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
                         <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
                         <Text style={styles.MenueLable}>My Account</Text>

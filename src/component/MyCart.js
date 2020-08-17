@@ -402,7 +402,7 @@ class MyCart extends Component {
         }else{
             return(
                 <EmptyComp imageName={constants.image.emptyCart} 
-                    welcomText={"Looks like you haven’t added anything to your cart yet!"}
+                    welcomText={"You have no post orders ,Let's get you started"}
                     redirectText={"Shop Now"}
                     onPress={()=>this.props.navigation.navigate("MainHome")}
                 />

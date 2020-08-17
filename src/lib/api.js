@@ -1370,3 +1370,34 @@ export const getOrderList= (data) => (dispatch,getState) => {
     });
 
 }
+
+
+export const getOrderDetails= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    // console.log("klk000000",data);
+    let url = weburl + 'api-orderDetails?user_id='+getState().data.authUserID+"&order_no="+data;
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        console.log(res);
+        res.json()
+        .then(response => {
+            if(response.status == "1"){
+                dispatch({ type : 'FETCH_ORDER_DETAILS', orederDetails:response.orederDetails });
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+  //          dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+//        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}

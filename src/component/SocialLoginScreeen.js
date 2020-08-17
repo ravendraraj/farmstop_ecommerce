@@ -182,15 +182,15 @@ class SocialLoginScreen extends Component{
                             </TouchableOpacity>
                         </View>
 
-                        {/* <View style={{alignSelf:'center',backgroundColor:'red',alignItems:'center'}}> */}
+                        <View style={{marginTop:constants.vh(10)}}>            
                             <Text style={{textAlign:'center',fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(15),marginTop:constants.vw(10)}}>
                                 Having issue signing up, please write to us at info@farmstop.in
                             </Text>
-                        {/* </View> */}
-
-                        <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:constants.vw(10),paddingLeft:constants.vw(10),borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-3}} onPress={()=>this.props.navigation.navigate('MainHome')}>
+                        
+                            <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:constants.vw(10),paddingLeft:constants.vw(10),borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-3}} onPress={()=>this.props.navigation.navigate('MainHome')}>
                                 <Text style={{fontSize:constants.vw(16),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
                     </View>
             )
     }

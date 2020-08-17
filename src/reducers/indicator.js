@@ -30,6 +30,7 @@ const indicator = (state = false, action) => {
         case "FETECH_ADDRESS_LIST":
         case "NOT_DILEVER_ON_PINCODE":
         case "DILEVER_ON_PINCODE":
+        case "FETCH_ORDER_DETAILS":
             return false;
         default :
             return state;

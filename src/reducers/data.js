@@ -1,6 +1,6 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
     knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
-,defaultShipingAddress:null,coupon_id:null,orderList:[]};
+,defaultShipingAddress:null,coupon_id:null,orderList:[],orderDetail:[]};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -15,6 +15,12 @@ const data = (state = initialDataState, action) => {
             ...state,
             total:0,
             addedItems:[]
+        }
+
+        case 'FETCH_ORDER_DETAILS':
+        return{
+            ...state,
+            orderDetail:action.orederDetails,
         }
 
         case 'FETCH_ORDER_LIST':
@@ -42,7 +48,8 @@ const data = (state = initialDataState, action) => {
                 shippingCharges:null,
                 shippingPincode:null,
                 defaultShipingAddress:null,
-                activeProduct:''
+                activeProduct:'',
+                orederDetails:[]
             }
         
         case 'FETECH_ADDRESS_LIST':
@@ -82,7 +89,7 @@ const data = (state = initialDataState, action) => {
             if(action.cartItem.length >0)
             {
                 action.cartItem.map(item=>{
-                    newSyncItemTotal += parseFloat(item.selectedQtyPrice);
+                    newSyncItemTotal += parseFloat(item.selectedVariationPrice);
                 })
             }
 
@@ -497,15 +504,15 @@ const data = (state = initialDataState, action) => {
                 "cart_item_id": action.cart_item_id,
                 "selectedQty": addedItem.selectedQty,
                 "selectedVariationID": addedItem.selectedVariationID,
-                "selectedQtyPrice":addedItem.selectedQtyPrice,
+                "selectedQtyPrice":addedItem.selectedVariationPrice,
                 "selectedQtyVariation": addedItem.selectedQtyVariation,
-                "selectedVariationPrice": addedItem.selectedVariationPrice,
+                "selectedVariationPrice": addedItem.selectedQtyPrice,
                 "variation_details": addedItem.variation_details
                 }
 
             //    addedItem.quantity = 1;
                //calculating the total
-               let newTotal = state.total + parseFloat(addedItem.selectedVariationPrice) 
+               let newTotal = state.total + parseFloat(addedItem.selectedQtyPrice) 
                return{
                    ...state,
                    addedItems: [...state.addedItems, newCartItem],

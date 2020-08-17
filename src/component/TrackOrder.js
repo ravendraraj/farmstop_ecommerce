@@ -31,9 +31,9 @@ _loadLoader() {
     }
 
  renederItemTrackList() {
-        let orderId = this.props.route.params['orderId'];
-        let orderDetails = this.props.orderList.find((item)=> item.id == orderId);
-            
+        let order_no = this.props.route.params['order_no'];
+        let orderDetails = this.props.orderList.find((item)=> item.order_no == order_no);
+            // console.log(this.props.route.params,order_no,orderDetails);
       return (
             <View>
                 <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>

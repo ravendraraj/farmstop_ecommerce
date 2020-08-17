@@ -33,6 +33,7 @@ import WishTabNav from './WishTabNav'
 import MyOrderTab from './MyOrderTab'
 import TrackOrder from '../component/TrackOrder'
 import MyProfile from '../component/MyProfile'
+import OrderDetails from '../component/OrderDetails'
 
 const RootStack = createStackNavigator();
 
@@ -70,6 +71,15 @@ const HomeStack = ({navigation}) => (
             
             // name="ProductType" component={productVariation}/>
             name="HowItWorks" component={HowItWorks}/>
+
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="OrderDetails" component={OrderDetails}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({

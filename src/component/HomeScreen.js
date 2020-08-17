@@ -9,6 +9,7 @@ import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
+import PushController from './PushController'
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
@@ -299,6 +300,7 @@ class HomeScreen extends Component {
             {this.renderSourceSection()}
           </View>
         </View>
+        <PushController/>
       </ImageBackground>
     )
   }
