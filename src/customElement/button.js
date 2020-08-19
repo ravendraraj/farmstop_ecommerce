@@ -5,9 +5,11 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
-} from 'react-native';
-import constants from "../constants";
-import AntDesign from 'react-native-vector-icons/AntDesign';
+    Image
+} from 'react-native'
+import constants from "../constants"
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Icons from 'react-native-vector-icons/SimpleLineIcons'
 import {Picker} from '@react-native-community/picker';
 
 const bold = constants.fonts.Cardo_Bold;
@@ -15,12 +17,22 @@ const italic = constants.fonts.Cardo_Italic;
 const regular = constants.fonts.Cardo_Regular;
 
 export const ButtonWithIcon = (props) => {
+    let leftIcon = props.leftIcon;
+    let rightIcon = props.rightIcon;
+    let image = props.isImg;
+
     return (
         <TouchableOpacity 
-            style={styles.button} 
-            {...props} >
-            <Text style={styles.buttonText}>{props.buttonName}</Text>
-            <AntDesign name={"right"} size={16} />
+                style={styles.button} 
+                {...props} >
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+
+                <View style={{flexDirection:'row'}}>
+                    {image!= true ?(<Icons name={leftIcon} size={20} />):(<Image source={leftIcon} style={{width:20,height:20}}/>)}
+                    <Text style={[styles.buttonText,{paddingLeft:20}]}>{props.buttonName}</Text>
+                </View>
+                    {rightIcon!= ""?(<Icons name={rightIcon} size={10} />):(<View/>)}
+            </View>
         </TouchableOpacity>
     );
 }
@@ -83,16 +95,13 @@ export const AppartMentDropDown = (props)=>{
 
 const styles = StyleSheet.create({
     button:{
-        flexDirection:'row',
-        justifyContent:"space-between",
-        borderWidth:1,
         borderColor:constants.Colors.color_grey,
-        padding:10,
-        borderRadius:10
+        marginBottom:constants.vw(10)
     },
     buttonText:{
         color:constants.Colors.color_BLACK,
-        fontFamily:regular
+        fontFamily:regular,
+        fontSize:16
     },
     nrmlbutton:{
         backgroundColor:constants.Colors.color_heading,

@@ -7,6 +7,7 @@ import SocialLinks from '../component/SocialLinks'
 import { prod_image ,weburl } from '../constants/url'
 import {getOrderList} from '../lib/api'
 import {Loader} from '../customElement/Loader'
+import {findOrderStatus} from '../lib/helper'
 
 const width = Dimensions.get('window').width;
 class TrackOrder extends Component{

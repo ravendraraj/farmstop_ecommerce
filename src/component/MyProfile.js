@@ -5,6 +5,8 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import {TextHeading} from '../customElement/Input'
+import {ButtonWithIcon} from '../customElement/button'
+import {logout} from "../lib/api"
 
 const width = Dimensions.get('window').width;
 class MyProfile extends Component{
@@ -22,12 +24,12 @@ class MyProfile extends Component{
             return(
                 <Image 
                     source={{uri:this.props.profile}} 
-                    style={{width:constants.vw(90),height:constants.vw(90), borderWidth:2,borderColor:constants.Colors.color_grey,borderRadius:constants.vw(4)}}
+                    style={{width:constants.vw(120),height:constants.vw(120), borderWidth:2,borderRadius:constants.vw(60),alignSelf:'center'}}
                 />
             )
         }else{
             return(
-                <View style={{width:constants.vw(90),height:constants.vw(90),paddingTop:4,borderWidth:2,borderColor:constants.Colors.color_grey,borderRadius:constants.vw(4),alignItems:'center',backgroundColor:"white"}}>
+                <View style={{width:constants.vw(120),height:constants.vw(120),paddingTop:constants.vw(30),borderWidth:2,borderRadius:constants.vw(60),alignItems:'center',backgroundColor:"white",alignSelf:'center'}}>
                     <Icon 
                         name="user"
                         color={constants.Colors.color_BLACK}
@@ -38,63 +40,52 @@ class MyProfile extends Component{
         }
     }
 
+    async _logOutEvent(){
+        await this.props.logout();
+    }
+
     render(){
         return(
             <View style={styles.container}>
                {/*<TextHeading title="My Profile"/>*/}
                 <ScrollView>
-                    <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
-                        <View style={{width:'100%',height:constants.vw(140),backgroundColor:constants.Colors.color_platnium,borderBottomWidth:0,borderColor:constants.Colors.color_grey}}>
-                        </View>
-                        <View style={{flexDirection:'row',padding:10,marginTop:-constants.vw(60)}}>
+                <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
+                    <View style={{ overflow: 'hidden', paddingBottom: 5 }}>
+                        <View
+                          style={{
+                            backgroundColor: '#fff',
+                            width: "100%",
+                            borderRadius:10,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 1, height: 1 },
+                            shadowOpacity:  0.4,
+                            shadowRadius: 3,
+                            elevation: 5,
+                            paddingBottom:constants.vh(20),
+                            paddingTop:constants.vh(20)
+                          }} 
+                        >
+
                             {this.renderProfileImage()}
-                            <View style={{justifyContent:'flex-start',paddingLeft:20,marginTop:constants.vw(45)}}>
-                                <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular,}}>{this.props.userName}</Text>
-                            </View>
-                            <View>
-                            </View>
-                        </View>
-                        
-                        <View style={{width:'95%',alignSelf:"center",backgroundColor:'white',marginTop:10}}>
-                            <View style={styles.profileItem}>
-                                <Icon 
-                                    name="location-pin"
-                                    color={constants.Colors.color_BLACK}
-                                    size={20}
-                                />
-                                <View style={styles.block}>
-                                {(this.props.selectAddress != null && this.props.selectAddress !='')?
-                                (<Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular}}>{this.props.selectAddress}</Text>):(<TouchableOpacity style={styles.locationBtn}onPress={()=>this.props.navigation.navigate("GoogleLocation")}><Text style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Regular}}>Select Address</Text></TouchableOpacity>)}
-                                </View>
-                            </View>
+                            <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,marginTop:10,alignSelf:'center'}}>{this.props.userName}</Text>
+                            <Text style={{fontSize:17,fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',color:constants.Colors.color_grey}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
+                            <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular,marginTop:0,alignSelf:'center'}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
                         </View>
                     </View>
-
-                    <View style={{width:'95%',alignSelf:"center",backgroundColor:'white',paddingBottom:10}}>
-                        <View style={styles.profileItem}>
-                                <Icon 
-                                    name="phone"
-                                    color={constants.Colors.color_BLACK}
-                                    size={20}
-                                />
-                                <View style={styles.block}>
-                                    <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
-                                </View>
-                        </View>
-
-                        <View style={styles.profileItem}>
-                            <Image source={constants.image.mailIcon} style={styles.icon}/>
-                            <View style={styles.block}>
-                                <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
-                            </View>
-                        </View>
+                    <View style={{width:'95%',alignSelf:'center',marginTop:constants.vw(40)}}>
+                        <ButtonWithIcon buttonName={"Your Orders"} leftIcon={constants.image.myOrderIcon} rightIcon={"arrow-right"} isImg={true} onPress={()=>{this.props.navigation.navigate("MyOrderTab")}}/>
+                        <ButtonWithIcon buttonName={"Address"} leftIcon={"location-pin"} rightIcon={"arrow-right"} isImg={false} onPress={()=>{this.props.navigation.navigate("ShippingAddress",{screen_name: "side_menu_bar"})}}/>
+                        <ButtonWithIcon buttonName={"Logout"} leftIcon={"logout"} rightIcon={""} isImg={false} onPress={()=>this._logOutEvent()}/>
+                        
+                    </View>
                     </View>
                 </ScrollView>
-                {/*<View style={{justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_platnium}}>
-                                    <TouchableOpacity>
-                                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:20,padding:10}}>Edit Profile</Text>
-                                    </TouchableOpacity>
-                                </View>*/}
+                <View>
+                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_WHITE,borderWidth:1,borderColor:constants.Colors.color_grey,borderRadius:5,marginBottom:10,backgroundColor:constants.Colors.color_heading}}
+                    onPress={()=>this.props.navigation.navigate("EditProfile")}>
+                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>Edit Profile</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -118,6 +109,18 @@ const styles = StyleSheet.create({
     profileItem:{
         flexDirection:'row',
         marginTop:10
+    },
+    blockShadow:{
+        width:'100%',
+        alignSelf:'center',
+        marginTop:constants.vh(30),
+        backgroundColor:constants.Colors.color_WHITE,
+        borderRadius:10,
+        shadowRadius: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity:  0.4,
+        elevation: 1    
     }
 
 })
@@ -136,6 +139,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     // getItemVariation: (data) => dispatch(getProductVariation(data)),
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
+    logout:(data)=>dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);

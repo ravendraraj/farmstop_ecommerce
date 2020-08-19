@@ -2,43 +2,34 @@ import React from 'react'
 import {Image} from 'react-native'
 import {View,StyleSheet,Text,TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import constants from '../constants'
 import {navigate} from '../appnavigation/RootNavigation'
 
-function main_screen_header({navigation,cartItem}){
+function editHeader({navigation,cartItem,title}){
     // onPress={() => {navigation.openDrawer()}}
     const openMenue =()=>{
         navigation.openDrawer()
     }
 
     const nav = (route)=>{
+        console.log("Ravendra",title.children)
         navigate(route);
     }
 
     let totalProd = cartItem.length > 0 ? cartItem.length:0;
     return(
         <View style = {styles.head}>
-            {/* <TouchableOpacity style={{marginLeft:4}} >
-                <Icon name="menu" size={30} onPress={openMenue} color={constants.Colors.color_BLACK}/>
-            </TouchableOpacity> */}
+
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
-            <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("GoogleLocation")}>
-                    <Image source={constants.image.liveLocIcon} style={{width:30,height:30}}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("MyCart")}>
-                    <View style={styles.cartTextContainer}>
-                        <Text style={styles.cartText}>{totalProd}</Text>
-                    </View>
-                    {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
-                    <Image source={constants.image.cartIcon} style={{width:30,height:30}}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={()=>nav("MyProfile")}>
-                    {/* <Icon name="user" size={25}/> */}
-                    <Image source={constants.image.userIcon} style={{width:30,height:30}}/>
-                </TouchableOpacity>
+            {
+                title.children == "MyProfile"?(<TouchableOpacity onPress={()=>nav("EditProfile")} style={{marginTop:20}}>
+                    <Material name="lead-pencil" size={20} /> 
+                </TouchableOpacity>):(<View style={{marginTop:20}}><Material name="lead-pencil" size={20} color={constants.Colors.color_heading}/></View>)
+            }
             </View>
+
         </View>
     )
 }
@@ -54,8 +45,7 @@ const styles = StyleSheet.create({
     },
     headText:{
         color:'black',
-    },
-    cartTextContainer:{
+    },cartTextContainer:{
         position:'absolute',
         left:25,
         top:-5,
@@ -84,4 +74,4 @@ const mapDispatchToProps = dispatch => ({
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(main_screen_header);
+export default connect(mapStateToProps, mapDispatchToProps)(editHeader);

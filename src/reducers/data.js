@@ -1,6 +1,6 @@
-const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
+const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',token:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
     knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
-,defaultShipingAddress:null,coupon_id:null,orderList:[],orderDetail:[]};
+,defaultShipingAddress:null,coupon_id:null,orderList:[],orderDetail:[],popup:''};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -8,6 +8,20 @@ const data = (state = initialDataState, action) => {
         return { 
             ...state,
             appIntro:action.data
+        };
+
+        case 'EDIT_PROFILE':
+        return { 
+            ...state,
+            popup:action.payload,
+            authMobile:action.authMobile,
+            authEmail:action.authEmail
+        };
+
+        case 'REMOVE_POPUP':
+        return { 
+            ...state,
+            popup:'',
         };
 
         case 'ORDER_SUCCESSFULL':
@@ -49,7 +63,8 @@ const data = (state = initialDataState, action) => {
                 shippingPincode:null,
                 defaultShipingAddress:null,
                 activeProduct:'',
-                orederDetails:[]
+                orederDetails:[],
+                token:''
             }
         
         case 'FETECH_ADDRESS_LIST':
@@ -201,7 +216,8 @@ const data = (state = initialDataState, action) => {
             authUserID: action.userID,
             login_type:action.login_type,
             profile:action.profile,
-            authName:action.authName
+            authName:action.authName,
+            token:action.token
         };
 
         case 'MY_WISHLIST':

@@ -14,3 +14,32 @@ export const removeTags=(str)=> {
 		return str.replace( /(<([^>]+)>)/ig, '');
 	}
 }
+
+export const findOrderStatus=(str)=>{
+			   // 0 pending
+      //          1 processing
+      //          2 Hold
+      //          3 dispatched
+      //          4 completed
+      //          5 cancelled
+      //          6 refunded
+      //          7 failed
+
+      if(str == 0){
+      	return "Pending";
+      }else if(str == 1){
+      	return "processing";
+      }else if(str == 2){
+      		return "Hold";
+      }else if(str == 3){
+      		return "Dispatched";
+      }else if(str == 4){
+      		return "Completed";
+      }else if(str == 5){
+      		return "Cancelled";
+      }else if(str == 6){
+      		return "Refunded";
+      }else if(str == 5){
+      		return "Failed";
+      }
+}

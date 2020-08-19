@@ -31,11 +31,7 @@ export default class PushController extends Component{
               sound: true
             },
             popInitialNotification: true,
-            requestPermissions: true,
-            vibrate: true,
-            vibration: 300,
-            playSound: true,
-            soundName: 'default',
+            requestPermissions: true
           });
     }
 
@@ -51,6 +47,7 @@ export default class PushController extends Component{
         vibration: 300,
         playSound: true,
         soundName: 'default',
+        actions: '["Yes", "No"]'
       })
   }
 

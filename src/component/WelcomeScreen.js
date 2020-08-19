@@ -60,7 +60,7 @@ class WelcomeScreen extends Component {
 						// this.setState({ show_Main_App: true });
 						let objAuthData = JSON.parse(authData);
 						
-						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name})
+						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name,token:objAuthData.token})
 
 						setTimeout(function(){  
 							navigate('DrawerScreen');  
@@ -141,7 +141,7 @@ class WelcomeScreen extends Component {
 				<View style={styles.container}>
 					<View style={{flex:1,justifyContent:'center'}}>
 					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
-					<Text style={styles.welcomText}>Welcome in Farmstop</Text>
+					<Text style={styles.welcomText}>Welcome To Farmstop</Text>
 					</View>
 				</View>
 			);
@@ -216,7 +216,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
-	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName})
+	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

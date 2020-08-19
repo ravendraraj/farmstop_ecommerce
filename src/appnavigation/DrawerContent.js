@@ -9,6 +9,7 @@ import {logout} from "../lib/api"
 import ImagePicker from 'react-native-image-picker';
 import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
+import Icons from 'react-native-vector-icons/FontAwesome'
 
 class DrawerContent extends Component{
     constructor(props){
@@ -123,7 +124,7 @@ _profileRender(){
     }else{
         return(
             <View>
-                <TouchableOpacity style={styles.uploadImage} onPress={this.chooseFile.bind(this)}>
+                <TouchableOpacity style={styles.uploadImage} onPress={() => this._redirect('MyProfile')}>
                     
                     <Text style={styles.profileText}>Upload</Text>
                     <Text style={styles.profileText}>your</Text>
@@ -221,10 +222,14 @@ async _logOutEvent(){
      return(
          <View style={{flex:1}}>
              <ScrollView>
-
-                 <View style={{flexDirection:"row",paddingTop:constants.vw(20),paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
+                <View style={{backgroundColor:constants.Colors.color_platnium}}>
+                    <TouchableOpacity onPress={()=>{this.props.navigation.closeDrawer()}} style={{alignSelf:'flex-end',padding:10}}>
+                        <Icons name={"close"} size={14} style={{marginTop:5}}/>
+                    </TouchableOpacity>
+                </View>
+                 <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
                     {this._profileRender()}
-                    <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
+                    <View style={{flex:1,marginTop:constants.vw(20),marginLeft:constants.vw(20),marginRight:3}}>
                         <Text style={styles.userName}>Hello</Text>
                         <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
                     </View>
@@ -237,35 +242,53 @@ async _logOutEvent(){
 
 
                     <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
-                        <Image source={constants.image.homeIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>Home</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.homeIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>Home</Text>
+                        </View>
+                        <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
-                        <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
-                        <Text style={styles.MenueLable}>My Account</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
+                            <Text style={styles.MenueLable}>My Account</Text>
+                        </View>
+                        <Icons name={(this.state.displayMyAccChild== true)?"angle-down":"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     {this.renderMyAccTab()}
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyOrderList()}>
-                        <Image source={constants.image.myOrderIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>My Orders</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.myOrderIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>My Orders</Text>
+                        </View>
+                        <Icons name={(this.state.displayMyOrderChild== true)?"angle-down":"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     {this.renderMyOrder()}
                     
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._redirect('WishList')}>
-                        <Image source={constants.image.heartIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>Wish List</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.heartIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>Wish List</Text>
+                        </View>
+                        <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('OrderSuccuess')}}>
-                        <Image source={constants.image.questionIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>FAQ</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.questionIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>FAQ</Text>
+                        </View>
+                        <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('internetError')}}>
-                        <Image source={constants.image.notificationIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>Notifications</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.notificationIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>Notifications</Text>
+                        </View>
+                        <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     <View style={{marginLeft:25}}>
                         <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('AboutFarm')}}>
@@ -281,8 +304,11 @@ async _logOutEvent(){
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('ContactScreen')}}>
-                        <Image source={constants.image.mailIcon} style={styles.icon}/>
-                        <Text style={styles.MenueLable}>Contact Us</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Image source={constants.image.mailIcon} style={styles.icon}/>
+                            <Text style={styles.MenueLable}>Contact Us</Text>
+                        </View>
+                        <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     {this.renderLogout()}
                     </View>
@@ -295,7 +321,8 @@ async _logOutEvent(){
 
 const styles = StyleSheet.create({
 	MenueLable: {
-        fontFamily:constants.fonts.Cardo_Bold,
+        fontFamily:constants.fonts.Cardo_Regular,
+        fontWeight:'bold',
         fontSize:constants.vw(18),
         paddingLeft:10
         },
@@ -307,6 +334,7 @@ const styles = StyleSheet.create({
     },
     menuTab:{
         flexDirection:'row',
+        justifyContent:'space-between',
         marginTop:7,
         marginBottom:7,
         width:'80%'
@@ -340,7 +368,7 @@ const styles = StyleSheet.create({
     },
     userName:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:constants.vh(20),
+        fontSize:constants.vh(22),
         color:constants.Colors.color_BLACK
     },
     childMenuTab:{

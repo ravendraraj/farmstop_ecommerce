@@ -19,18 +19,15 @@ class AboutFarm extends Component{
             <View style={styles.container}>
                 <ScrollView>
                     <View style={{width:'90%',alignSelf:"center"}}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:25}}>
+                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
                             Farmstop Organic farms
                         </Text>
                         <View style={{marginTop:10}}>
-                            <Text style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:20}}>
-                                Organic farming for us at "farmstop"is practiced
-                                with devotion and passion to contribute for a
-                                better society. We are certified organic farmers
-                                with a vision to change the way food is produced
-                                and consumed.
+                            <Text
+                            style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:18}}>
+                                Organic farming for us at "farmstop"is practiced with devotion and passion to contribute for a better society. We are certified organic farmers with a vision to change the way food is produced and consumed.
                             </Text>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,color:constants.Colors.color_BLACK ,fontSize:20}}>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:5}}>
                                 A glimpse of our farms
                             </Text>
                             <Image source={constants.image.aboutFarm} style={{width:width-20,height:width-140,alignSelf:'center'}}/>

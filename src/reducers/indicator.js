@@ -14,6 +14,7 @@ const indicator = (state = false, action) => {
         case 'REGISTER_USER':
         case 'MY_WISHLIST':
         case 'SUCCESS':
+        case 'EDIT_PROFILE':
         case "LOCATION_FETCHED":
         case "NOT_DELIVER":
         case "SEARCH_PRODUCT_LIST":

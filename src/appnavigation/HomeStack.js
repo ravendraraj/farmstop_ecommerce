@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 //screens
 import HomeScreen from '../component/HomeScreen'
 import Header from '../headerComponent/header'
+import EditHeader from '../headerComponent/editHeader'
 import Mainheader from '../headerComponent/main_screen_header'
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
 // import productVariation from '../component/PorductVariation'
@@ -34,6 +35,7 @@ import MyOrderTab from './MyOrderTab'
 import TrackOrder from '../component/TrackOrder'
 import MyProfile from '../component/MyProfile'
 import OrderDetails from '../component/OrderDetails'
+import EditProfile from '../component/EditProfile'
 
 const RootStack = createStackNavigator();
 
@@ -114,12 +116,21 @@ const HomeStack = ({navigation}) => (
 
             <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                headerTitle: () => <Header navigation={navigation} />,
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: (route) => (<EditHeader navigation={navigation} title={route}/>),
                 headerStyle:{shadowOpacity:0.1,elevation: 0},
                 headerTransparent:false,
             })}
             name="MyProfile" component={MyProfile}/>
+
+            <RootStack.Screen 
+            options={({ navigation }) => ({
+                // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: (route) => (<EditHeader navigation={navigation} title={route}/>),
+                headerStyle:{shadowOpacity:0.1,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="EditProfile" component={EditProfile}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({

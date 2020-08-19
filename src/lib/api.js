@@ -36,7 +36,8 @@ export const loginValidation = (data) => (dispatch,getState) => {
                     'profile' :'null',
                     'email' :response.user.email,
                     'userId' :response.user.id,
-                    'mobile' :response.user.mobile
+                    'mobile' :response.user.mobile,
+                    'token':response.token
                 };
                  
                 AsyncStorage.setItem('authData', JSON.stringify(authUser));
@@ -49,6 +50,7 @@ export const loginValidation = (data) => (dispatch,getState) => {
                     mobile:response.user.mobile ,
                     userID:response.user.id,
                     authName:response.user.name,
+                    token:response.token
                  });
                 
             setTimeout(function(){  
@@ -99,7 +101,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
         res.json()
         .then(response => {
             if(response.status == "1"){
-                // console.log(response);
+                console.log(response);
                 var authUser = {
                     'Login_Type' :userData["social_type"],
                     'name' :userData["name"],
@@ -107,6 +109,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                     'email' :response.user_info["email"],
                     'userId' :userData["id"],
                     'mobile' :response.user_info["mobile"],
+                    'token':response.token
                 };
 
                  AsyncStorage.setItem('Logined', 'YES');
@@ -123,6 +126,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                     mobile:response.user_info["mobile"],
                     userID:userData["id"],
                     authName:userData["name"],
+                    token:response.token
                 });
                 
                 navigate('MainHome');
@@ -1396,6 +1400,49 @@ export const getOrderDetails= (data) => (dispatch,getState) => {
     })
     .catch( err => {
 //        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}
+
+export const updateProfile= (formdata) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    // console.log("klk000000",formdata);
+    var formData = new FormData();
+        formData.append("email", formdata['email']);
+        formData.append("mobile", formdata['mobile']);
+        formData.append("user_type", getState().data.login_type);
+        formData.append("user_id", getState().data.authUserID);
+        formData.append("token",getState().data.token);
+
+    let post_req = {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            }
+        }
+
+    let url = weburl + 'api-updateProfile';
+    console.log(post_req);
+    fetch(url,post_req).then(res =>{
+        console.log(res);
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'EDIT_PROFILE', payload:response.message, authEmail:formdata['email'],authMobile:formdata['mobile']});
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
         dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         navigate("internetError");
     });

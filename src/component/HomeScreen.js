@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
+import { ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
 import { prod_image ,weburl } from '../constants/url'
@@ -13,8 +13,11 @@ import PushController from './PushController'
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
-
+import SocialLinks from '../component/SocialLinks'
 const regular = constants.fonts.Cardo_Regular;
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+const headerHeight = height;
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
@@ -23,8 +26,9 @@ class HomeScreen extends Component {
       query: '',
       dilevryStatus: false,
       checkedShippingArea : false,
+      showFooter:false,
     };
-
+    
     if(!this.props.cartItemSync)
      this.props.getCartItem();
   }
@@ -136,7 +140,8 @@ class HomeScreen extends Component {
 
 
 					},
-					(error) => {console.log(error)},
+					(error) => {//console.log(error)
+          },
 					{ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
 			  	);
 
@@ -182,6 +187,15 @@ class HomeScreen extends Component {
     if (ItemList != "undefined" && ItemList != null) {
       return (
         <FlatList
+          ref={
+            (c) => {
+              this.flatList = c;
+            }
+          }
+          onScrollEndDrag={this.onScrollEnd}
+          contentOffset={
+            {x: 0, y: headerHeight}
+          }
           data={ItemList}
           renderItem={({ item }) => (
             <View style={styles.homeProdCat}>
@@ -194,7 +208,65 @@ class HomeScreen extends Component {
           //Setting the number of column
           numColumns={2}
           keyExtractor={(item) => item.id}
+          onEndReachedThreshold={0.1}
+          onEndReached={()=>this.LoadMoreRandomData()}
+          ListFooterComponent={
+            this.renederAboutFarm()
+          }
         />
+      )
+    }
+  }
+
+  onScrollEnd = (e) => {
+    const scrollTop = e.nativeEvent.contentOffset.y;    
+    // console.log(scrollTop);
+    if (scrollTop < headerHeight) {
+      // console.log(scrollTop,"Ravendra");
+      // Scrolls to top instead to y = 100
+      if(scrollTop<10){
+          this.setState({showFooter:false});
+      }
+    }
+  }
+
+  LoadMoreRandomData(){
+    this.setState({showFooter:true});
+    // Alert.alert("Hii");
+  }
+
+  renederAboutFarm(){
+    if(this.state.showFooter){
+      return(
+              <View style={{width:"95%",alignSelf:"center",marginTop:constants.vh(120)}}>
+                  <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
+                    Farmstop Organic farms
+                  </Text>
+                <View style={{marginTop:10}}>
+                    <Text style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:18}}>
+                      Organic farming for us at "farmstop"is practiced
+                      with devotion and passion to contribute for a
+                      better society. We are certified organic farmers
+                      with a vision to change the way food is produced
+                      and consumed.
+                    </Text>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:5}}>
+                        A glimpse of our farms
+                    </Text>
+                    <Image source={constants.image.aboutFarm} style={{width:width-30,height:width-140,alignSelf:'center'}}/>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_BLACK ,fontSize:18,marginTop:30}}>
+                      Please click the links below to understand how
+                      we raise crops and what goes into the farms
+                    </Text>
+                  <View>
+                    <SocialLinks size='25'/>
+                  </View>
+                </View>
+              </View>
+      )
+    }else{
+      return(
+        <View style={{width:'100%',height:height/3}}/>
       )
     }
   }
@@ -216,9 +288,9 @@ class HomeScreen extends Component {
 
   renderSourceSection(){
     let ItemList = this.props.itemData;
-    if (ItemList != "undefined" && ItemList != null) {
+    if (!this.state.showFooter && ItemList != "undefined" && ItemList != null) {
       return(
-        <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(2),}}>
+        <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14),}}>
           
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to your home</Text>
                 <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
@@ -313,6 +385,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // margin: 10,
+    width:"100%",
     backgroundColor: constants.Colors.color_WHITE,
     opacity: .9
   },
@@ -326,6 +399,7 @@ const styles = StyleSheet.create({
   MainContainer: {
     justifyContent: 'center',
     flex: 1,
+    width:'100%',
     marginTop:constants.vw(5),
     padding: 10,
   },
