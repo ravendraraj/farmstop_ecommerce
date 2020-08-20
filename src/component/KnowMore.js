@@ -44,15 +44,28 @@ class KnowMore extends Component {
     }
     
     async _addInCart(prodTypeId,variationId ,selectedQty){
+        let existProd = false;
+        this.props.cart.map( cartItems=>{
+            if(prodTypeId == cartItems.prod_id && variationId == cartItems.selectedVariationID)
+            {
+                existProd = true;
+            }
+        })
+        console.log(existProd,prodTypeId,variationId ,selectedQty)
         if(variationId !=""){
             // this.props.addToCart({prodId:prodTypeId ,screen:this.props.screen});
-            var data = [];
-            data["id"] = prodTypeId;
-            data["variationId"] = variationId;
-            data["screen"] = this.props.screen;
-            data["qty"] = selectedQty;
-            await this.props.addItemToCart(data);
-            this.props.setCartItemLocal();
+            if(!existProd)
+            {
+                var data = [];
+                data["id"] = prodTypeId;
+                data["variationId"] = variationId;
+                data["screen"] = this.props.screen;
+                data["qty"] = selectedQty;
+                await this.props.addItemToCart(data);
+                this.props.setCartItemLocal();
+            }else{
+                ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
 
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -99,13 +112,14 @@ class KnowMore extends Component {
     }
 
     _swiper(){
+        var i=0;
         return(
             this.props.itemtypeData.map((item,id)=>{
-                if(this.props.prodId != item.id){
+                if(this.props.prodId != item.id && i++ < 6){
                     return (
                         <View style={styles.prodBlock}>
                             <View>
-                                <TouchableOpacity style={{alignSelf:'center',marginTop:constants.vh(40)}}>
+                                <TouchableOpacity style={{alignSelf:'center',marginTop:constants.vh(40)}} onPress={()=>{this._knowMore(item.id)}}>
                                     <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                                 </TouchableOpacity>
                             </View>
@@ -141,19 +155,29 @@ class KnowMore extends Component {
             }
 
             return(
-                <View style={{alignItems:'center',marginTop:constants.vh(30)}}>
-                    <View>
+                <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
+                    <Text style={{fontSize:constants.vw(20),textAlign:'center',fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
+                    <View style={{alignSelf:'center'}}>
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
                         <TouchableOpacity style={{alignSelf:'flex-end',marginTop:-20,marginRight:-30}}
                         onPress={()=>this._addinWishList(prodDetails)}>
                             <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={30}/>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{fontSize:constants.vw(25),alignSelf:'center',fontFamily:bold}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
-                    <View style={{flexDirection:'row',justifyContent:'center',alignSelf:'center',width:'80%',marginTop:30}}>
-                    <View style={{alignItems:'flex-start'}}>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <TouchableOpacity style={{marginRight:10}} 
+                    
+                    
+                        <View style={{flexDirection:'row',alignSelf:'center',}}>
+                            <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5,marginRight:15}}>
+                                <Picker
+                                    selectedValue = {prodDetails.selectedVariationID == ""? "": prodDetails.selectedQtyVariation}
+                                    // mode="dropdown"
+                                    style={{height: 50, width: 110,marginTop:0,fontFamily:constants.fonts.Cardo_Bold,marginTop:-10,marginBottom:-10}}
+                                    onValueChange={ (value) => ( this.setVariationType(value,prodDetails.id))}
+                                >
+                                    { this.variationOpt(prodDetails.variation_details) }
+                                </Picker>
+                            </View>
+                            <TouchableOpacity style={{marginRight:5}} 
                             onPress={()=>this._manageProdQty(prodId,'remove',prodDetails.selectedVariationID)}>
                                 <Material 
                                     name="minus-circle-outline"
@@ -161,19 +185,8 @@ class KnowMore extends Component {
                                     size={25}
                                 />
                             </TouchableOpacity>
-
-                            {/* <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text> */}
-                            <Picker
-                                    selectedValue = {prodDetails.selectedVariationID == ""? "": prodDetails.selectedQtyVariation}
-                                    // mode="dropdown"
-                                    style={{height: 50, width: 110,marginTop:-12,fontFamily:constants.fonts.Cardo_Bold}}
-                                    onValueChange={ (value) => ( this.setVariationType(value,prodDetails.id))}
-                                    >
-                                    <Picker.Item label="Select" value="Select"  />
-                                    { this.variationOpt(prodDetails.variation_details) }
-                                </Picker>
-
-                            <TouchableOpacity style={{marginLeft:10}} 
+                            <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text>
+                            <TouchableOpacity style={{marginLeft:5}} 
                             onPress={()=>this._manageProdQty(prodId,'add',prodDetails.selectedVariationID)}>
                                 <Material 
                                     name="plus-circle-outline"
@@ -182,19 +195,16 @@ class KnowMore extends Component {
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={{fontFamily:regular,fontSize:20,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
-                    </View>
-                    <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}
-                        onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty)}>
-
-                        <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                        <Text style={{fontFamily:regular}}>Add to Cart</Text>
-                    </TouchableOpacity>
-                    </View>
-                    <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:20}}>{removeTags(prodDesc)}</Text>
-                    </View>
-
+                        <View style={{flexDirection:'row',justifyContent:'space-evenly',marginTop:15}}>
+                            <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
+                            <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}
+                                onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty)}>
+                                <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
+                                <Text style={{fontFamily:regular}}>Add to Cart</Text>
+                            </TouchableOpacity>
+                        </View>
+                
+                    <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
                     <View style={styles.wrapper}>
                         <Swiper style={{height:constants.vh(200)}} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
                             {this._swiper()}
@@ -215,6 +225,11 @@ class KnowMore extends Component {
                 </View>
             )
         }
+    }
+    
+    _knowMore(prod_id){
+        this.props.knowMore({prodId:prod_id, screen:"ProductType"});
+        navigate("knowMoreProd");
     }
 
     render() {
@@ -282,7 +297,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-evenly',
     },
     wrapper:{
-        width:"90%",
+        width:"100%",
         height:constants.vw(200),
         borderRadius:4,
         elevation:10,
@@ -297,6 +312,7 @@ const mapStateToProps = state => ({
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
     searchProductList: state.data.searchProductList,
+    cart: state.data.addedItems
 
 });
 
@@ -312,6 +328,7 @@ const mapDispatchToProps = dispatch => ({
     selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
     addSearchItemInWish :(data)=>dispatch({type:'SEARCH-PROD-ADD-WISH',activeProdId:data}),
     setWishListItemOnServer : (data)=>dispatch(setWishListItemOnServer(data)),
+    knowMore:(data)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:data.prodId,screen:data.screen}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowMore);

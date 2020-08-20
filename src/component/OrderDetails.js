@@ -7,7 +7,7 @@ import SocialLinks from '../component/SocialLinks'
 import { prod_image ,weburl,prod_variation_url } from '../constants/url'
 import {getOrderDetails} from '../lib/api'
 import {Loader} from '../customElement/Loader'
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,findOrderStatus} from '../lib/helper'
 
 const width = Dimensions.get('window').width;
 class OrderDetails extends Component{
@@ -84,8 +84,14 @@ class OrderDetails extends Component{
 						</View>
 					</View>
 					<Text style={styles.boldHeading}>Product Delivery details</Text>
+
+					<View style={{width:'90%',alignSelf:'center',marginTop:20}}>
+						<View style={{flexDirection:'row'}}>
+							<Text style={styles.boldHeading}>Order Status:</Text><Text style={{paddingLeft:3,fontSize:18,fontFamily:constants.fonts.Cardo_Regular}}>{findOrderStatus(orderDetails[0].order_status)}</Text>
+						</View>
 						{this.renderProdOfDelivery()}
-					<View style={{width:'100%',height:20}}/>
+						<View style={{width:'100%',height:20}}/>
+					</View>
 				</View>
 			)
 		}else{

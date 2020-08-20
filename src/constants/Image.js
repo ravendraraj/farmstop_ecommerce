@@ -64,5 +64,6 @@ export default {
   razorpay:require('../images/farmstop/razorpay.png'),
   emptyCart:require('../images/farmstop/empty-cart.png'),
   remove:require('../images/farmstop/trash.png'),
+  greenDottedLine:require('../images/farmstop/greenDottedLine.png'),
 };
  

@@ -26,20 +26,20 @@ export const findOrderStatus=(str)=>{
       //          7 failed
 
       if(str == 0){
-      	return "Pending";
+      	return "Order Placed";
       }else if(str == 1){
-      	return "processing";
+      	return "Produce Harvested";
       }else if(str == 2){
-      		return "Hold";
+      	return "On Hold";
       }else if(str == 3){
-      		return "Dispatched";
+      	return "Order in Transit";
       }else if(str == 4){
-      		return "Completed";
+      	return "Order Delivered";
       }else if(str == 5){
-      		return "Cancelled";
+      	return "Cancelled";
       }else if(str == 6){
-      		return "Refunded";
+      	return "Refunded";
       }else if(str == 5){
-      		return "Failed";
+      	return "Failed";
       }
 }

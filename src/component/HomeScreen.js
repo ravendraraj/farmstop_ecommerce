@@ -175,6 +175,7 @@ class HomeScreen extends Component {
 
 
   async _getItemType(prod_id) {
+    // console.log(prod_id,"Ravendra");
     await this.props.setProdId(prod_id);
     this.props.navigation.navigate('ProductType', {
       itemId: prod_id
@@ -220,11 +221,11 @@ class HomeScreen extends Component {
 
   onScrollEnd = (e) => {
     const scrollTop = e.nativeEvent.contentOffset.y;    
-    // console.log(scrollTop);
+     console.log(scrollTop);
     if (scrollTop < headerHeight) {
       // console.log(scrollTop,"Ravendra");
       // Scrolls to top instead to y = 100
-      if(scrollTop<10){
+      if(scrollTop==0){
           this.setState({showFooter:false});
       }
     }
@@ -233,6 +234,7 @@ class HomeScreen extends Component {
   LoadMoreRandomData(){
     this.setState({showFooter:true});
     // Alert.alert("Hii");
+    console.log("loader");
   }
 
   renederAboutFarm(){
@@ -266,7 +268,7 @@ class HomeScreen extends Component {
       )
     }else{
       return(
-        <View style={{width:'100%',height:height/3}}/>
+        <View style={{width:'100%',height:height/2}}/>
       )
     }
   }

@@ -20,6 +20,16 @@ export default class PushController extends Component{
               //notification.finish(PushNotificationIOS.FetchResult.NoData);
               if(notification.foreground == true){
                 // this._foregroundNotification(notification)
+                PushNotification.localNotification({
+                  autoCancel: true,
+                  bigText:notification.message,
+                  title: notification.title,
+                  message: notification.message,
+                  vibrate: true,
+                  vibration: 300,
+                  playSound: true,
+                  soundName: 'default',
+                })
               }
             },
             // Android only

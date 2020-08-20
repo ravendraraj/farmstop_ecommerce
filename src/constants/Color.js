@@ -12,5 +12,6 @@ const Colors = {
   color_lineGrey:'#B6B6B4',
   color_platnium:'#DCDBD9',
   color_cartText:"#80b435",
+  color_green:'#267219'
 };
 export default Colors;

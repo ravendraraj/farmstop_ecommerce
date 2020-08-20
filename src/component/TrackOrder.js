@@ -34,7 +34,7 @@ _loadLoader() {
  renederItemTrackList() {
         let order_no = this.props.route.params['order_no'];
         let orderDetails = this.props.orderList.find((item)=> item.order_no == order_no);
-            // console.log(this.props.route.params,order_no,orderDetails);
+        let order_status = orderDetails.order_status;
       return (
             <View>
                 <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>
@@ -53,11 +53,11 @@ _loadLoader() {
                                 style={styles.imageTrack}/>
                         </View>
                         <View style={{alignSelf:'center'}}>
-                            <Text style={styles.trackText}>Order Placed</Text>
+                            <Text style={styles.activeOrderStatus}>Order Placed</Text>
                         </View>
                     </View>
 
-                    <Image source={constants.image.dotedline} style={styles.arcImage}/>
+                    <Image source={constants.image.greenDottedLine} style={styles.arcImage}/>
 
                     <View style={styles.tractContainer}>
                         <View>
@@ -66,10 +66,10 @@ _loadLoader() {
                                 style={styles.imageTrack}/>
                         </View>
                         <View style={{alignSelf:'center'}}>
-                            <Text style={styles.trackText}>Produce Harvested</Text>
+                            <Text style={(order_status == 1 || order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Produce Harvested</Text>
                         </View>
                     </View>
-                    <Image source={constants.image.dotedline} style={styles.arcImage}/>
+                    <Image source={(order_status == 3 || order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
 
                     <View style={styles.tractContainer}>
                         <View>
@@ -78,11 +78,11 @@ _loadLoader() {
                                 style={styles.imageTrack}/>
                         </View>
                         <View style={{alignSelf:'center'}}>
-                            <Text style={styles.trackText}>Order in Transit</Text>
+                            <Text style={(order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order in Transit</Text>
                         </View>
                     </View>
 
-                    <Image source={constants.image.dotedline} style={styles.arcImage}/>
+                    <Image source={(order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
                     <View style={styles.tractContainer}>
                         <View>
                         
@@ -90,7 +90,7 @@ _loadLoader() {
                                style={styles.imageTrack}/>
                         </View>
                         <View style={{alignSelf:'center'}}>
-                            <Text style={styles.trackText}>Order Dispatched</Text>
+                            <Text style={(order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order Delivered</Text>
                         </View>
                     </View>
                 </View>
@@ -131,6 +131,11 @@ const styles = StyleSheet.create({
         fontFamily:constants.fonts.Cardo_Regular,
         fontSize:constants.vw(16)
     },
+    activeOrderStatus:{
+        color:constants.Colors.color_green,
+        fontFamily:constants.fonts.Cardo_Bold,
+        fontSize:constants.vw(18)
+    },
     trackText:{
       color:constants.Colors.color_Black,
         fontFamily:constants.fonts.Cardo_Regular,
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
         alignSelf:'center'
     },
     arcImage:{
-        width:20,
+        width:6,
         height:constants.vh(50),
         position:'relative',
         left:constants.vw(200),

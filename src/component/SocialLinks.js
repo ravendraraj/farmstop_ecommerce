@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import constants from '../constants'
 
 const SocialLinks =(props) =>{
-    console.log(props.size);
     let iconSize = props.size;
     return(
         <View style={{flex:1,flexDirection:'row',width:'90%',alignSelf:"center",paddingTop:20,paddingBottom:30}}>
