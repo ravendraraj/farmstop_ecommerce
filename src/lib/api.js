@@ -21,6 +21,8 @@ export const loginValidation = (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
 
     let url = weburl + 'api-login?email='+data.email+'&password='+data.password;//geting all product
+        url+="&devicetoken="+getState().data.deviceToken+"&os="+getState().data.os;
+        
     console.log(url);
 
     fetch(url)
@@ -86,6 +88,8 @@ export const socialLogin = (userData) => (dispatch,getState) => {
     data.append("last_name", userData["last_name"]);
     data.append("social_type", userData["social_type"]);
     data.append("image", userData["image"]);    
+    data.append("devicetoken",getState().data.deviceToken);
+    data.append("os",getState().data.os);
 
     let post_req = {
         method: 'POST',
@@ -158,6 +162,8 @@ export const signUpManual = (data) => (dispatch,getState) => {
     data.append("username", getState().data.username);
     data.append("email", getState().data.email);
     data.append("password", getState().data.password);   
+    data.append("devicetoken",getState().data.deviceToken);
+    data.append("os",getState().data.os);
 
     let post_req = {
         method: 'POST',
@@ -416,7 +422,7 @@ export const getWishListItem= (data) => (dispatch,getState) => {
 
 export const setWishListItemOnServer= (data) => (dispatch,getState) => {
 
-    let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID;
+    let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID+"&token="+getState().data.token;
     console.log(url);
     fetch(url)
     .then(res =>{
@@ -425,6 +431,35 @@ export const setWishListItemOnServer= (data) => (dispatch,getState) => {
             //console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'SAVED_WISH', payload : response.message});
+            }else{
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        // console.log("NetWork Error");
+        navigate("internetError");
+    });
+
+}
+
+
+export const deleteWishItem= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    // console.log(data);
+    let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID+"&action="+data.action+"&token="+getState().data.token;
+    console.log(url);
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'REMOVE_FROM_WISH', payload : response.message,'prod_id':data.id});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -691,12 +726,12 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
     dispatch({type : 'LOADING'});
     console.log(address);
     var userShipingAddress =[];
-        userShipingAddress["defualtShippingAdd"] = address;
+        userShipingAddress["defualtShippingAdd"] = address.id;
     var pincode = "";
 
     if(getState().data.addressList.length >0){
         getState().data.addressList.map((item)=>{
-            if(item.id == address)
+            if(item.id == address.id)
             {
                 pincode = item.zipcode;
             }
@@ -712,7 +747,13 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
                 //console.log(response);
                 if(response.status == "1"){
                     AsyncStorage.setItem('defualtShippingAdd', JSON.stringify(userShipingAddress));
-                    dispatch({type:'SAVED_DEFAULT_SHIPPING_ADDRESS',addressId :address,shipping_cost:response.result["shipping_cost"]});
+                    dispatch({type:'SAVED_DEFAULT_SHIPPING_ADDRESS',addressId :address.id,shipping_cost:response.result["shipping_cost"]});
+                    if(address.screen_name == "cart"){
+                        navigate("MyCart");
+                    }
+                    else if(address.screen_name =="PaymentOption"){
+                            navigate(address.screen_name);   
+                        }
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.ADDRESS_UPDATE_FAILED});
                 }
@@ -794,7 +835,7 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
 
 export const deleteItem = (prodData) => (dispatch,getState) => {
 // export const addItemToCart = (data) => (dispatch,getState) => {
-    // dispatch({type : 'LOADING'});
+    dispatch({type : 'LOADING'});
     // console.log(prodData);
     let product = prodData.id;
     let variationId = prodData.variationId;
@@ -1185,6 +1226,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
 
          checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
          checkOutFormData.append("status", checkOutData['status']);
+         checkOutFormData.append("token",getState().data.token);
 
          let post_req = {
              method: 'POST',
@@ -1199,13 +1241,11 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
     .then(res =>{
         res.json()
         .then(response => {
-            
             if(response.status == "1"){
                 console.log("order created");
-                
-                // dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value,coupon_id:response.coupon_id});
+
                     var options = {
-                        description: 'Credits towards consultation',
+                        description: '',
                         image: "https://www.farmstop.in/assets/images/farmstop.png",
                         currency: 'INR',
                         key:razor_api_key,
@@ -1213,19 +1253,17 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         name: 'FARMSTOP',
                         order_id: response.orderData['razor_orderId'],
                         prefill: {
-                        email: checkOutData['email'],
-                        contact: checkOutData['contact'],
-                        name: checkOutData['username'],
-                    },
-                    theme: {color: constants.Colors.color_intro,
+                            email: checkOutData['email'],
+                            contact: checkOutData['contact'],
+                            name: checkOutData['username'],
+                        },
+                        theme: {color: constants.Colors.color_intro,
                             fontFamily:constants.fonts.Cardo_Regular,
                             backgroundColor:'white',
                         }
                     }
 
                     RazorpayCheckout.open(options).then((data) => {
-                    // handle success
-                    // alert(`Success: ${data.razorpay_payment_id}`);
 
                     if(data.razorpay_payment_id !="")
                     {
@@ -1238,7 +1276,10 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         verifyData.append("razorpay_signature", data.razorpay_signature);
                         verifyData.append("razorpay_payment_id", data.razorpay_payment_id);
                         verifyData.append("foramstopOrderId", response.orderData['receipt']);
-            
+                        verifyData.append("order_no", response.orderData['order_no']);
+                        verifyData.append("token",getState().data.token);
+                        verifyData.append("email",getState().data.authEmail);
+
                         let verify_post_req = {
                              method: 'POST',
                              body:verifyData,
@@ -1246,7 +1287,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                                  Accept: 'application/json',
                                  'Content-Type': 'multipart/form-data',
                              }
-                        }                                  
+                        }
                             console.log(verify_post_req);
                             fetch(orderVerifyUrl ,verify_post_req).then(res =>{
                                 res.json()
@@ -1310,6 +1351,8 @@ export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
 
          checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
          checkOutFormData.append("status", checkOutData['status']);
+         checkOutFormData.append("token",getState().data.token);
+         checkOutFormData.append("email",getState().data.authEmail);
 
          let post_req = {
              method: 'POST',
@@ -1426,14 +1469,99 @@ export const updateProfile= (formdata) => (dispatch,getState) => {
         }
 
     let url = weburl + 'api-updateProfile';
-    console.log(post_req);
+    console.log(url);
     fetch(url,post_req).then(res =>{
-        console.log(res);
+        // console.log(res);
         res.json()
         .then(response => {
             console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'EDIT_PROFILE', payload:response.message, authEmail:formdata['email'],authMobile:formdata['mobile']});
+                if(formdata['screen_name'] != "MyProfile"){
+                    navigate("PaymentOption");
+                }
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}
+
+export const getNotification= (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-get-notification';
+
+    var formData = new FormData();
+        formData.append("user_id", getState().data.authUserID);
+        formData.append("token",getState().data.token);
+
+    let post_req = {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            }
+        }
+    console.log(url,post_req);
+
+    fetch(url,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            if(response.status == "1"){
+                dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification });
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}
+
+export const removeNotification= (data) => (dispatch,getState) => {
+    console.log(data);
+
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-delete-notification';
+
+    var formData = new FormData();
+        formData.append("user_id", getState().data.authUserID);
+        formData.append("token",getState().data.token);
+        formData.append("notify_id",data);
+
+    let post_req = {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            }
+        }
+    console.log(url,post_req);
+
+    fetch(url,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification });
             }else{
                 dispatch({type : 'NETWORK_ERROR', payload : response.message});
             }

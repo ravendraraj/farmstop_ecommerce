@@ -9,7 +9,7 @@ import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import PushController from './PushController'
+
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
@@ -193,6 +193,7 @@ class HomeScreen extends Component {
               this.flatList = c;
             }
           }
+          showsVerticalScrollIndicator={false}
           onScrollEndDrag={this.onScrollEnd}
           contentOffset={
             {x: 0, y: headerHeight}
@@ -240,7 +241,7 @@ class HomeScreen extends Component {
   renederAboutFarm(){
     if(this.state.showFooter){
       return(
-              <View style={{width:"95%",alignSelf:"center",marginTop:constants.vh(120)}}>
+              <View style={{width:"95%",alignSelf:"center",marginTop:constants.vh(60)}}>
                   <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
                     Farmstop Organic farms
                   </Text>
@@ -252,7 +253,7 @@ class HomeScreen extends Component {
                       with a vision to change the way food is produced
                       and consumed.
                     </Text>
-                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:5}}>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:10,marginBottom:10}}>
                         A glimpse of our farms
                     </Text>
                     <Image source={constants.image.aboutFarm} style={{width:width-30,height:width-140,alignSelf:'center'}}/>
@@ -290,18 +291,20 @@ class HomeScreen extends Component {
 
   renderSourceSection(){
     let ItemList = this.props.itemData;
-    if (!this.state.showFooter && ItemList != "undefined" && ItemList != null) {
+    if (ItemList != "undefined" && ItemList != null) {
+    // if ( this.state.showFooter != true && ItemList != "undefined" && ItemList != null) {
       return(
-        <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14),}}>
-          
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to your home</Text>
-                <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
-                {/* <ScrollView onScroll={Alert.alert('i am call')}> */}
-                  <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("AboutFarm")}>
-                    <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>
-                  </TouchableOpacity>
-                {/* </ScrollView> */}
+        <View style={{justifyContent:"flex-end",marginBottom:constants.vw(1),backgroundColor:constants.Colors.color_WHITE}}>  
+            <ScrollView>
+            <View style={{alignSelf:'center',width:'95%'}}>
+            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
+            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
+            </View>
+            <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
+            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
+            <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>
+            <View/>
+            </ScrollView>
         </View>
       )
     }
@@ -338,35 +341,34 @@ class HomeScreen extends Component {
         source={storeImg.appIntro1}>
         <View style={styles.container}>
           {/* <View style={styles.SectionStyle}> */}
-          <AntDesign name="search1" size={20} color={constants.Colors.color_BLACK}
+          {/*<AntDesign name="search1" size={20} color={constants.Colors.color_BLACK}
             style={styles.ImageStyle} />
 
           <Autocomplete
-            autoCapitalize="none"
-            autoCorrect={false}
-            containerStyle={styles.autocompleteContainer}
-            inputContainerStyle={{ borderWidth: 0 }}
-            style={{ color: constants.Colors.color_grey, fontSize: 18 }}
-
-            listStyle={{ borderWidth: 0 }}
-            //data to show in suggestion
-            data={productList.length === 1 && comp(query, productList[0].attribute_name) ? [] : productList}
-            //default value if you want to set something in input
-            defaultValue={query}
-            /*onchange of the text changing the state of the query which will trigger
-            the findProduct method to show the suggestions*/
-            onChangeText={text => this.setState({ query: text })}
-            onSubmitEditing ={()=> this.seacrhProduct(this.state.query)}
-            placeholder="Search for good health"
-            renderItem={({ item }) => (
-              //you can change the view you want to show in suggestion from here
-              <TouchableOpacity onPress={() => { this.setState({ query: item.attribute_name }), this.seacrhProduct(item.attribute_name) }}>
-                <Text style={styles.itemText}>
-                  {item.attribute_name}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      containerStyle={styles.autocompleteContainer}
+                      inputContainerStyle={{ borderWidth: 0 }}
+                      style={{ color: constants.Colors.color_grey, fontSize: 18 }}
+          
+                      listStyle={{ borderWidth: 0 }}
+                      //data to show in suggestion
+                      data={productList.length === 1 && comp(query, productList[0].attribute_name) ? [] : productList}
+                      //default value if you want to set something in input
+                      defaultValue={query}
+                      
+                      onChangeText={text => this.setState({ query: text })}
+                      onSubmitEditing ={()=> this.seacrhProduct(this.state.query)}
+                      placeholder="Search for good health"
+                      renderItem={({ item }) => (
+                        //you can change the view you want to show in suggestion from here
+                        <TouchableOpacity onPress={() => { this.setState({ query: item.attribute_name }), this.seacrhProduct(item.attribute_name) }}>
+                          <Text style={styles.itemText}>
+                            {item.attribute_name}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    />*/}
           <View style={styles.MainContainer}>
             {this._ShowError()}
             {this._loadLoader()}
@@ -374,7 +376,6 @@ class HomeScreen extends Component {
             {this.renderSourceSection()}
           </View>
         </View>
-        <PushController/>
       </ImageBackground>
     )
   }

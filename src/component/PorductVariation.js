@@ -7,17 +7,12 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
-
 //api call
 import { getProductType,setWishListItemInLocal ,setWishListItemOnServer,addItemToCart,setCartItemLocal} from '../lib/api'
 import {Picker} from '@react-native-community/picker';
-
 //navigation function
-import { navigate } from '../appnavigation/RootNavigation'
+import { navigate } from '../appnavigation/RootNavigation' 
 
-import AutoScrollListview from '../customElement/Auto'
-import Marquee from '../customElement/marquee'
-// import TestMarquee from './TestMarquee';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -134,16 +129,6 @@ class PorductVariation extends Component {
         this.props.removeFromCart(itemId);
     }
 
-    renderItemTitleOld(){
-        const Auto=this.props.productData.length>0?<AutoScrollListview itemList= {this.props.productData} totalProd={totalprod} scrollPosition={5} /> :null;
-        return (
-            <View style={{paddingBottom:0,marginBottom:-70}}>
-                <Marquee duration={18*1000} >
-                        {Auto}
-                </Marquee>
-            </View>
-        )
-    }
 
     _selectCat(prod_cat_id){
         console.log(prod_cat_id);
@@ -264,24 +249,26 @@ class PorductVariation extends Component {
                             {/*this.selectQtyDetail(item)*/}
                             {/**Price section */}
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{fontSize:18,fontFamily:bold}}>Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}</Text>
+                                <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontFamily:bold,paddingLeft:10}}>
+                                Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}
+                                </Text>
 
                                 <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity style={{marginRight:8,marginLeft:5}}
+                                <TouchableOpacity style={{marginRight:5,marginLeft:5,marginTop:-4}}
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove',item.selectedQty)}>
                                     <Material 
                                         name="minus-circle-outline"
                                         color={constants.Colors.color_grey}
-                                        size={25}
+                                        size={constants.vw(25)}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
-                                <TouchableOpacity style={{marginLeft:8}}
+                                <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
+                                <TouchableOpacity style={{marginLeft:5,marginTop:-4}} 
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add',item.selectedQty)}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
-                                        size={25}
+                                        size={constants.vw(25)}
                                     />
                                 </TouchableOpacity>
                             </View>

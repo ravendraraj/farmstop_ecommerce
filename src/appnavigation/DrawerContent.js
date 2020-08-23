@@ -275,7 +275,7 @@ async _logOutEvent(){
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('OrderSuccuess')}}>
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('Faq')}}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.questionIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>FAQ</Text>
@@ -283,7 +283,7 @@ async _logOutEvent(){
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('internetError')}}>
+                    <TouchableOpacity style={styles.menuTab} onPress={() => {this._redirect('Notification')}}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.notificationIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>Notifications</Text>

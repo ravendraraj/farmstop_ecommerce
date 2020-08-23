@@ -144,8 +144,8 @@ class MyCart extends Component {
     }
 
     checkProceed(){
-
-        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingCost != null){
+            console.log(this.props.authUserID ,this.props.authUserID, this.props.shippingAddress);
+        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
             
             let subtotal = this.props.subtotal;
             let tax = 0;
@@ -174,7 +174,7 @@ class MyCart extends Component {
 
             if(this.props.authUserID == null && this.props.authUserID == "" ){
                 this.props.navigation.navigate("NotLogin");
-            }else if(this.props.shippingAddress == null){
+            }else if(this.props.shippingAddress == ""){
                 {/**this.props.navigation.navigate("ShippingAddress");**/}
                 this.props.navigation.navigate('ShippingAddress', {
                     screen_name: "cart",
@@ -184,8 +184,8 @@ class MyCart extends Component {
     }
     
     redirectOnPaymentPage(){
-
-        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != null){
+        
+        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
                 let subtotal = this.props.subtotal;
                 let tax = 0;
                 let deliveryCharges = this.state.deliveryCharges;
@@ -230,7 +230,7 @@ class MyCart extends Component {
             if(this.props.authUserID == null && this.props.authUserID == "" ){
                 this.props.navigation.navigate("NotLogin");
             }else if(this.props.shippingAddress == null){
-                this.props.navigation.navigate("ShippingAddress");
+                this.props.navigation.navigate("ShippingAddress",{screen:'MyCart'});
             }
       }
     }
@@ -267,10 +267,12 @@ class MyCart extends Component {
         
         
         let find = false;
+        let descOfDuplicateItem = ''
         this.props.cartData.map(item=>{
                 if(item.prod_id == prod_id && item.selectedQtyVariation == variationValue)
                 {
                     find = true;
+                    descOfDuplicateItem =fristLetterCapital(item.attribute_name)+"-"+item.selectedQtyVariation;
                 }
         });
 
@@ -284,7 +286,7 @@ class MyCart extends Component {
             await this.props.setVariationInCart(data);
             await this.props.setCartItemLocal();
         }else{
-            ToastAndroid.showWithGravity("Duplicate item in cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+            ToastAndroid.showWithGravity(descOfDuplicateItem+" is already in your cart.", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -349,7 +351,7 @@ class MyCart extends Component {
                                         selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
                                         // mode="dropdown"
                                         style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
-                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID,item.selectedVariationPrice))}
+                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID,item.selectedQtyPrice))}
                                         >
                                         {/**<Picker.Item label="Select" value="Select"  />*/}
                                         { this.variationOpt(item.variation_details) }
@@ -357,22 +359,24 @@ class MyCart extends Component {
                                 </View>
 
                                 <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                    <Text style={{fontSize:constants.vw(18),fontFamily:bold,paddingLeft:10}}>Rs. {item.selectedQtyPrice}</Text>
+                                    <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontFamily:bold,paddingLeft:10}}>
+                                        Rs. {item.selectedVariationPrice}
+                                    </Text>
                                     <View style={{flexDirection:'row'}}>
-                                        <TouchableOpacity style={{marginRight:8,marginLeft:5}}
+                                        <TouchableOpacity style={{marginRight:5,marginLeft:5,marginTop:-4}}
                                         onPress={()=>this._manageCartProdQty(item,'remove')}>
                                             <Material 
                                                 name="minus-circle-outline"
                                                 color={constants.Colors.color_grey}
-                                                size={25}
+                                                size={constants.vw(25)}
                                             />
                                         </TouchableOpacity>
-                                        <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
-                                        <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
+                                        <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
+                                        <TouchableOpacity style={{marginLeft:5,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                             <Material 
                                                 name="plus-circle-outline"
                                                 color={constants.Colors.color_grey}
-                                                size={25}
+                                                size={constants.vw(25)}
                                             />
                                         </TouchableOpacity>
                                     </View>

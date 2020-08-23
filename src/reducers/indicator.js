@@ -11,9 +11,12 @@ const indicator = (state = false, action) => {
         case 'SIGNUP_SUCCESS':
         case 'OTP_SEND':
         case 'ADD_TO_CART':
+        case 'REMOVE_FROM_WISH':
         case 'REGISTER_USER':
         case 'MY_WISHLIST':
         case 'SUCCESS':
+        case 'FETCH_NOTIFICATION_LIST':
+        case 'REMOVE_ITEM':
         case 'EDIT_PROFILE':
         case "LOCATION_FETCHED":
         case "NOT_DELIVER":

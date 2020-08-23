@@ -7,7 +7,6 @@ import WithoutSignInStack from './WithoutSignInStack';
 
 //Screens
 import HomeScreen from '../component/HomeScreen';
-import SellerInfoScreen from '../component/SellerInfoScreen';
 
 const Drawer = createDrawerNavigator();
 const NoneValidate = ({navigation}) => (

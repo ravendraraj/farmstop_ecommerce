@@ -1,6 +1,6 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',token:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
     knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
-,defaultShipingAddress:null,coupon_id:null,orderList:[],orderDetail:[],popup:''};
+,defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:''};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -9,6 +9,19 @@ const data = (state = initialDataState, action) => {
             ...state,
             appIntro:action.data
         };
+
+        case 'SET_DIVECE_DATA':
+        return{
+            ...state,
+            deviceToken:action.token,
+            os:action.os
+        }
+
+        case 'FETCH_NOTIFICATION_LIST':
+        return{
+            ...state,
+            userNotifications:action.notification
+        }
 
         case 'EDIT_PROFILE':
         return { 
@@ -46,6 +59,7 @@ const data = (state = initialDataState, action) => {
         case 'LOGOUT':
             return{
                 ...state,
+                userNotifications:[],
                 cartItemSync:false,
                 apartmentList:[],
                 coupon_value:'',
@@ -61,7 +75,7 @@ const data = (state = initialDataState, action) => {
                 selectAddress:null,
                 shippingCharges:null,
                 shippingPincode:null,
-                defaultShipingAddress:null,
+                defaultShipingAddress:"",
                 activeProduct:'',
                 orederDetails:[],
                 token:''
@@ -104,7 +118,7 @@ const data = (state = initialDataState, action) => {
             if(action.cartItem.length >0)
             {
                 action.cartItem.map(item=>{
-                    newSyncItemTotal += parseFloat(item.selectedVariationPrice);
+                    newSyncItemTotal += parseFloat(item.selectedQtyPrice);
                 })
             }
 
@@ -497,7 +511,6 @@ const data = (state = initialDataState, action) => {
                 dataSetForCart = state.my_wish_list;
             }
 
-            console.log(dataSetForCart);
             let addedItem = dataSetForCart.find(item => item.id === action.id && item.selectedVariationID == action.selectedVariationID);
              //check if the action id exists in the addedItems
             let existed_item= state.addedItems.find(item=> action.id === item.id && item.selectedVariationID == addedItem.selectedVariationID)
@@ -520,9 +533,9 @@ const data = (state = initialDataState, action) => {
                 "cart_item_id": action.cart_item_id,
                 "selectedQty": addedItem.selectedQty,
                 "selectedVariationID": addedItem.selectedVariationID,
-                "selectedQtyPrice":addedItem.selectedVariationPrice,
+                "selectedQtyPrice":addedItem.selectedQtyPrice,
                 "selectedQtyVariation": addedItem.selectedQtyVariation,
-                "selectedVariationPrice": addedItem.selectedQtyPrice,
+                "selectedVariationPrice": addedItem.selectedVariationPrice,
                 "variation_details": addedItem.variation_details
                 }
 
@@ -549,10 +562,10 @@ const data = (state = initialDataState, action) => {
                             if(variation.varition === selectedCartVariation){
                                 // console.log("Select ravendra");
                                 item.selectedQtyVariation = selectedCartVariation;
-                                item.selectedQtyPrice = variation.right_price;
+                                item.selectedQtyPrice = (parseInt(item.selectedQty)*parseFloat(variation.right_price));
                                 item.selectedVariationID = variation.varition_detail_id;
-                                item.selectedVariationPrice = (parseInt(item.selectedQty)*parseFloat(variation.right_price));
-                                totalOnChangeVari=(totalOnChangeVari-parseFloat(oldPriceOnPicker)+ parseFloat(item.selectedVariationPrice));
+                                item.selectedVariationPrice = variation.right_price;
+                                totalOnChangeVari=(totalOnChangeVari-parseFloat(oldPriceOnPicker)+ (parseInt(item.selectedQty)*parseFloat(variation.right_price)));
                             }else if(selectedCartVariation === "Select"){
                                 // console.log("Not Select");
                                 item.selectedVariationID = "";
@@ -571,32 +584,12 @@ const data = (state = initialDataState, action) => {
                     total:totalOnChangeVari
             }
 
-        // //cart reducers for wish item 
-        // case "ADD_WISH_ITEM_TO_CART" :
-    
-        //     let addedWishItem = state.my_wish_list.find(item => item.product_variation_id === action.id);
-        //      //check if the action id exists in the addedItems
-        //     let existedWishItem= state.addedItems.find(item=> action.id === item.id)
-        //     if(existedWishItem)
-        //     {
-        //     //    addedItem.quantity += 1 
-        //         return{
-        //            ...state,
-        //            //addedItems: [...state.addedItems, addedItem], 
-        //            }
-        //    }
-        //     else{
-        //     //    addedItem.quantity = 1;
-        //        //calculating the total
-        //        let newTotal = state.total + parseFloat(addedWishItem.selectedQtyPrice) 
-        //        return{
-        //            ...state,
-        //            addedItems: [...state.addedItems, addedWishItem],
-        //            total : newTotal,
-        //        }
-               
-        // }
-
+        case 'REMOVE_FROM_WISH':
+            let updateWishList = state.my_wish_list.filter(item=> (action.prod_id != item.id ));
+            return{
+                ...state,
+                my_wish_list:updateWishList
+            }
 
         case "REMOVE_ITEM":
             let itemToRemove= state.addedItems.find(item=> (action.id === item.prod_id && action.selectedVariationID == item.selectedVariationID));

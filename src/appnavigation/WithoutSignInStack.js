@@ -31,6 +31,8 @@ import TrackOrder from '../component/TrackOrder'
 import MyProfile from '../component/MyProfile'
 import OrderDetails from '../component/OrderDetails'
 import EditProfile from '../component/EditProfile'
+import Faq from '../component/Faq'
+import Notification from '../component/Notification'
 
 const RootStack = createStackNavigator();
 
@@ -73,6 +75,24 @@ const WithoutSignInStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="ProductType" component={TabNavProdvariation}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="Notification" component={Notification}/>
+
+        <RootStack.Screen 
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="Faq" component={Faq}/>
 
             <RootStack.Screen 
                     options={({ navigation }) => ({
@@ -254,8 +274,7 @@ const WithoutSignInStack = ({navigation}) => (
 
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                headerTitle: () => <Header navigation={navigation} />,
+                headerTitle: null,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}

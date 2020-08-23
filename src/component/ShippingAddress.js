@@ -83,7 +83,12 @@ class shippingAddress extends Component{
 
     setDilevryAddress(addressId){
         if(addressId !=""){
-            this.props.selectShippingAddress(addressId);
+            // console.log("rooo",this.props.route);
+            var data = [];
+                data["id"] = addressId;
+                data["screen_name"] = this.props.route.params.screen_name;
+        
+            this.props.selectShippingAddress(data);
         }else{
             ToastAndroid.showWithGravity("Something went wrong,Please try again", ToastAndroid.SHORT, ToastAndroid.TOP);    
         }
@@ -105,7 +110,7 @@ class shippingAddress extends Component{
                                 {addressRow.district},{addressRow.zipcode},{addressRow.country}
                             </Text>
                             <View style={{flexDirection:'row',justifyContent:'space-between',alignSelf:'flex-end'}}>
-                                {this.props.route.params.screen_name == "cart" ?(<TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
+                                {(this.props.route.params.screen_name == "cart" || this.props.route.params.screen_name =="PaymentOption") ?(<TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
                                                                     <Text style={styles.deliveryBtntext}>Delivery at this Address</Text>
                                                                 </TouchableOpacity>):<View/>}
                                 <TouchableOpacity style={styles.editBtn} onPress={()=>this.editAddress(addressRow.id)}>

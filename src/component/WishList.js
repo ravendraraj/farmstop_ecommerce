@@ -8,12 +8,11 @@ import {Loader} from '../customElement/Loader'
 import {CouponTextInput ,TextHeading,EmptyComp} from '../customElement/Input'
 //helper function
 import {fristLetterCapital} from '../lib/helper'
-import {getWishListItem ,addItemToCart,setCartItemLocal} from  '../lib/api'
+import {getWishListItem ,addItemToCart,setCartItemLocal,deleteWishItem} from  '../lib/api'
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
-import Autocomplete from 'react-native-autocomplete-input'
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -67,24 +66,43 @@ class WishList extends Component {
     }
 
     _manageCartProdQty = (prod ,typeaction)=>{
+        console.log(prod.selectedQty);
         if(prod.selectedVariationID !=''){
-            this.props.manageCartQty({prodId:prod.id,typeOfAct:typeaction});
+            if(typeaction =="add"){
+                this.props.manageCartQty({prodId:prod.id,typeOfAct:typeaction});
+            }else{
+                if(prod.selectedQty >1)
+                    this.props.manageCartQty({prodId:prod.id,typeOfAct:typeaction});
+            }
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
     async _addInCart(prodCatId_id,variationId,Itemid,selectedQty){
+        let existProd = false;
+        this.props.cart.map( cartItems=>{
+            if(Itemid == cartItems.prod_id && variationId == cartItems.selectedVariationID)
+            {
+                existProd = true;
+            }
+        })
+
         if(variationId !=''){
             // this.props.addToCart(Itemid);
-            var data = [];
-            data["id"] = Itemid;
-            data["variationId"] = variationId;
-            data["screen"] = this.props.route.name;
-            data["qty"] = selectedQty
-            // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
-            await this.props.addItemToCart(data);
-            this.props.setCartItemLocal();
+            if(!existProd)
+            {
+                var data = [];
+                data["id"] = Itemid;
+                data["variationId"] = variationId;
+                data["screen"] = this.props.route.name;
+                data["qty"] = selectedQty
+                // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
+                await this.props.addItemToCart(data);
+                this.props.setCartItemLocal();
+            }else{
+                ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
 
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -98,6 +116,17 @@ class WishList extends Component {
             )
         }
     }
+
+    _removeWishList (id,action) {
+        // data.isMyWish =! "heart" ? "heart-outline": "heart";
+        if(this.props.authUserId !=''){
+            //this.props.setWishInLocal(data);//save in local
+            this.props.removeWishListItemOnServer({id,action}); //save in server
+            // this.props.addInWish(data.id);
+        }else{
+            ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+    };
 
     renederItemType () {
         // let ItemList = this.props.my_wish_list;
@@ -122,9 +151,20 @@ class WishList extends Component {
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                         </View>
                         <View style={{width:'50%'}}>
-                            <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
-                                {item.attribute_name}
-                            </Text>
+                            <View style={{flexDirection:'row'}}>
+                                <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
+                                    {item.attribute_name}
+                                </Text>
+                                <View style={{flex:1}}>
+                                        <TouchableOpacity style={{position:'absolute',right:0,bottom:4,zIndex:1}} onPress={()=>this._removeWishList(item.id,"remove")}>
+                                            <Icon 
+                                                name="trash-o"
+                                                color={constants.Colors.color_BLACK}
+                                                size={25}
+                                            />
+                                        </TouchableOpacity>
+                                </View>
+                            </View>
                             <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
                                 <Picker
                                     selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
@@ -132,12 +172,12 @@ class WishList extends Component {
                                     style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
                                     onValueChange={ (value) => ( this.setVariationType(value,item.id))}
                                     >
-                                    <Picker.Item label="Select" value="Select"  />
+                                    {/* <Picker.Item label="Select" value="Select"  /> */}
                                     { this.variationOpt(item.variation_details) }
                                 </Picker>
                             </View>
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                            <Text style={{fontSize:18,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
+                            <Text style={{fontSize:16,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                                 onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -277,12 +317,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     my_wish_list :state.data.my_wish_list,
     animate : state.indicator,
+    cart: state.data.addedItems,
+    authUserId:state.data.authUserID
 });
 
 const mapDispatchToProps = dispatch => ({
     getWishListItem: ()=>dispatch(getWishListItem()),
     addToCart :(prodId)=> dispatch({type:'ADD_WISH_ITEM_TO_CART',id:prodId}),
-    removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
+    removeWishListItemOnServer :(data)=> dispatch(deleteWishItem(data)),
     removeloader:()=>dispatch({type : 'CANCEL_LOADING'}),
     manageCartQty:(data) =>dispatch({type:'MANAGE-WISHPROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct}),
     selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value}),

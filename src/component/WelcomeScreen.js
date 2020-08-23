@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import constants from '../constants'
 import {navigate} from '../appnavigation/RootNavigation'
+import PushController from './PushController'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -65,7 +66,6 @@ class WelcomeScreen extends Component {
 						setTimeout(function(){  
 							navigate('DrawerScreen');  
 						}, 1000);
-
 					}else{
 						navigate('NotLogin');
 					}
@@ -143,6 +143,7 @@ class WelcomeScreen extends Component {
 					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
 					<Text style={styles.welcomText}>Welcome To Farmstop</Text>
 					</View>
+					<PushController/>
 				</View>
 			);
 		} else {

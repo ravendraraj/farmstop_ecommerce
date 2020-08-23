@@ -82,7 +82,7 @@ class MyProfile extends Component{
                 </ScrollView>
                 <View>
                     <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_WHITE,borderWidth:1,borderColor:constants.Colors.color_grey,borderRadius:5,marginBottom:10,backgroundColor:constants.Colors.color_heading}}
-                    onPress={()=>this.props.navigation.navigate("EditProfile")}>
+                    onPress={()=>this.props.navigation.navigate("EditProfile",{screen_name:'MyProfile'})}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>

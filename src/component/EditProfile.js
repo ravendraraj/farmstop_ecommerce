@@ -58,7 +58,9 @@ class EditProfile extends Component{
         }else if(mobile =='' || mobile =='null' || mobile ==null){
             ToastAndroid.showWithGravity("Please fill mobile", ToastAndroid.SHORT, ToastAndroid.TOP);
         }else{
-            this.props.updateProfile({email,mobile});
+            let screen_name = this.props.route.params.screen_name;
+            console.log("My Profile",this.props.route);
+            this.props.updateProfile({email,mobile,screen_name});
         }
     }
 
@@ -69,6 +71,27 @@ class EditProfile extends Component{
             ToastAndroid.showWithGravity("Profile Update Successfully.", ToastAndroid.SHORT, ToastAndroid.TOP);
             this.props.remove_popup();
         }
+    }
+
+    _sendMessage(){
+        Alert.alert(
+            'Farmstop',
+            'Email can not change, please go back',
+            [
+                {
+                    text: 'Go Back',
+                    onPress: () => this.props.navigation.navigate(this.props.route.params.screen_name)
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                    },
+            ],
+                {   
+                    cancelable: false
+                }
+            );
     }
 
     render(){
@@ -119,7 +142,7 @@ class EditProfile extends Component{
                 </ScrollView>
                     {this._loadLoader()}
                     {this._showMsg()}
-                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_heading,borderWidth:0,borderRadius:5,marginBottom:10}} onPress={()=>this._submit()}>
+                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_heading,borderWidth:0,borderRadius:5,marginBottom:10}} onPress={()=>{(email !="" && mobile !="")?this._sendMessage():this._submit()}}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>SAVE</Text>
                     </TouchableOpacity>
                 

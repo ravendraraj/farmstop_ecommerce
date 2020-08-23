@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import constants from '../constants'
-import {navigate} from '../appnavigation/RootNavigation'
+import {navigate,navigateWithParams} from '../appnavigation/RootNavigation'
 
 function editHeader({navigation,cartItem,title}){
     // onPress={() => {navigation.openDrawer()}}
@@ -15,7 +15,8 @@ function editHeader({navigation,cartItem,title}){
 
     const nav = (route)=>{
         console.log("Ravendra",title.children)
-        navigate(route);
+        {/*navigate(route);*/}
+        navigateWithParams(route, {screen_name:"MyProfile"});
     }
 
     let totalProd = cartItem.length > 0 ? cartItem.length:0;

@@ -51,7 +51,7 @@ class KnowMore extends Component {
                 existProd = true;
             }
         })
-        console.log(existProd,prodTypeId,variationId ,selectedQty)
+        // console.log(existProd,prodTypeId,variationId ,selectedQty)
         if(variationId !=""){
             // this.props.addToCart({prodId:prodTypeId ,screen:this.props.screen});
             if(!existProd)
