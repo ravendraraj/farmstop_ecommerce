@@ -175,7 +175,7 @@ _redirect(routeParam){
             screen_name: "side_menu_bar",
         });
     }else{
-        ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+        this.props.navigation.navigate("SocialLogin");
     }
 }
 
@@ -229,8 +229,8 @@ async _logOutEvent(){
                 </View>
                  <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
                     {this._profileRender()}
-                    <View style={{flex:1,marginTop:constants.vw(20),marginLeft:constants.vw(20),marginRight:3}}>
-                        <Text style={styles.userName}>Hello</Text>
+                    <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
+                        <Text style={styles.userName}>Hello !</Text>
                         <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
                     </View>
                 </View>
@@ -239,7 +239,6 @@ async _logOutEvent(){
                     {this._renderSignUpAndLogin()}
                     </View>
                     <View style={{paddingLeft:10}}>
-
 
                     <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
                         <View style={{flexDirection:'row'}}>
@@ -267,7 +266,7 @@ async _logOutEvent(){
                     </TouchableOpacity>
                     {this.renderMyOrder()}
                     
-                    <TouchableOpacity style={styles.menuTab} onPress={() => this._redirect('WishList')}>
+                    <TouchableOpacity style={styles.menuTab} onPress={() => this._redirect('Wish List')}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.heartIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>Wish List</Text>
@@ -321,8 +320,7 @@ async _logOutEvent(){
 
 const styles = StyleSheet.create({
 	MenueLable: {
-        fontFamily:constants.fonts.Cardo_Regular,
-        fontWeight:'bold',
+        fontFamily:constants.fonts.CardoBOLD,
         fontSize:constants.vw(18),
         paddingLeft:10
         },
@@ -337,7 +335,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         marginTop:7,
         marginBottom:7,
-        width:'80%'
+        width:'90%'
     },
     icon:{
         width:constants.vw(30),
@@ -367,7 +365,7 @@ const styles = StyleSheet.create({
 
     },
     userName:{
-        fontFamily:constants.fonts.Cardo_Bold,
+        fontFamily:constants.fonts.CardoBOLD,
         fontSize:constants.vh(22),
         color:constants.Colors.color_BLACK
     },

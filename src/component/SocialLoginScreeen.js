@@ -75,7 +75,14 @@ class SocialLoginScreen extends Component{
                 // })
 
         }else{
-            Alert.alert("Please Fill Email id or Mobile number");
+            Alert.alert(
+            "Fatmstop",
+            "Please Fill Email id or Mobile number correctly",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+          );
         }
     }
 
@@ -146,7 +153,7 @@ class SocialLoginScreen extends Component{
     _renderView(){
        
             return(
-            <View style={{width:'80%',alignSelf:"center"}}>
+            <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(5)}}>
                         <Image source={constants.image.social_login} style={styles.socialImage}/>
                         
                         <View style={{flexDirection:'row',alignSelf:'center'}}>
@@ -172,7 +179,11 @@ class SocialLoginScreen extends Component{
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Password" secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})} onSubmitEditing={()=>this.submitManualReg()}/>
                         </View>
-
+                        <View style={{marginTop:constants.vh(20)}}>
+                            <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:constants.vh(10)}} onPress={()=>this.submitManualReg()}>
+                                <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,textAlign:'center',color:constants.Colors.color_WHITE}}>Login</Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                             <TouchableOpacity style={{alignSelf:'flex-end',marginTop:constants.vw(10)}} onPress={()=>this._renderSignUpScreen()}>
                                 <Text style={{fontSize:constants.vh(20),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Create Account</Text>
@@ -187,7 +198,7 @@ class SocialLoginScreen extends Component{
                                 Having issue signing up, please write to us at info@farmstop.in
                             </Text>
                         
-                            <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:constants.vw(10),paddingLeft:constants.vw(10),borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-3}} onPress={()=>this.props.navigation.navigate('MainHome')}>
+                            <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-4}} onPress={()=>this.props.navigation.navigate('MainHome')}>
                                 <Text style={{fontSize:constants.vw(16),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
                             </TouchableOpacity>
                         </View>

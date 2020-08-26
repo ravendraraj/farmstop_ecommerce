@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions ,ToastAndroid} from 'react-native'
+import { View,ScrollView, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions ,ToastAndroid} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -116,11 +116,11 @@ class PorductVariation extends Component {
                 await this.props.addItemToCart(data);
                 this.props.setCartItemLocal()
             }else{
-                ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+                // ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
 
         }else{
-            ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
+            // ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -137,11 +137,20 @@ class PorductVariation extends Component {
     }
 
     renderItemTitle(){
-        let catName = this.props.productData;
+        var catName = this.props.productData;
+        var categoryList = [];
+        categoryList[0]=catName.find(item=>item.id == this.props.activeProdCat);
+        var uniqueList = catName.filter(item=>item.id != this.props.activeProdCat);
+        
+        var j=1;
+        for(var i = 0; i<uniqueList.length;i++){
+            categoryList[j++] = uniqueList[i];
+        }
+
         return (
                 <View style={{width:'95%',alignSelf:'center'}}>
                     <FlatList
-                        data={catName}
+                        data={categoryList}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => (
@@ -151,13 +160,13 @@ class PorductVariation extends Component {
                                         <Text style={styles.notActiveItem}>
                                             {fristLetterCapital(item.title)}
                                         </Text>
-                                ):(
-                                    <TouchableOpacity onPress={()=>this._selectCat(item.id)}>
-                                        <Text style={styles.activeItem}>
-                                            {fristLetterCapital(item.title)}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
+                                    ):(
+                                        <TouchableOpacity onPress={()=>this._selectCat(item.id)}>
+                                            <Text style={styles.activeItem}>
+                                                {fristLetterCapital(item.title)}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )
                                 }
                             </View>
                         )}
@@ -201,16 +210,12 @@ class PorductVariation extends Component {
 
         return(
             <View>
-                {/* <Text style={{fontSize:18,color:constants.Colors.color_heading,fontFamily:italic,marginTop:40,marginBottom:30}}>
-                    {fristLetterCapital(producName)}
-                </Text> */}
                 {this.renderItemTitle()}
             <FlatList
             data={updateItemList}
             renderItem={({ item }) => (
                 <View style={styles.prodBlock}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
-                        {/* <TouchableOpacity onPress={()=>this._getItemType(item.id)}> */}
                         <View>
                             <TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
                                 <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
@@ -220,14 +225,12 @@ class PorductVariation extends Component {
                             onPress={()=>this._addinWishList(item)}>
                                 <Material name={item.isMyWish} color={constants.Colors.color_grey} size={25}/>
                             </TouchableOpacity>
-                            {/* <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text> */}
-                                <View>
-                                    <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
-                                        <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Know More</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                
+                            <TouchableOpacity style={{marginTop:10,alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
+                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Know more</Text>
+                            </TouchableOpacity>
+                                
                         </View>
-                        {/* </TouchableOpacity> */}
 
                         {/** Select Option */}
                         <View style={{width:'50%'}}>
@@ -249,12 +252,12 @@ class PorductVariation extends Component {
                             {/*this.selectQtyDetail(item)*/}
                             {/**Price section */}
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                                <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontFamily:bold,paddingLeft:10}}>
-                                Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}
+                                <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontWeight:'bold',paddingLeft:10}}>
+                                    Rs. {(item.selectedVariationID !='') ? item.selectedQtyPrice : item.price}
                                 </Text>
 
                                 <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity style={{marginRight:5,marginLeft:5,marginTop:-4}}
+                                <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'remove',item.selectedQty)}>
                                     <Material 
                                         name="minus-circle-outline"
@@ -263,7 +266,7 @@ class PorductVariation extends Component {
                                     />
                                 </TouchableOpacity>
                                 <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
-                                <TouchableOpacity style={{marginLeft:5,marginTop:-4}} 
+                                <TouchableOpacity style={{marginLeft:8,marginTop:-4}} 
                                 onPress={()=>this._manageProdQty(item.id,item.selectedVariationID,'add',item.selectedQty)}>
                                     <Material 
                                         name="plus-circle-outline"
@@ -275,16 +278,12 @@ class PorductVariation extends Component {
                             </View>
 
                             <View>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
+                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
                                     onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,item.selectedQty)}>
-                                    <Material name="cart" size={18} color={constants.Colors.color_BLACK}/>
-                                    <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
+                                    <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
+                                    <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                                 </TouchableOpacity>
                             </View>
-                            {/**Know More  section */}
-                            {/* <TouchableOpacity style={{alignSelf:'center',marginTop:15}} onPress={()=>this._knowMore(item.id)}>
-                                <Text style={{fontFamily:bold}}>Know More</Text>
-                            </TouchableOpacity> */}
                         </View>
                     </View>
                     <View style={{flexDirection:'row'}}>
@@ -361,8 +360,8 @@ const styles = StyleSheet.create({
     imageThumbnail: {
       justifyContent: 'center',
       alignItems: 'center',
-      width:constants.vw(120),
-      height:constants.vw(110),
+      width:constants.vw(110),
+      height:constants.vw(100),
     },
     row:{
         flexDirection: 'row', 
@@ -389,7 +388,7 @@ const styles = StyleSheet.create({
     notActiveItem:{
         fontSize:20,
         color:constants.Colors.color_heading,
-        fontFamily:constants.fonts.Cardo_Italic,
+        fontFamily:constants.fonts.Cardo_Bold,
         paddingRight:15,
     }
   });

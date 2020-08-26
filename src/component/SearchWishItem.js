@@ -17,6 +17,7 @@ import { addItemToCart,setCartItemLocal,deleteWishItem } from '../lib/api'
 
 
 const regular = constants.fonts.Cardo_Regular;
+const bold = constants.fonts.Cardo_Bold;
 class SearchWishItem extends Component {
   constructor(props) {
     super(props)
@@ -179,16 +180,15 @@ renederItemType () {
                           <Picker
                                 selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
                                 // mode="dropdown"
-                                style={{height: 50, width: 110,marginTop:-12,marginBottom:-12,fontFamily:constants.fonts.Cardo_Bold}}
+                                style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
                                 onValueChange={ (value) => ( this.setVariationType(value,item.id))}
                                 >
-                                <Picker.Item label="Select" value="Select"  />
                                 { this.variationOpt(item.variation_details) }
                             </Picker>
                         </View>
 
                         <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                        <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
+                         <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontWeight:'bold'}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                         <View style={{flexDirection:'row'}}>
                             <TouchableOpacity style={{marginRight:8,marginLeft:5}}
                             onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -198,7 +198,7 @@ renederItemType () {
                                     size={25}
                                 />
                             </TouchableOpacity>
-                            <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
+                             <Text style={{fontSize:constants.vw(16),fontFamily:bold,marginTop:4}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
                             <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                 <Material 
                                     name="plus-circle-outline"
@@ -212,10 +212,10 @@ renederItemType () {
                         {/**Price section */}
                         {/**Price section */}
                         <View>
-                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
+                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
                                 onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
-                                <Material name="cart" size={19} color={constants.Colors.color_BLACK}/>
-                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
+                                <Material name="cart" size={19} color={constants.Colors.color_WHITE}/>
+                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

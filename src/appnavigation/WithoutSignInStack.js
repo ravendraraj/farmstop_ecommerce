@@ -101,7 +101,7 @@ const WithoutSignInStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="WishList" component={WishTabNav}/>
+                    name="Wish List" component={WishTabNav}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({
@@ -248,6 +248,7 @@ const WithoutSignInStack = ({navigation}) => (
                     options={({ navigation }) => ({
                         // headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
                         // headerTitle: () => <Header navigation={navigation} />,
+                        headerShown:false,
                         headerTitle: null,
                         headerLeft:false,
                         headerStyle:{shadowOpacity:0,elevation: 0},

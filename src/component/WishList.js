@@ -35,6 +35,7 @@ class WishList extends Component {
     }
 
     async componentDidMount(){
+        console.log(this.props.route.name,"check");
         if(this.props.route.name != "SearchWishItem")
             await this.props.getWishListItem();
     }
@@ -46,6 +47,10 @@ class WishList extends Component {
             )
         }
     }
+
+componentWillUnmount() {
+    console.log(this.props.route.name,"check");
+}
     
     setVariationType(variationValue, prod_id){
         console.log(variationValue);
@@ -177,9 +182,9 @@ class WishList extends Component {
                                 </Picker>
                             </View>
                             <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
-                            <Text style={{fontSize:16,fontFamily:bold}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
+                            <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontWeight:'bold'}}>Rs. {item.selectedVariationID ==''?item.price:item.selectedQtyPrice}</Text>
                             <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity style={{marginRight:8,marginLeft:5}}
+                                <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
                                 onPress={()=>this._manageCartProdQty(item,'remove')}>
                                     <Material 
                                         name="minus-circle-outline"
@@ -187,8 +192,8 @@ class WishList extends Component {
                                         size={25}
                                     />
                                 </TouchableOpacity>
-                                    <Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
-                                <TouchableOpacity style={{marginLeft:8}} onPress={()=>this._manageCartProdQty(item, "add")}>
+                                    <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
+                                <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                     <Material 
                                         name="plus-circle-outline"
                                         color={constants.Colors.color_grey}
@@ -201,10 +206,10 @@ class WishList extends Component {
                             {/**Price section */}
                             {/**Price section */}
                             <View>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
+                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
                                     onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty)}>
-                                    <Material name="cart" size={19} color={constants.Colors.color_BLACK}/>
-                                    <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
+                                    <Material name="cart" size={19} color={constants.Colors.color_WHITE}/>
+                                    <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -230,7 +235,7 @@ class WishList extends Component {
                 return(
                     <EmptyComp imageName={constants.image.emptyCart} 
                         welcomText={"Looks like you haven’t added anything to your Wish List yet!"}
-                        redirectText={"Add Now"}
+                        redirectText={"Shop Now"}
                         onPress={()=>this.props.navigation.navigate("MainHome")}
                     />
                 )

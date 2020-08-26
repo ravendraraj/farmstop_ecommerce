@@ -19,12 +19,12 @@ const slides = [
 		brandImg: image.brandImages,
 		backgroundColor: '#F7BB64',
 	},
-	{
-		key: 'two',
-		text: 'Are you farmer and want to sell anything "Organic"',
-		image: image.appIntro2,
-		backgroundColor: '#F7BB64',
-	},
+	// {
+	// 	key: 'two',
+	// 	text: 'Are you farmer and want to sell anything "Organic"',
+	// 	image: image.appIntro2,
+	// 	backgroundColor: '#F7BB64',
+	// },
 	{
 		key: 'three',
 		text: 'Are you a consumer and want to Buy anything "Organic"',

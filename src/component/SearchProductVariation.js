@@ -175,7 +175,7 @@ class SearchProductVariation extends Component {
 					renderItem={({ item }) => (
 						<View style={{ marginBottom: 10 }}>
 							<View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
-								{/* <TouchableOpacity onPress={()=>this._getItemType(item.id)}> */}
+								
 								<View>
 									<TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
 										<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />
@@ -184,15 +184,13 @@ class SearchProductVariation extends Component {
 										onPress={() => this._addinWishList(item)}>
 										<Material name={item.isMyWish} color={constants.Colors.color_grey} size={25} />
 									</TouchableOpacity>
-									{/* <Text style={{fontSize:12,marginTop:10,alignSelf:'center',fontFamily:regular}}>{fristLetterCapital(item.attribute_name)}</Text> */}
 
-									<View>
-                                    <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
-                                        <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Know More</Text>
+									
+                                    <TouchableOpacity style={{flex:2,justifyContent:'flex-end'}} onPress={()=>this._knowMore(item.id)}>
+                                        <Text style={{textAlign:'center',fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Know More</Text>
                                     </TouchableOpacity>
-                                </View>
+                                
 								</View>
-								{/* </TouchableOpacity> */}
 
 								{/** Select Option */}
 								<View style={{ width: '50%' }}>
@@ -211,9 +209,11 @@ class SearchProductVariation extends Component {
 										</Picker>
 									</View>
 									<View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:10,marginTop:10}}>
-										<Text style={{ fontSize: 18, fontFamily: bold }}>Rs. {(item.selectedVariationID != '') ? item.selectedQtyPrice : item.price}</Text>
+										<Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontWeight:'bold',paddingLeft:10}}>
+											Rs. {(item.selectedVariationID != '') ? item.selectedQtyPrice : item.price}
+										</Text>
 										<View style={{flexDirection:'row'}}>
-										<TouchableOpacity style={{ marginRight: 5, marginLeft: 0 }}
+										<TouchableOpacity style={{ marginRight: 8, marginLeft: 0 }}
 											onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'remove',item.selectedQty)}>
 											<Material
 												name="minus-circle-outline"
@@ -221,8 +221,8 @@ class SearchProductVariation extends Component {
 												size={25}
 											/>
 										</TouchableOpacity>
-										<Text style={{fontSize:20,fontFamily:bold}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
-										<TouchableOpacity style={{ marginLeft: 5 }}
+										<Text style={{fontSize:constants.vw(16),fontWeight:'bold',marginTop:4}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
+										<TouchableOpacity style={{ marginLeft: 8 }}
 											onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'add',item.selectedQty)}>
 											<Material
 												name="plus-circle-outline"
@@ -232,20 +232,14 @@ class SearchProductVariation extends Component {
 										</TouchableOpacity>
 										</View>
 									</View>
-									{/*this.selectQtyDetail(item)*/}
 									{/**Price section */}
 									<View>
-										<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_heading,justifyContent:'center',borderRadius:4,height: 30}}
+										<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
 											onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, item.selectedQty)}>
-											<Material name="cart" size={18} color={constants.Colors.color_BLACK} />
-											<Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Add to Cart</Text>
+											<Material name="cart" size={18} color={constants.Colors.color_WHITE} />
+											<Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
 										</TouchableOpacity>
 									</View>
-
-									{/**Know More  section */}
-									{/* <TouchableOpacity style={{alignSelf:'center',marginTop:15}} onPress={()=>this._knowMore(item.id)}>
-                            <Text style={{fontFamily:bold}}>Know More</Text>
-                        </TouchableOpacity> */}
 								</View>
 							</View>
 						</View>

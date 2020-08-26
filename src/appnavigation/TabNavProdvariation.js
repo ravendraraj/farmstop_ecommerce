@@ -6,6 +6,10 @@ import MyCart from '../component/MyCart'
 import SearchProductVariation from '../component/SearchProductVariation'
 import constants from '../constants'
 import MyProfile from '../component/MyProfile'
+import MyWish from '../component/WishList' 
+import Icons from 'react-native-vector-icons/FontAwesome5'
+import Material from 'react-native-vector-icons/AntDesign'
+
 
 const Tab = createBottomTabNavigator();
 const TabNavProdvariation = ({navigation}) => (
@@ -14,14 +18,21 @@ const TabNavProdvariation = ({navigation}) => (
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'productVariation') {
-            iconName = focused ? <Image source={constants.image.homeIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.homeIcon} style={{width:35,height:35}}/>;
+          if (route.name === 'Home') {
+            // iconName = focused ? <Image source={constants.image.homeIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.homeIcon} style={{width:35,height:35}}/>;
+            iconName = focused ? <Icons name="home" color={constants.Colors.color_btn} size={25}/> :<Icons name="home" color={constants.Colors.color_BLACK} size={25}/>
             // iconName = constants.image.homeIcon;
           } else if (route.name === 'Search') {
-            iconName = focused ? <Image source={constants.image.searchIcon} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.searchIcon} style={{width:35,height:35}}/>;
+            // iconName = focused ? <Image source={constants.image.searchIcon} style={{width:25,height:25,opacity:0.5}}/> : <Image source={constants.image.searchIcon} style={{width:25,height:25}}/>;
+            iconName = focused ? <Material name="search1" color={constants.Colors.color_btn} size={25}/> :<Material name="search1" color={constants.Colors.color_BLACK} size={25}/>
             // iconName = constants.image.searchIcon;
-          }else if (route.name === 'MyProfile') {
-            iconName = focused ? <Image source={constants.image.profile} style={{width:35,height:35,opacity:0.5}}/> : <Image source={constants.image.profile} style={{width:35,height:35}}/>;
+          }else if (route.name === 'My Profile') {
+            // iconName = focused ? <Image source={constants.image.profile} style={{width:25,height:25,opacity:0.5}}/> : <Image source={constants.image.profile} style={{width:25,height:25}}/>;
+            iconName = focused ? <Icons name="user-alt" color={constants.Colors.color_btn} size={25}/> :<Icons name="user-alt" color={constants.Colors.color_BLACK} size={25}/>
+            // iconName = constants.image.profile;
+          }else if (route.name === 'Wish List') {
+            // iconName = focused ? <Image source={constants.image.heartIcon} style={{width:25,height:25,opacity:0.5}}/> : <Image source={constants.image.heartIcon} style={{width:25,height:25}}/>;
+            iconName = focused ? <Material name="heart" color={constants.Colors.color_btn} size={25}/> :<Material name="heart" color={constants.Colors.color_BLACK} size={25}/>
             // iconName = constants.image.profile;
           }
 
@@ -32,16 +43,17 @@ const TabNavProdvariation = ({navigation}) => (
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
+        activeTintColor: constants.Colors.color_btn,
         inactiveTintColor: 'gray',
-        showLabel:false
+        showLabel:true
       }}
 
       
     >
-        <Tab.Screen name="productVariation" component={productVariation} />
+        <Tab.Screen name="Home" component={productVariation} />
         <Tab.Screen name="Search" component={SearchProductVariation} />
-        <Tab.Screen name="MyProfile" component={MyProfile} />
+        <Tab.Screen name="Wish List" component={MyWish} />
+        <Tab.Screen name="My Profile" component={MyProfile} />
     </Tab.Navigator>
 )
 

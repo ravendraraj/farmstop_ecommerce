@@ -8,30 +8,7 @@ import NoneValidate from './NoneValidate';
 import AppIntroScreen from './AppIntroScreen';
 import WelcomeScreen from '../component/WelcomeScreen'
 
-// import AsyncStorage from '@react-native-community/async-storage';
-//var appIntro = "done";
-
 const Navigation = ({navigation,introDoneProps}) => {
-  // const [appIntro, setIntro] = useState("null1");
-  // useEffect(() => {
-  //   // Create an scoped async function in the hoo
-  //   async function getIntroToken() {
-  //       try {
-            
-  //           let res = await AsyncStorage.getItem('introHadDone');
-  //           setIntro(res)
-  //           ToastAndroid.showWithGravity(
-  //               "All Your Base Are Belong To Us-"+res,
-  //               ToastAndroid.SHORT,
-  //               ToastAndroid.CENTER
-  //             );
-  //       } catch(e) {
-  //         console.log(e);
-  //       }
-  //   }
-  //   // Execute the created function directly
-  //   getIntroToken();
-  // }, []);
 
   const RootAppStack = createStackNavigator();
   return (

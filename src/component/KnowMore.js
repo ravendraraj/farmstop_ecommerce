@@ -165,8 +165,9 @@ class KnowMore extends Component {
                         </TouchableOpacity>
                     </View>
                     
-                    
-                        <View style={{flexDirection:'row',alignSelf:'center',}}>
+                        <View style={{width:'85%',alignSelf:'center'}}>
+                        <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:20}}>
+
                             <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5,marginRight:15}}>
                                 <Picker
                                     selectedValue = {prodDetails.selectedVariationID == ""? "": prodDetails.selectedQtyVariation}
@@ -177,31 +178,38 @@ class KnowMore extends Component {
                                     { this.variationOpt(prodDetails.variation_details) }
                                 </Picker>
                             </View>
-                            <TouchableOpacity style={{marginRight:5}} 
-                            onPress={()=>this._manageProdQty(prodId,'remove',prodDetails.selectedVariationID)}>
-                                <Material 
-                                    name="minus-circle-outline"
-                                    color={constants.Colors.color_grey}
-                                    size={25}
-                                />
-                            </TouchableOpacity>
-                            <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text>
-                            <TouchableOpacity style={{marginLeft:5}} 
-                            onPress={()=>this._manageProdQty(prodId,'add',prodDetails.selectedVariationID)}>
-                                <Material 
-                                    name="plus-circle-outline"
-                                    color={constants.Colors.color_grey}
-                                    size={25}
-                                />
-                            </TouchableOpacity>
+
+                            <View style={{flexDirection:'row'}}>
+                                <TouchableOpacity style={{marginRight:5}} 
+                                onPress={()=>this._manageProdQty(prodId,'remove',prodDetails.selectedVariationID)}>
+                                    <Material 
+                                        name="minus-circle-outline"
+                                        color={constants.Colors.color_grey}
+                                        size={25}
+                                    />
+                                </TouchableOpacity>
+                                <Text style={{fontSize:20,fontFamily:regular}}>{prodDetails.selectedQty > 0 ?prodDetails.selectedQty:"Select"}</Text>
+                                <TouchableOpacity style={{marginLeft:5}} 
+                                onPress={()=>this._manageProdQty(prodId,'add',prodDetails.selectedVariationID)}>
+                                    <Material 
+                                        name="plus-circle-outline"
+                                        color={constants.Colors.color_grey}
+                                        size={25}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{flexDirection:'row',justifyContent:'space-evenly',marginTop:15}}>
+
+                        <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
                             <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
-                            <TouchableOpacity style={{padding:4,flexDirection:'row',backgroundColor:constants.Colors.color_heading,width:100,alignSelf:'flex-end',borderRadius:4,marginLeft:25}}
+                            <View>
+                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5,paddingLeft:15,paddingRight:15}}
                                 onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty)}>
-                                <Material name="cart" size={15} color={constants.Colors.color_BLACK}/>
-                                <Text style={{fontFamily:regular}}>Add to Cart</Text>
+                                <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
+                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                             </TouchableOpacity>
+                            </View>
+                        </View>
                         </View>
                 
                     <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>

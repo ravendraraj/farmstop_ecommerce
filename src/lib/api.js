@@ -30,8 +30,6 @@ export const loginValidation = (data) => (dispatch,getState) => {
         res.json()
         .then(response => {
             if(response.status == "1"){
-                dispatch({ type : 'LOGIN_SUCCESS', payload : response.user});
-
                  var authUser = {
                     'Login_Type' :"MANUAL",
                     'name' :response.user.name,
@@ -55,10 +53,10 @@ export const loginValidation = (data) => (dispatch,getState) => {
                     token:response.token
                  });
                 
-            setTimeout(function(){  
-                navigate('DrawerScreen');
-            }, 1000);
-                
+            setTimeout(function(){
+                navigate('MainHome');
+            }, 500);
+            dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -613,7 +611,7 @@ export const getAppartment= (data) => (dispatch,getState) => {
 
 export const getUserAddressList= (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
-    let url = weburl + 'api-getUserAddess/'+getState().data.authUserID;
+    let url = weburl + 'api-getUserAddess/?user_id='+getState().data.authUserID+'&token='+getState().data.token;
     // let url = weburl + 'api-getUserAddess/37';
     console.log(url);
 
@@ -680,11 +678,12 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     var data = new FormData();
     data.append("name", userData["name"]);
     data.append("pincode", userData["pincode"]);
-    data.append("deliverOn", userData["name"]);
+    data.append("deliverOn", userData["deliverOn"]);
     data.append("email", getState().data.authEmail);
     data.append("userId", getState().data.authUserID);
     data.append("address", userData["houseOrFlat"]+","+userData["address"]);
     data.append("updatable", userData["isUpdateAddress"]);
+    data.append("token",getState().data.token);
 
     let post_req = {
         method: 'POST',
@@ -749,7 +748,7 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
                     AsyncStorage.setItem('defualtShippingAdd', JSON.stringify(userShipingAddress));
                     dispatch({type:'SAVED_DEFAULT_SHIPPING_ADDRESS',addressId :address.id,shipping_cost:response.result["shipping_cost"]});
                     if(address.screen_name == "cart"){
-                        navigate("MyCart");
+                        navigate("PaymentOption");
                     }
                     else if(address.screen_name =="PaymentOption"){
                             navigate(address.screen_name);   
@@ -931,16 +930,17 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                                 dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
                             }else if( asyncCartData != null){
                                 
-                                let updatableData = asyncCartData;
+                                let updatableData = JSON.parse(asyncCartData);
                                 if(serverDataLength <= 0){
-                                    // update async item on server
-                                    // console.log("get async only");
+                                    console.log("only async cart item");
+                                    if(updatableData.length > 0){
+                                        updateCartItemsOnServer(updatableData ,getState().data.authUserID , getState().data.authEmail,dispatch);
+                                    }
                                 }else{
 
                                     let cartItems = JSON.parse(asyncCartData); // asyncstroage data
                                     let notUpdated = []
-                                    // console.log("get async and live only");
-                                    // console.log(cartItems);
+                                    
                                     cartItems.map(item=>{
                                             let find = false;
                                             serverCartItem.map(serverItem=>{
@@ -954,18 +954,16 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                                                 notUpdated.push(item);
                                             }
                                     });
-                        
-                                    updatableData = notUpdated;
+                                    console.log("both cart item");
+                                    if(notUpdated.length > 0){
+                                        console.log("both async cart item");
+                                        updateCartItemsOnServer(notUpdated ,getState().data.authUserID , getState().data.authEmail,dispatch);
+                                    }else{
+                                        console.log("both server cart item");
+                                        dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
+                                    }
                                 }
                         
-                                    //console.log("merge data");
-                                if(updatableData.length > 0){
-                                    // console.log("iam cal");
-                                    updateCartItemsOnServer(updatableData ,getState().data.authUserID , getState().data.authEmail,dispatch);
-                                }else{
-                                    dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
-                                }
-                            // dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
                     }
                 
                 });
@@ -1008,9 +1006,9 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
     let product ="";
     let varidationId ="";
     let totalItem ="";
-    
-    items.map(item=>{
+    console.log("items",items);
 
+    items.map(item=>{
         product +=item.prod_id+',';
         varidationId +=item.selectedVariationID+',';
         totalItem +=item.selectedQty+',';
@@ -1031,23 +1029,22 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
             'Content-Type': 'multipart/form-data',
         }
     }
- //console.log(post_req);
- //console.log(url)
+    console.log("post request",post_req)
     fetch(url,post_req)
     .then(res =>{
         res.json()
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-
+                console.log("cart updateed");
                 let Itemurl = weburl +"api-getCartItems?userId="+userId;
-                console.log(Itemurl);
                 fetch(Itemurl)
                 .then(res =>{
                     res.json()
                     .then(response => {
                         //console.log(response);
                         if(response.status == "1"){
+                            AsyncStorage.removeItem("userCart");
                             dispatch({type:'CART_ITEM_SYNC', cartItem:response.cart});
                         }
                     })
@@ -1058,6 +1055,7 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
                 .catch( err => {
                     // dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
                     console.log("NetWork Error");
+                    navigate("internetError");
                 });    
 
             }else{
@@ -1226,6 +1224,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
 
          checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
          checkOutFormData.append("status", checkOutData['status']);
+         checkOutFormData.append("deliveryDate", checkOutData['deliveryDate']);
          checkOutFormData.append("token",getState().data.token);
 
          let post_req = {
@@ -1272,6 +1271,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         
                         let verifyData= new FormData();
                         verifyData.append("user_id", checkOutData['user_id']);
+                        verifyData.append("cart_items",checkOutData['cart_items']);
                         verifyData.append("razorpay_order_id", data.razorpay_order_id);
                         verifyData.append("razorpay_signature", data.razorpay_signature);
                         verifyData.append("razorpay_payment_id", data.razorpay_payment_id);
@@ -1348,9 +1348,11 @@ export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
          checkOutFormData.append("shhipingCost", checkOutData['shhipingCost']);
          checkOutFormData.append("coupon_id", checkOutData['coupon_id']);
          checkOutFormData.append("total_cost", checkOutData['total_cost']);
+         checkOutFormData.append("cart_items",checkOutData['cart_items']);
 
          checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
          checkOutFormData.append("status", checkOutData['status']);
+         checkOutFormData.append("deliveryDate", checkOutData['deliveryDate']);
          checkOutFormData.append("token",getState().data.token);
          checkOutFormData.append("email",getState().data.authEmail);
 
@@ -1392,7 +1394,7 @@ export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
 /********************************* Get order List***************************************/
 export const getOrderList= (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
-    let url = weburl + 'api-getOrderList?user_id='+getState().data.authUserID;
+    let url = weburl + 'api-getOrderList?user_id='+getState().data.authUserID+"&token="+getState().data.token;
     console.log(url);
 
     fetch(url)
@@ -1422,7 +1424,7 @@ export const getOrderList= (data) => (dispatch,getState) => {
 export const getOrderDetails= (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     // console.log("klk000000",data);
-    let url = weburl + 'api-orderDetails?user_id='+getState().data.authUserID+"&order_no="+data;
+    let url = weburl + 'api-orderDetails?user_id='+getState().data.authUserID+"&order_no="+data+"&token="+getState().data.token;
     console.log(url);
 
     fetch(url)
@@ -1562,6 +1564,75 @@ export const removeNotification= (data) => (dispatch,getState) => {
             console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification });
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}
+
+
+export const removeAddress= (data) => (dispatch,getState) => {
+    console.log(data);
+
+    dispatch({type : 'LOADING'});
+    let url = weburl + 'api-removeUserAddess';
+
+    var formData = new FormData();
+        formData.append("user_id", getState().data.authUserID);
+        formData.append("token",getState().data.token);
+        formData.append("address_id",data);
+
+    let post_req = {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            }
+        }
+    console.log(url,post_req);
+
+    fetch(url,post_req)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+            }else{
+                dispatch({type : 'NETWORK_ERROR', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+        navigate("internetError");
+    });
+
+}
+
+export const getDeliveryDate= (data) => (dispatch,getState) => {
+    let url = weburl + 'api-getDeliveryDate';    
+    console.log(url);
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            console.log(response);
+            if(response.status == "1"){
+                dispatch({ type : 'GET_DELIVERY_DATE', deliveryDate:response.deliveryDate});
             }else{
                 dispatch({type : 'NETWORK_ERROR', payload : response.message});
             }

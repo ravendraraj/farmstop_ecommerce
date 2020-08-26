@@ -9,6 +9,7 @@ import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
+import AboutFarm from './AboutFarm'
 
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
@@ -241,35 +242,13 @@ class HomeScreen extends Component {
   renederAboutFarm(){
     if(this.state.showFooter){
       return(
-              <View style={{width:"95%",alignSelf:"center",marginTop:constants.vh(60)}}>
-                  <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
-                    Farmstop Organic farms
-                  </Text>
-                <View style={{marginTop:10}}>
-                    <Text style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:18}}>
-                      Organic farming for us at "farmstop"is practiced
-                      with devotion and passion to contribute for a
-                      better society. We are certified organic farmers
-                      with a vision to change the way food is produced
-                      and consumed.
-                    </Text>
-                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:10,marginBottom:10}}>
-                        A glimpse of our farms
-                    </Text>
-                    <Image source={constants.image.aboutFarm} style={{width:width-30,height:width-140,alignSelf:'center'}}/>
-                    <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_BLACK ,fontSize:18,marginTop:30}}>
-                      Please click the links below to understand how
-                      we raise crops and what goes into the farms
-                    </Text>
-                  <View>
-                    <SocialLinks size='25'/>
-                  </View>
-                </View>
+              <View style={{marginTop:constants.vh(60)}}>
+                  <AboutFarm/>
               </View>
       )
     }else{
       return(
-        <View style={{width:'100%',height:height/2}}/>
+        <View style={{width:'100%',height:height/1.5}}/>
       )
     }
   }
@@ -291,20 +270,16 @@ class HomeScreen extends Component {
 
   renderSourceSection(){
     let ItemList = this.props.itemData;
-    if (ItemList != "undefined" && ItemList != null) {
-    // if ( this.state.showFooter != true && ItemList != "undefined" && ItemList != null) {
+    //if (ItemList != "undefined" && ItemList != null) {
+    if ( this.state.showFooter != true && ItemList != "undefined" && ItemList != null) {
       return(
-        <View style={{justifyContent:"flex-end",marginBottom:constants.vw(1),backgroundColor:constants.Colors.color_WHITE}}>  
-            <ScrollView>
-            <View style={{alignSelf:'center',width:'95%'}}>
-            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
-            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
-            </View>
-            <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
-            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
-            <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>
-            <View/>
-            </ScrollView>
+        // <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14)}}>
+        <View style={{position:'absolute',bottom:10,width:"100%",alignSelf:'center'}}>
+              <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
+              <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
+              <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
+              <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
+            <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>  
         </View>
       )
     }
@@ -336,9 +311,10 @@ class HomeScreen extends Component {
     const productList = this.findProduct(query);
     const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
     return (
-      <ImageBackground style={styles.imgBackground}
-        resizeMode='contain'
-        source={storeImg.appIntro1}>
+      //<ImageBackground style={styles.imgBackground}
+        //resizeMode='contain'
+        //source={storeImg.appIntro1}>
+
         <View style={styles.container}>
           {/* <View style={styles.SectionStyle}> */}
           {/*<AntDesign name="search1" size={20} color={constants.Colors.color_BLACK}
@@ -376,7 +352,7 @@ class HomeScreen extends Component {
             {this.renderSourceSection()}
           </View>
         </View>
-      </ImageBackground>
+      //</ImageBackground>
     )
   }
 }
@@ -390,7 +366,6 @@ const styles = StyleSheet.create({
     // margin: 10,
     width:"100%",
     backgroundColor: constants.Colors.color_WHITE,
-    opacity: .9
   },
   homeProdCat:{
     flex: 1, 
@@ -403,7 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     width:'100%',
-    marginTop:constants.vw(5),
+    marginTop:constants.vw(15),
     padding: 10,
   },
   imageThumbnail: {

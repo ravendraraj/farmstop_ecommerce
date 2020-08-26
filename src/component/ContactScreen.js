@@ -10,19 +10,19 @@ const width = Dimensions.get('window').width;
 export default function ContactScreen(){
         return(
             <View style={styles.container}>
-                {/* <ScrollView> */}
-                    <View style={{flex:1,flexDirection:'column',width:'90%',alignSelf:"center"}}>
+                <ScrollView>
+                    <View style={{width:'90%',alignSelf:"center"}}>
                         <TextHeading title="Contact Us"/>
-                        <View style={{marginTop:constants.vw(25)}}>
-                            <Image source={constants.image.contactus} style={{width:"88%",height:'39%',alignSelf:'center'}}/>
-                            <View style={{marginTop:constants.vw(10)}}>
+                        <View style={{flex:1,marginTop:constants.vw(25)}}>
+                            <Image source={constants.image.contactus} style={{width:constants.vw(340),height:constants.vw(200),alignSelf:'center'}}/>
+                            <View style={{marginTop:constants.vw(40)}}>
                                 <Text style={styles.text}>
                                     Write to us at
                                 </Text>
                                 <Text style={styles.text}>
                                     info@farmstop.in
                                 </Text>
-                                <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(28),marginTop:constants.vw(10),marginBottom:constants.vw(10)}}>
+                                <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(20),marginTop:constants.vw(10),marginBottom:constants.vw(10)}}>
                                     Or
                                 </Text>
                                 <Text style={styles.text}>
@@ -34,7 +34,7 @@ export default function ContactScreen(){
                             </View>
                         </View>
                     </View>
-                {/* </ScrollView> */}
+                </ScrollView>
             </View>
         )
 }
@@ -44,11 +44,8 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor:constants.Colors.color_WHITE
     },
-    inputBox:{
-        marginTop:20
-    },
     text:{
-        fontSize:constants.vw(28),
+        fontSize:constants.vw(20),
         fontFamily:constants.fonts.Cardo_Bold
     }
 

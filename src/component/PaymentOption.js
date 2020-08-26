@@ -47,7 +47,7 @@ _radioHandler(){
             let address = this.props.addressList.find(item => item.id === id);
             return(
                 <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
-                    <Text style={styles.text}>{address.address}{address.district},{address.zipcode},{address.country}</Text>
+                    <Text style={styles.text}>{address.address}, {address.district}, {address.zipcode}, {address.country}</Text>
                 </View>
             )
         }
@@ -90,11 +90,16 @@ _radioHandler(){
                                     <Text style={styles.text}>{this.props.authEmail !=""?this.props.authEmail:"Add Email Id"}</Text>
                                 </View>
                             </View>
+                            <View style={{marginTop:constants.vh(10),flexDirection:'row'}}>
+                                <Text style={styles.heading}>Delivery On :</Text>
+                                <Text style={styles.text}> {this.props.deliveryDate}</Text>
+                            </View>
+
                             <Text style={[styles.heading,{marginBottom:constants.vh(10),marginTop:constants.vh(10)}]}>Payment Method</Text>
                             <View style={styles.prodBlock}>
                                 <View style={{flexDirection: 'row', justifyContent:'space-evenly',paddingTop:10}}>
                                     <View style={{width:'20%'}}><RadioButton  checked={this.state.option1} onPress={()=>this._radioHandler()}/></View>
-                                    <View style={{width:'60%'}}><Image source={constants.image.razorpay} style={{width:constants.vw(200),height:constants.vw(50),marginTop:-12}}/></View>
+                                    <View style={{width:'60%'}}><Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold,marginTop:-5}}> Pay Online</Text></View>
                                 </View>
                                 
                                 <View style={{flexDirection: 'row', justifyContent:'space-evenly',marginTop:20,marginBottom:10}}>
@@ -163,7 +168,6 @@ _radioHandler(){
 
 
     redirectOnPaymentPage(){
-
         if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != "" && this.props.authEmail !="" && this.props.authMobile !=""){
                 let subtotal = this.props.subtotal;
                 let tax = 0;
@@ -179,13 +183,25 @@ _radioHandler(){
                 }else{
                     userType = 3;
                 }
+                
+                let cartItemIds = "";
+                let cartItems= this.props.cartData;
+                let totalItem =cartItems.length;
+                for(var i=0;i<totalItem ;i++){
+                    if(i < totalItem-1)
+                    {
+                        cartItemIds += cartItems[i]["cart_item_id"]+",";
+                    }else{
+                        cartItemIds += cartItems[i]["cart_item_id"];
+                    }
+                }
+                
 
                 var orderDetails = [];
                     orderDetails['user_id'] = this.props.authUserID;
                     orderDetails['user_type'] = userType;
                     orderDetails['address_id'] = this.props.shippingAddress;
                     orderDetails['usr_mob'] = this.props.authMobile;
-
                     orderDetails['subtotal'] = subtotal;
                     orderDetails['shhipingCost'] = deliveryCharges;
                     
@@ -201,6 +217,8 @@ _radioHandler(){
                     orderDetails['email'] = this.props.authEmail;
                     orderDetails['contact'] = this.props.authMobile;
                     orderDetails['username'] = this.props.authName;
+                    orderDetails['deliveryDate'] = this.props.deliveryDate;
+                    orderDetails['cart_items'] = cartItemIds;
 
                     if(this.state.option1 == "select"){
 
@@ -260,7 +278,7 @@ const styles = StyleSheet.create({
         borderWidth:2,
         borderRadius:10,
         borderColor:constants.Colors.color_cartText,
-        backgroundColor:"#41A317",
+        backgroundColor:constants.Colors.color_btn,
         padding:5,
         width:'98%',
         alignSelf:'center',
@@ -304,7 +322,8 @@ const mapStateToProps = state => ({
     coupon_id: state.data.coupon_id,
     defaultShipingAddress:state.data.defaultShipingAddress,
     addressList:state.data.addressList,
-    coupon_value:state.data.coupon_value
+    coupon_value:state.data.coupon_value,
+    deliveryDate:state.data.deliveryDate,
 });
 
 const mapDispatchToProps = dispatch => ({

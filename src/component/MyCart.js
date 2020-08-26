@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
-import {checkCouponCode ,getCartItem,deleteItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
+import {checkCouponCode ,getDeliveryDate,getCartItem,deleteItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -133,7 +133,6 @@ class MyCart extends Component {
                                 onSubmitEditing={()=>this.getCouponCodeDetails()}/>
                         </View>
                         <View style={{flex:1,alignSelf:'center',width:'90%'}}>
-                            {/*<TouchableOpacity onPress={()=>this.redirectOnPaymentPage()}>*/}
                             <TouchableOpacity onPress={()=>this.checkProceed()}>
                                 <Text style={styles.checkout}>Checkout  Rs. {total} </Text> 
                             </TouchableOpacity>
@@ -144,97 +143,45 @@ class MyCart extends Component {
     }
 
     checkProceed(){
-            console.log(this.props.authUserID ,this.props.authUserID, this.props.shippingAddress);
-        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
-            
-            let subtotal = this.props.subtotal;
-            let tax = 0;
-            let deliveryCharges = this.state.deliveryCharges;
-            let discount = this.state.discount;
-            let total = subtotal+parseFloat(deliveryCharges)+tax;
-            let userType = ""; 
+        let subtotal = this.props.subtotal;
+        if(subtotal >= 360){ 
+                this.props.getDeliveryDate();
+                if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
+                    let tax = 0;
+                    let deliveryCharges = this.state.deliveryCharges;
+                    let discount = this.state.discount;
+                    let total = subtotal+parseFloat(deliveryCharges)+tax;
+                    let userType = "";
+                    this.props.navigation.navigate("PaymentOption");
+                }else{
+                    if(this.props.authUserID == null || this.props.authUserID == "" ){
+                        
+                        this.props.navigation.navigate('SocialLogin', {
+                            screen_name: "MyCart",
+                        });
 
-            if(subtotal > 360){ 
-                this.props.navigation.navigate("PaymentOption");
+                    }else if(this.props.shippingAddress == ""){
+                        this.props.navigation.navigate('ShippingAddress', {
+                            screen_name: "cart",
+                        });
+                    }
+                }
             }else{
-                Alert.alert(
-          'Farmstop',
-          'Please order more or equal to 360.',
-          [
-            {
-              text: 'Ok',
-              onPress: () => console.log('OkPressed'),
-            },
-          ],
-          { cancelable: false }
-        );
-            }
-
-        }else{
-
-            if(this.props.authUserID == null && this.props.authUserID == "" ){
-                this.props.navigation.navigate("NotLogin");
-            }else if(this.props.shippingAddress == ""){
-                {/**this.props.navigation.navigate("ShippingAddress");**/}
-                this.props.navigation.navigate('ShippingAddress', {
-                    screen_name: "cart",
-                });
-            }
+              Alert.alert(
+              'Farmstop',
+              'Please order more or equal to 360.',
+              [
+                {
+                  text: 'Ok',
+                  onPress: () => console.log('OkPressed'),
+                },
+              ],
+              { cancelable: false }
+            );
         }
     }
     
-    redirectOnPaymentPage(){
-        
-        if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
-                let subtotal = this.props.subtotal;
-                let tax = 0;
-                let deliveryCharges = this.state.deliveryCharges;
-                let discount = this.state.discount;
-                let total = subtotal+parseFloat(deliveryCharges)+tax;
-                let userType = "";
-                
-                if(this.props.login_type == "MANUAL"){
-                    userType = 1;
-                }else if(this.props.login_type == "FACEBOOK"){
-                    userType = 2;
-                }else{
-                    userType = 3;
-                }
-
-                var orderDetails = [];
-                    orderDetails['user_id'] = this.props.authUserID;
-                    orderDetails['user_type'] = userType;
-                    orderDetails['address_id'] = this.props.shippingAddress;
-                    orderDetails['usr_mob'] = this.props.authMobile;
-
-                    orderDetails['subtotal'] = subtotal;
-                    orderDetails['shhipingCost'] = deliveryCharges;
-                    
-                    if(this.props.coupon_id != null){
-                        orderDetails['coupon_id'] = this.props.coupon_id;
-                    }else{
-                        orderDetails['coupon_id'] = "";
-                    }
-
-                    orderDetails['total_cost'] = total;
-                    orderDetails['paymentOption'] = "";
-                    orderDetails['status'] = 0;
-
-                    orderDetails['email'] = this.props.authEmail;
-                    orderDetails['contact'] = this.props.authMobile;
-                    orderDetails['username'] = this.props.authName;
-
-                    this.props.checkOut(orderDetails);
-                
-      }else{
-            if(this.props.authUserID == null && this.props.authUserID == "" ){
-                this.props.navigation.navigate("NotLogin");
-            }else if(this.props.shippingAddress == null){
-                this.props.navigation.navigate("ShippingAddress",{screen:'MyCart'});
-            }
-      }
-    }
-
+    
     renderCouponMsg(){
         if(this.props.coupon_msg !=''){
             let msg = this.props.coupon_msg;
@@ -346,7 +293,7 @@ class MyCart extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 </View>
-                                <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
+                                <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5,marginTop:15}}>
                                     <Picker
                                         selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
                                         // mode="dropdown"
@@ -358,12 +305,12 @@ class MyCart extends Component {
                                     </Picker>
                                 </View>
 
-                                <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:10}}>
+                                <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:20}}>
                                     <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontFamily:bold,paddingLeft:10}}>
                                         Rs. {item.selectedVariationPrice}
                                     </Text>
                                     <View style={{flexDirection:'row'}}>
-                                        <TouchableOpacity style={{marginRight:5,marginLeft:5,marginTop:-4}}
+                                        <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
                                         onPress={()=>this._manageCartProdQty(item,'remove')}>
                                             <Material 
                                                 name="minus-circle-outline"
@@ -372,7 +319,7 @@ class MyCart extends Component {
                                             />
                                         </TouchableOpacity>
                                         <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
-                                        <TouchableOpacity style={{marginLeft:5,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
+                                        <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                             <Material 
                                                 name="plus-circle-outline"
                                                 color={constants.Colors.color_grey}
@@ -405,11 +352,13 @@ class MyCart extends Component {
             )
         }else{
             return(
+                <View style={{width:'96%',alignSelf:'center'}}>
                 <EmptyComp imageName={constants.image.emptyCart} 
                     welcomText={"You have no post orders ,Let's get you started"}
                     redirectText={"Shop Now"}
                     onPress={()=>this.props.navigation.navigate("MainHome")}
                 />
+                </View>
             )
         }
     }
@@ -467,7 +416,7 @@ const styles = StyleSheet.create({
     checkout:{
         fontFamily:constants.fonts.Cardo_Bold, 
         textAlign:'center',
-        color: constants.Colors.color_intro,
+        color: constants.Colors.color_btn,
 		fontSize:constants.vw(20),
 		padding: 20,
     },
@@ -528,7 +477,8 @@ const mapDispatchToProps = dispatch => ({
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
     checkOut:(data)=>dispatch(checkOut(data)),
-    deleteItem:(data)=>dispatch(deleteItem(data))
+    deleteItem:(data)=>dispatch(deleteItem(data)),
+    getDeliveryDate:()=>dispatch(getDeliveryDate())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

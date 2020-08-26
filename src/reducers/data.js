@@ -1,6 +1,6 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',token:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[]
-,defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:''};
+    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
+deliveryDate:'',defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:''};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
@@ -9,6 +9,18 @@ const data = (state = initialDataState, action) => {
             ...state,
             appIntro:action.data
         };
+
+        case 'LOGIN_SUCCESS':
+        return{
+            ...state,
+            popup:action.payload,
+        }
+
+        case 'GET_DELIVERY_DATE':
+        return{
+            ...state,
+            deliveryDate:action.deliveryDate            
+        }
 
         case 'SET_DIVECE_DATA':
         return{
@@ -115,6 +127,7 @@ const data = (state = initialDataState, action) => {
         
         case 'CART_ITEM_SYNC':
             let newSyncItemTotal = 0;
+            let isLoggedIn = state.authUserID !=""? true : false;
             if(action.cartItem.length >0)
             {
                 action.cartItem.map(item=>{
@@ -123,10 +136,10 @@ const data = (state = initialDataState, action) => {
             }
 
             return{
-                ...state,
-                addedItems: action.cartItem,
-                total : newSyncItemTotal,
-                cartItemSync:true,
+            ...state,
+            addedItems: action.cartItem,
+            total : newSyncItemTotal,
+            cartItemSync:isLoggedIn,
         }
 
         case 'PRODUCT_FETCH':

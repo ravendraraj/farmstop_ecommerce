@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import {TextHeading,PrimaryTextInput} from '../customElement/Input'
 import {ButtonWithIcon,NormalButton} from '../customElement/button'
 import {updateProfile} from "../lib/api"
-import {Loader} from '../customElement/Loader'
+import {Loader} from '../customElement/Loader' 
 
 const width = Dimensions.get('window').width;
 class EditProfile extends Component{
@@ -31,7 +31,7 @@ class EditProfile extends Component{
             )
         }else{
             return(
-                <View style={{width:constants.vw(120),height:constants.vw(120),paddingTop:4,borderWidth:2,borderRadius:constants.vw(60),alignItems:'center',backgroundColor:"white",alignSelf:'center'}}>
+                <View style={{width:constants.vw(120),height:constants.vw(120),paddingTop:constants.vw(30),borderWidth:2,borderRadius:constants.vw(60),alignItems:'center',backgroundColor:"white",alignSelf:'center'}}>
                     <Icon 
                         name="user"
                         color={constants.Colors.color_BLACK}
@@ -76,7 +76,7 @@ class EditProfile extends Component{
     _sendMessage(){
         Alert.alert(
             'Farmstop',
-            'Email can not change, please go back',
+            "Sorry, you can't change your email from your existing account",
             [
                 {
                     text: 'Go Back',
@@ -98,8 +98,8 @@ class EditProfile extends Component{
         let email =this.props.authEmail;
         let mobile =this.props.authMobile;
 
-        let emailEditable = (email =='' || email =='null' || email ==null)?true:false;
-        let mobEditable = (mobile =='' || mobile =='null' || mobile ==null)?true:false;
+        let emailEditable = (email =='' || email =='null' || email ==null || email =="undefined")?true:false;
+        let mobEditable = (mobile =='' || mobile =='null' || mobile ==null || mobile =="undefined")?true:false;
         return(
             <View style={styles.container}>
                {/*<TextHeading title="My Profile"/>*/}
@@ -142,7 +142,7 @@ class EditProfile extends Component{
                 </ScrollView>
                     {this._loadLoader()}
                     {this._showMsg()}
-                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_heading,borderWidth:0,borderRadius:5,marginBottom:10}} onPress={()=>{(email !="" && mobile !="")?this._sendMessage():this._submit()}}>
+                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_heading,borderWidth:0,borderRadius:5,marginBottom:10}} onPress={()=>{(email !="" && email !="undefined" && mobile !="" && mobile !="undefined")?this._sendMessage():this._submit()}}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>SAVE</Text>
                     </TouchableOpacity>
                 

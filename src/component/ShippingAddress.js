@@ -5,9 +5,12 @@ import Autocomplete from 'react-native-autocomplete-input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
-import {getAppartment ,checkDeliveryOnPincode ,getUserAddressList ,addNewShippingAddress ,selectShippingAddress} from '../lib/api'
+import {getAppartment ,checkDeliveryOnPincode ,removeAddress,getUserAddressList ,addNewShippingAddress ,selectShippingAddress} from '../lib/api'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Loader } from '../customElement/Loader'
+import Icons from 'react-native-vector-icons/SimpleLineIcons'
+import RadioButton from '../customElement/RadioButton'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 class shippingAddress extends Component{
     
@@ -23,9 +26,11 @@ class shippingAddress extends Component{
             appartment:'',
             houseOrFlat:'',
             country:'India',
-            deliverType:'',
+            deliverType:'Home',
             displayForm:false,
             editAddress:0,
+            option1:'select',
+            option2:'notselect'
         };
     }
 
@@ -94,6 +99,14 @@ class shippingAddress extends Component{
         }
     }
 
+    removeAddresses(addressId){
+        if(this.state.displayForm && this.props.addressList.length <= 1)
+        {
+            this.setState({displayForm:false})
+        }
+        this.props.removeAddress(addressId);
+    }
+
     renderAddresList(){
         if(this.props.addressList.length >0){
 
@@ -112,7 +125,10 @@ class shippingAddress extends Component{
                             <View style={{flexDirection:'row',justifyContent:'space-between',alignSelf:'flex-end'}}>
                                 {(this.props.route.params.screen_name == "cart" || this.props.route.params.screen_name =="PaymentOption") ?(<TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.setDilevryAddress(addressRow.id)}>
                                                                     <Text style={styles.deliveryBtntext}>Delivery at this Address</Text>
-                                                                </TouchableOpacity>):<View/>}
+                                                                </TouchableOpacity>):(
+                                                                <TouchableOpacity style={styles.deliveryBtn} onPress={()=>this.removeAddresses(addressRow.id)}>
+                                                                    <FontAwesome name="trash-o" color={constants.Colors.color_BLACK} size={20}/>
+                                                                </TouchableOpacity>)}
                                 <TouchableOpacity style={styles.editBtn} onPress={()=>this.editAddress(addressRow.id)}>
                                     <Text style={styles.editBtntext}>Edit Address</Text>
                                 </TouchableOpacity>
@@ -170,9 +186,10 @@ class shippingAddress extends Component{
     renderAddAnotherAddressBtn(){
         if(this.props.addressList.length >0){
         return(
-            <View>
-                <TouchableOpacity style={styles.editBtn} onPress={()=>this.displayForm()}>
-                            <Text style={styles.btnText}>Add Another address</Text>
+            <View style={{marginTop:20}}>
+                <TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:10}} onPress={()=>this.displayForm()}>
+                            <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add Another address</Text>
+                            <Icons name={"arrow-right"} size={10} style={{marginTop:constants.vw(8),color:constants.Colors.color_WHITE}}/>
                 </TouchableOpacity>
             </View>
         )
@@ -203,6 +220,22 @@ class shippingAddress extends Component{
         }
     }
 
+       _radioHandler(){
+            if(this.state.option1 == "select")
+            {
+                this.setState({option1:"notselect"})
+                this.setState({option2:"select"})
+                this.setState({deliverType:''})
+                // Alert.alert("Other")
+
+            }else{
+                this.setState({option1:"select"})
+                this.setState({option2:"notselect"})
+                this.setState({deliverType:'Home'})
+                // Alert.alert("Home")
+            }
+        }
+
     renderForm(){
         const { query } = this.state;
 		const productList = this.findAppartment(query);
@@ -212,12 +245,6 @@ class shippingAddress extends Component{
                 {this.renderMsg()}
                 <View style={{width:"80%"}}>
                     <PrimaryTextInput placeholder="Contact Name" value={this.state.name} onChangeText={(text)=>this.setState({name:text})}/>
-                </View>
-                {/* <View style={{width:"80%"}}>
-                    <PrimaryTextInput placeholder="Enter Mobile No*"  onChangeText={(text)=>this.setState({mobile:text})}/>
-                </View> */}
-                <View style={{width:"80%"}}>
-                    <PrimaryTextInput placeholder="Pincode" value={this.state.pincode} onChangeText={(text)=>this.setState({pincode:text})} onBlur={()=>this.checkDelivery()}/>
                 </View>
                 <View style={{width:"80%"}}>
                     <PrimaryTextInput placeholder="House number/flat number"  value={this.state.houseOrFlat} onChangeText={(text)=>this.setState({houseOrFlat:text})}/>
@@ -250,25 +277,46 @@ class shippingAddress extends Component{
                         )}
                     />
                 </View>
+                <View style={{width:"80%",marginTop:40}}>
+                    <PrimaryTextInput placeholder="Pincode" value={this.state.pincode} onChangeText={(text)=>this.setState({pincode:text})} onBlur={()=>this.checkDelivery()}/>
+                </View>
                 
-                <View style={{flexDirection:'row',justifyContent:"space-between",marginTop:constants.vw(70)}}>
-                    
-                        <TouchableOpacity style={{paddingTop:constants.vw(8)}} onPress={()=>this._submitForm()}>
-                            <Text style={styles.btnText}>Save as</Text>
-                        </TouchableOpacity>
+                <View style={{marginTop:constants.vw(20)}}>
+                        <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Bold}}>Address Type</Text>
+                        <View style={{flexDirection:'row',marginTop:constants.vh(10)}}>
+                        {/*<TouchableOpacity style={(this.state.deliverType !='' && this.state.deliverType !='Office' ? styles.selected : styles.notSelected )} onPress={()=>this.setState({deliverType:"Home"})}>
+                                            <Text style={(this.state.deliverType !='' && this.state.deliverType !='Office' ? styles.selectedText : styles.notSelectedText)}>Home</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={(this.state.deliverType !='' && this.state.deliverType !='Home' ? styles.selected : styles.notSelected )} onPress={()=>this.setState({deliverType:"Office"})}>
+                                            <Text style={(this.state.deliverType !='' && this.state.deliverType !='Home' ? styles.selectedText : styles.notSelectedText)}>Office</Text>
+                                 </TouchableOpacity>*/}
                         <View style={{flexDirection:'row'}}>
-                            <TouchableOpacity style={(this.state.deliverType !='' && this.state.deliverType !='Office' ? styles.selected : styles.notSelected )} onPress={()=>this.setState({deliverType:"Home"})}>
-                                <Text style={(this.state.deliverType !='' && this.state.deliverType !='Office' ? styles.selectedText : styles.notSelectedText)}>Home</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={(this.state.deliverType !='' && this.state.deliverType !='Home' ? styles.selected : styles.notSelected )} onPress={()=>this.setState({deliverType:"Office"})}>
-                                <Text style={(this.state.deliverType !='' && this.state.deliverType !='Home' ? styles.selectedText : styles.notSelectedText)}>Office</Text>
-                            </TouchableOpacity>
+                            <RadioButton  checked={this.state.option1} onPress={()=>this._radioHandler()}/>
+                            <Text>Home</Text>
+                        </View>
+
+                        <View style={{flexDirection:'row'}}>
+                            <RadioButton  checked={this.state.option2} onPress={()=>this._radioHandler()}/>
+                            <Text>Other</Text>
+                        </View>
+
                         </View>
                     
+                </View>
+                { this.state.option2 == "select"?
+                    (<View style={{width:"80%"}}>
+                        <PrimaryTextInput placeholder="Enter Other Address" value={this.state.deliverType} onChangeText={(text)=>this.setState({deliverType:text})}/>
+                    </View>):(<View/>)
+                }
+                <View style={{width:'80%',alignSelf:'center',marginTop:20}}>
+                <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:10}} onPress={()=>this._submitForm()}>
+                            <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Bold,textAlign:'center',color:constants.Colors.color_WHITE}}>Save</Text>
+                </TouchableOpacity>
                 </View>
             </View>
         )
     }
+
 
     _submitForm(){
         if(this.props.shippingCharges == null){
@@ -312,6 +360,7 @@ class shippingAddress extends Component{
                         <View style={{width:"95%",alignSelf:'center',marginBottom:30}}>
                             {this.renderFormOnKeyEvent()}
                             {this.renderAddAnotherAddressBtn()}
+                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18,marginTop:20}}>Current Addresses</Text>
                             {this.renderAddresList()}
                             {this._loadLoader()}
                         </View>
@@ -404,13 +453,13 @@ const styles = StyleSheet.create({
     selectedText:{
         fontFamily:constants.fonts.Cardo_Bold,
         color:'white',
-        fontSize:constants.vw(20)
+        fontSize:constants.vw(16)
 
     },
     notSelectedText:{
         fontFamily:constants.fonts.Cardo_Bold,
         color:constants.Colors.color_BLACK,
-        fontSize:constants.vw(20)
+        fontSize:constants.vw(16)
     },
     deliveryBtntext:{
         fontFamily:constants.fonts.Cardo_Bold,
@@ -442,6 +491,7 @@ const mapDispatchToProps = dispatch => ({
     checkDeliveryOnPincode:(data)=>dispatch(checkDeliveryOnPincode(data)),
     addNewAddress:(data)=>dispatch(addNewShippingAddress(data)),
     selectShippingAddress:(data)=>dispatch(selectShippingAddress(data)),
+    removeAddress:(data)=>dispatch(removeAddress(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(shippingAddress);

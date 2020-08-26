@@ -27,7 +27,7 @@ function editHeader({navigation,cartItem,title}){
             {
                 title.children == "MyProfile"?(<TouchableOpacity onPress={()=>nav("EditProfile")} style={{marginTop:20}}>
                     <Material name="lead-pencil" size={20} /> 
-                </TouchableOpacity>):(<View style={{marginTop:20}}><Material name="lead-pencil" size={20} color={constants.Colors.color_heading}/></View>)
+                </TouchableOpacity>):(<View/>)
             }
             </View>
 

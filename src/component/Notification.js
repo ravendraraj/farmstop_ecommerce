@@ -72,7 +72,7 @@ _loadLoader() {
     		if(this.props.animate == false){
                 return(
                     <EmptyComp imageName={constants.image.emptyNotification} 
-                        welcomText={"Nothing here !!!"}
+                        welcomText={"You don't have any notification yet"}
                         redirectText={""}
                         onPress={()=>this.props.navigation.navigate("MainHome")}
                     />
