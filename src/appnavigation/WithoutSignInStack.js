@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
 
 import HomeScreen from '../component/HomeScreen'
 import EditHeader from '../headerComponent/editHeader'
@@ -25,8 +25,7 @@ import pageNotFound404 from '../component/pageNotFound404'
 import internetError from '../component/internetError'
 import PaymentOption from '../component/PaymentOption'
 import ShippingAddress from '../component/ShippingAddress'
-import WishTabNav from './WishTabNav'
-import MyOrderTab from './MyOrderTab'
+
 import TrackOrder from '../component/TrackOrder'
 import MyProfile from '../component/MyProfile'
 import OrderDetails from '../component/OrderDetails'
@@ -38,7 +37,10 @@ import MyOrderList from '../component/MyOrderList'
 const RootStack = createStackNavigator();
 
 const WithoutSignInStack = ({navigation}) => (
-    <RootStack.Navigator initialRouteName="SocialLogin">
+    <RootStack.Navigator initialRouteName="SocialLogin" screenOptions={{
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+    }}
+ >
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -102,7 +104,7 @@ const WithoutSignInStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="Wish-List" component={WishTabNav}/>
+                    name="Wish-List" component={TabNavProdvariation}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({

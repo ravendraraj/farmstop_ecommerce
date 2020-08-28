@@ -174,7 +174,7 @@ class SearchProductVariation extends Component {
 				<FlatList
 					data={updateItemList}
 					renderItem={({ item }) => (
-						<View style={{ marginBottom: 10 }}>
+						<View style={styles.prodBlock}>
 							<View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
 								
 								<View>
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
 	},
 	prodBlock:{
         alignSelf:'center',
-        width:'95%',
+        width:'98%',
         backgroundColor:"white",
         borderRadius:2,
         elevation:4,

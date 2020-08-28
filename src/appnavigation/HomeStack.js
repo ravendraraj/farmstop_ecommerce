@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-// import { connect } from 'react-redux';
+import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
 
 //screens
 import HomeScreen from '../component/HomeScreen'
@@ -30,8 +29,7 @@ import internetError from '../component/internetError'
 import PaymentOption from '../component/PaymentOption'
 //tab navigation
 import TabNavProdvariation from './TabNavProdvariation'
-import WishTabNav from './WishTabNav'
-import MyOrderTab from './MyOrderTab'
+
 import TrackOrder from '../component/TrackOrder'
 import MyProfile from '../component/MyProfile'
 import OrderDetails from '../component/OrderDetails'
@@ -43,7 +41,10 @@ import MyOrderList from '../component/MyOrderList'
 const RootStack = createStackNavigator();
 
 const HomeStack = ({navigation}) => (
-    <RootStack.Navigator initialRouteName="MainHome">
+    <RootStack.Navigator initialRouteName="MainHome" screenOptions={{
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+    }}
+    >
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -253,7 +254,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="Wish-List" component={WishTabNav}/>
+                    name="Wish-List" component={TabNavProdvariation}/>
 
         <RootStack.Screen 
                     options={({ navigation }) => ({

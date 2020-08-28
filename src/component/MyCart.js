@@ -102,6 +102,7 @@ class MyCart extends Component {
             let subtotal = this.props.subtotal;
             let tax = 0;
             let deliveryCharges = ( this.props.shippingCost== null ? 0 :this.props.shippingCost);
+            deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges; 
             let discount = this.state.discount;
             let total = subtotal+parseFloat(deliveryCharges)+tax;
             // if(subtotal >0){
@@ -144,7 +145,7 @@ class MyCart extends Component {
 
     checkProceed(){
         let subtotal = this.props.subtotal;
-        if(subtotal >= 360){ 
+        if(subtotal >= this.props.minPurchase){ 
                 this.props.getDeliveryDate();
                 if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
                     let tax = 0;
@@ -169,7 +170,7 @@ class MyCart extends Component {
             }else{
               Alert.alert(
               'Farmstop',
-              'Please order more or equal to 360.',
+              'Please order more or equal to '+this.props.minPurchase,
               [
                 {
                   text: 'Ok',
@@ -280,15 +281,15 @@ class MyCart extends Component {
                             </View>
                             <View style={{width:'50%'}}>
                                 <View style={{flexDirection:'row'}}>
-                                <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
+                                <Text style={{width:'80%',fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
                                     {fristLetterCapital(item.attribute_name)}
                                 </Text>
-                                <View style={{flex:1}}>
-                                    <TouchableOpacity style={{position:'absolute',right:0,bottom:4,zIndex:1}} onPress={()=>this.deleteItem(item.prod_id ,item.selectedVariationID,item.cart_item_id,item.id)}>
+                                <View style={{flex:1,width:'20%'}}>
+                                    <TouchableOpacity style={{position:'absolute',top:0,right:0,zIndex:1}} onPress={()=>this.deleteItem(item.prod_id ,item.selectedVariationID,item.cart_item_id,item.id)}>
                                         <Icon 
                                             name="trash-o"
                                             color={constants.Colors.color_BLACK}
-                                            size={25}
+                                            size={20}
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -464,7 +465,9 @@ const mapStateToProps = state => ({
     authName :state.data.authName,
     shippingAddress : state.data.defaultShipingAddress,
     login_type : state.data.login_type,
-    coupon_id: state.data.coupon_id
+    coupon_id: state.data.coupon_id,
+    freeDeliveryAt:state.data.freeDilveryAt,
+    minPurchase:state.data.minPurchase,
 });
 
 const mapDispatchToProps = dispatch => ({

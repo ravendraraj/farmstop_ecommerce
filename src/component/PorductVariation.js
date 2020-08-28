@@ -41,7 +41,7 @@ class PorductVariation extends Component {
 
     static async getDerivedStateFromProps(props, state) {
         let {previousActiveProdId} = state;
-        console.log(props,state);
+        //console.log(props,state);
         if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
         {
             state.previousActiveProdId = props.activeProd;
@@ -64,7 +64,8 @@ class PorductVariation extends Component {
             this.props.setWishListItemOnServer(data); //save in server
 
         }else{
-            ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+            //ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
+            navigate("SocialLogin");
         }
     };
     
@@ -159,10 +160,11 @@ class PorductVariation extends Component {
 
     renderItemTitle(){
         var catName = this.props.productData;
-        if(catName != "undefined" && catName.length > 0){
+        var currentProdcat = this.props.activeProdCat;
+        if(catName != "undefined" && catName.length > 0 && currentProdcat  !=""){
             var categoryList = [];
-            categoryList[0]=catName.find(item=>item.id == this.props.activeProdCat);
-            var uniqueList = catName.filter(item=>item.id != this.props.activeProdCat);
+            categoryList[0]=catName.find(item=>item.id == currentProdcat);
+            var uniqueList = catName.filter(item=>item.id != currentProdcat);
             
             var j=1;
             for(var i = 0; i<uniqueList.length;i++){

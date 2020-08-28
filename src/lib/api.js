@@ -14,6 +14,7 @@ export const logout = (data) => async(dispatch,getState) => {
     await AsyncStorage.removeItem("userShippingAdd");
     dispatch({type:'LOGOUT'});
     navigate('NotLogin');
+    navigate('SocialLogin');
 }
 /** #################################################### User  Valiadtion Section ##############################*/
 export const loginValidation = (data) => (dispatch,getState) => {
@@ -278,7 +279,7 @@ export const getProduct = (data) => (dispatch,getState) => {
         res.json()
         .then(response => {
             if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_FETCH', payload : response.product});
+                dispatch({ type : 'PRODUCT_FETCH', payload : response.product,freeDilveryAt:response.freeDileveryAt ,minPurchase:response.minimumPurChaseAmt});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -457,6 +458,15 @@ export const deleteWishItem= (data) => (dispatch,getState) => {
             console.log(response);
             if(response.status == "1"){
                 dispatch({ type : 'REMOVE_FROM_WISH', payload : response.message,'prod_id':data.id});
+
+                if(getState().data.searchProductList.length>0){
+                    dispatch({type:'SEARCH-PROD-ADD-WISH',activeProdId:data.id});
+                }
+
+                if(getState().data.productVatiation.length>0){
+                    dispatch({type:'ADD-WISH', activeProdId:data.id});
+                }
+                
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }

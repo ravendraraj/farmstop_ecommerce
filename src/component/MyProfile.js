@@ -45,49 +45,54 @@ class MyProfile extends Component{
     }
 
     render(){
-        return(
-            <View style={styles.container}>
-               {/*<TextHeading title="My Profile"/>*/}
-                <ScrollView>
-                <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
-                    <View style={{ overflow: 'hidden', paddingBottom: 5 }}>
-                        <View
-                          style={{
-                            backgroundColor: '#fff',
-                            width: "100%",
-                            borderRadius:10,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 1, height: 1 },
-                            shadowOpacity:  0.4,
-                            shadowRadius: 3,
-                            elevation: 5,
-                            paddingBottom:constants.vh(20),
-                            paddingTop:constants.vh(20)
-                          }} 
-                        >
+        if(this.props.authUserID !=''){
+            return(
+                <View style={styles.container}>
+                   {/*<TextHeading title="My Profile"/>*/}
+                    <ScrollView>
+                    <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
+                        <View style={{ overflow: 'hidden', paddingBottom: 5 }}>
+                            <View
+                              style={{
+                                backgroundColor: '#fff',
+                                width: "100%",
+                                borderRadius:10,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 1, height: 1 },
+                                shadowOpacity:  0.4,
+                                shadowRadius: 3,
+                                elevation: 5,
+                                paddingBottom:constants.vh(20),
+                                paddingTop:constants.vh(20)
+                              }} 
+                            >
 
-                            {this.renderProfileImage()}
-                            <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,marginTop:10,alignSelf:'center'}}>{this.props.userName}</Text>
-                            <Text style={{fontSize:17,fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',color:constants.Colors.color_grey}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
-                            <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular,marginTop:0,alignSelf:'center'}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
+                                {this.renderProfileImage()}
+                                <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,marginTop:10,alignSelf:'center'}}>{this.props.userName}</Text>
+                                <Text style={{fontSize:17,fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',color:constants.Colors.color_grey}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
+                                <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular,marginTop:0,alignSelf:'center'}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
+                            </View>
                         </View>
+                        <View style={{width:'95%',alignSelf:'center',marginTop:constants.vw(40)}}>
+                            <ButtonWithIcon buttonName={"Your Orders"} leftIcon={constants.image.myOrderIcon} rightIcon={"arrow-right"} isImg={true} onPress={()=>{this.props.navigation.navigate("MyOrderTab")}}/>
+                            <ButtonWithIcon buttonName={"Address"} leftIcon={"location-pin"} rightIcon={"arrow-right"} isImg={false} onPress={()=>{this.props.navigation.navigate("ShippingAddress",{screen_name: "side_menu_bar"})}}/>
+                            <ButtonWithIcon buttonName={"Logout"} leftIcon={"logout"} rightIcon={""} isImg={false} onPress={()=>this._logOutEvent()}/>
+                            
+                        </View>
+                        </View>
+                    </ScrollView>
+                    <View>
+                        <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_WHITE,borderWidth:1,borderColor:constants.Colors.color_grey,borderRadius:5,marginBottom:10,backgroundColor:constants.Colors.color_heading}}
+                        onPress={()=>this.props.navigation.navigate("EditProfile",{screen_name:'MyProfile'})}>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>Edit Profile</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{width:'95%',alignSelf:'center',marginTop:constants.vw(40)}}>
-                        <ButtonWithIcon buttonName={"Your Orders"} leftIcon={constants.image.myOrderIcon} rightIcon={"arrow-right"} isImg={true} onPress={()=>{this.props.navigation.navigate("MyOrderTab")}}/>
-                        <ButtonWithIcon buttonName={"Address"} leftIcon={"location-pin"} rightIcon={"arrow-right"} isImg={false} onPress={()=>{this.props.navigation.navigate("ShippingAddress",{screen_name: "side_menu_bar"})}}/>
-                        <ButtonWithIcon buttonName={"Logout"} leftIcon={"logout"} rightIcon={""} isImg={false} onPress={()=>this._logOutEvent()}/>
-                        
-                    </View>
-                    </View>
-                </ScrollView>
-                <View>
-                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_WHITE,borderWidth:1,borderColor:constants.Colors.color_grey,borderRadius:5,marginBottom:10,backgroundColor:constants.Colors.color_heading}}
-                    onPress={()=>this.props.navigation.navigate("EditProfile",{screen_name:'MyProfile'})}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>Edit Profile</Text>
-                    </TouchableOpacity>
                 </View>
-            </View>
-        )
+            )
+        }else{
+            this.props.navigation.navigate("SocialLogin");
+            return null;
+        }
     }
 }
 

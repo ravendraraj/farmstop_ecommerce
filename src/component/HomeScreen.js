@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
+import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
 import { prod_image ,weburl } from '../constants/url'
@@ -31,7 +31,7 @@ class HomeScreen extends Component {
     };
     
     if(!this.props.cartItemSync)
-     this.props.getCartItem();
+        this.props.getCartItem();
   }
 
   _loadLoader() {
@@ -75,6 +75,7 @@ class HomeScreen extends Component {
     await this.props.getCartItem();
 
   }
+
 
   async  checkCurrentLocForDelivery() {
     try {

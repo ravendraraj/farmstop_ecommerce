@@ -156,16 +156,16 @@ componentWillUnmount() {
                             <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                         </View>
                         <View style={{width:'50%'}}>
-                            <View style={{flexDirection:'row'}}>
-                                <Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
+                            <View style={{flexDirection:'row',marginBottom:10}}>
+                                <Text style={{fontSize:constants.vw(14),width:'80%',fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
                                     {item.attribute_name}
                                 </Text>
-                                <View style={{flex:1}}>
-                                        <TouchableOpacity style={{position:'absolute',right:0,bottom:4,zIndex:1}} onPress={()=>this._removeWishList(item.id,"remove")}>
+                                <View style={{flex:1,width:'20%',}}>
+                                        <TouchableOpacity style={{position:'absolute',right:0,top:0,zIndex:1}} onPress={()=>this._removeWishList(item.id,"remove")}>
                                             <Icon 
                                                 name="trash-o"
                                                 color={constants.Colors.color_BLACK}
-                                                size={25}
+                                                size={20}
                                             />
                                         </TouchableOpacity>
                                 </View>
@@ -244,8 +244,8 @@ componentWillUnmount() {
     }
 
     render() {
-        return (
-
+        if(this.props.authUserId !=''){
+            return (
                 <View style={styles.container}>
                     <TextHeading title="My Wish List"/>
                         <View style={styles.MainContainer}>
@@ -256,6 +256,10 @@ componentWillUnmount() {
                         </View>
                 </View>
             )
+        }else{
+            this.props.navigation.navigate("SocialLogin");
+            return null;
+        }
         }
     }
 

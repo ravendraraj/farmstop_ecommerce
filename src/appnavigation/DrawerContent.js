@@ -124,7 +124,7 @@ _profileRender(){
     }else{
         return(
             <View>
-                <TouchableOpacity style={styles.uploadImage} onPress={() => this._redirect('MyProfile')}>
+                <TouchableOpacity style={styles.uploadImage} onPress={() => this._redirect('My Profile')}>
                     
                     <Text style={styles.profileText}>Upload</Text>
                     <Text style={styles.profileText}>your</Text>
@@ -147,7 +147,7 @@ renderMyAccTab(){
     if(this.state.displayMyAccChild ){
         return(
             <View style={{marginLeft:25}}>
-                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('MyProfile')}>
+                <TouchableOpacity style={styles.childMenuTab} onPress={() => this._redirect('My Profile')}>
                     <Text style={styles.MenueLable}>Your Profile</Text>
                 </TouchableOpacity>
 

@@ -43,8 +43,9 @@ _radioHandler(){
     }
 
     _showAddress(id){
-        if(this.props.addressList.length >0){
-            let address = this.props.addressList.find(item => item.id === id);
+        let listOfAddress = this.props.addressList;
+        if(listOfAddress.length >0){
+            let address = listOfAddress.find(item => item.id === id);
             return(
                 <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
                     <Text style={styles.text}>{address.address}, {address.district}, {address.zipcode}, {address.country}</Text>
@@ -57,6 +58,7 @@ _radioHandler(){
             let subtotal = this.props.subtotal;
             let tax = 0;
             let deliveryCharges = this.props.shippingCost;
+            deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges;
             let discount = this.props.coupon_value !=""?parseFloat(this.props.coupon_value):0;
             let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
             return(
@@ -172,6 +174,7 @@ _radioHandler(){
                 let subtotal = this.props.subtotal;
                 let tax = 0;
                 let deliveryCharges = this.props.shippingCost;
+                deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges;
                 let discount = 0;
                 let total = subtotal+parseFloat(deliveryCharges)+tax;
                 let userType = "";
@@ -324,6 +327,7 @@ const mapStateToProps = state => ({
     addressList:state.data.addressList,
     coupon_value:state.data.coupon_value,
     deliveryDate:state.data.deliveryDate,
+    freeDeliveryAt:state.data.freeDilveryAt,
 });
 
 const mapDispatchToProps = dispatch => ({
