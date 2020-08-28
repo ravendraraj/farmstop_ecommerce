@@ -28,20 +28,41 @@ class PorductVariation extends Component {
         this.state={
             ListItem :'',
             page:1,
+            previousActiveProdId:'',
         }
     }
 
    async componentDidMount(){
+        // console.log("active id=>",this.props.activeProd);
+        this.setState({previousActiveProdId:this.props.activeProd});
         if(this.props.activeProd != '')
         await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
     }
 
-    _addinWishList = data => {
+    static async getDerivedStateFromProps(props, state) {
+        let {previousActiveProdId} = state;
+        console.log(props,state);
+        if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
+        {
+            state.previousActiveProdId = props.activeProd;
+            if(props.activeProd != '')
+            await props.getProductType({prodID:props.activeProd ,start:0,end:totalprod});
+
+            return null;
+        }
+
+        return null;
+    }
+
+    _addinWishList = prodData => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
         if(this.props.authEmail != "" || this.props.authMobile != ''){
-            //this.props.setWishInLocal(data);//save in local
+            
+            var data = [];
+                data["id"] = prodData.id;
+                data["screen"] = this.props.route.name;
             this.props.setWishListItemOnServer(data); //save in server
-            this.props.addInWish(data.id);
+
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -101,7 +122,7 @@ class PorductVariation extends Component {
             }
         })
 
-        console.log("add in cart ",existProd);
+        // console.log("add in cart ",existProd);
 
         if(ProdVariationID !=''){
             var data = [];
@@ -116,7 +137,7 @@ class PorductVariation extends Component {
                 await this.props.addItemToCart(data);
                 this.props.setCartItemLocal()
             }else{
-                // ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity("This Product is already in your cart", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
 
         }else{
@@ -131,49 +152,51 @@ class PorductVariation extends Component {
 
 
     _selectCat(prod_cat_id){
-        console.log(prod_cat_id);
+        // console.log(prod_cat_id);
         this.props.selectCat(prod_cat_id);
-        this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+        //this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
     }
 
     renderItemTitle(){
         var catName = this.props.productData;
-        var categoryList = [];
-        categoryList[0]=catName.find(item=>item.id == this.props.activeProdCat);
-        var uniqueList = catName.filter(item=>item.id != this.props.activeProdCat);
-        
-        var j=1;
-        for(var i = 0; i<uniqueList.length;i++){
-            categoryList[j++] = uniqueList[i];
-        }
+        if(catName != "undefined" && catName.length > 0){
+            var categoryList = [];
+            categoryList[0]=catName.find(item=>item.id == this.props.activeProdCat);
+            var uniqueList = catName.filter(item=>item.id != this.props.activeProdCat);
+            
+            var j=1;
+            for(var i = 0; i<uniqueList.length;i++){
+                categoryList[j++] = uniqueList[i];
+            }
 
-        return (
-                <View style={{width:'95%',alignSelf:'center'}}>
-                    <FlatList
-                        data={categoryList}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <View>
-                                {
-                                    this.props.activeProdCat == item.id?(
-                                        <Text style={styles.notActiveItem}>
-                                            {fristLetterCapital(item.title)}
-                                        </Text>
-                                    ):(
-                                        <TouchableOpacity onPress={()=>this._selectCat(item.id)}>
-                                            <Text style={styles.activeItem}>
+            return (
+                    <View style={{width:'95%',alignSelf:'center'}}>
+                        <FlatList
+                            data={categoryList}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item }) => (
+                                <View>
+                                    {
+                                        this.props.activeProdCat == item.id?(
+                                            <Text style={styles.notActiveItem}>
                                                 {fristLetterCapital(item.title)}
                                             </Text>
-                                        </TouchableOpacity>
-                                    )
-                                }
-                            </View>
-                        )}
-                        keyExtractor={item => item.id}
-                    />
-                </View>
-        )
+                                        ):(
+                                            <TouchableOpacity onPress={()=>this._selectCat(item.id)}>
+                                                <Text style={styles.activeItem}>
+                                                    {fristLetterCapital(item.title)}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+                                </View>
+                            )}
+                            keyExtractor={item => item.id}
+                        />
+                    </View>
+            )
+        }
     }
 
     setVariationType(variationValue, prod_id){
@@ -197,7 +220,6 @@ class PorductVariation extends Component {
     }
 
     renederItemType () {
-        
         let ItemList = this.props.itemtypeData;
         if(ItemList != "undefined" && ItemList.length > 0){
 

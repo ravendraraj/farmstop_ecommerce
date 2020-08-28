@@ -419,16 +419,15 @@ export const getWishListItem= (data) => (dispatch,getState) => {
 }
 
 export const setWishListItemOnServer= (data) => (dispatch,getState) => {
-
+    dispatch({type : 'LOADING'});
     let url = weburl + 'api-add-in-wish?prodId='+data.id+"&userId="+getState().data.authUserID+"&token="+getState().data.token;
-    console.log(url);
     fetch(url)
     .then(res =>{
         res.json()
         .then(response => {
-            //console.log(response);
+            
             if(response.status == "1"){
-                dispatch({ type : 'SAVED_WISH', payload : response.message});
+                dispatch({ type : 'SAVED_WISH', payload : response.message,prodId:data.id,screen:data.screen,userWishList:response.wishList});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }

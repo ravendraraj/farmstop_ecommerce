@@ -54,7 +54,7 @@ class SearchProductVariation extends Component {
 			const regex = new RegExp(`${query.trim()}`, 'i');
 			//return the filtered film array according the query from the input
 
-			return this.props.productName.filter(prod => (prod.attribute_name.search(regex) >= 0 && prod.product_id == this.props.activeProd));
+			return this.props.productName.filter(prod => (prod.attribute_name.search(regex) >= 0));
 		} else {
 			return [];
 		}
@@ -71,17 +71,18 @@ class SearchProductVariation extends Component {
 
 	seacrhProduct(key) {
 		// Alert.alert(key);
+		this.setState({query:''});
 		this.props.getProductListForSearch({ prodKey: key, screen: this.props.route.name })
 		//this.props.navigation.navigate('ProductType',{keyword:key});
 	}
 
-	_addinWishList = data => {
+	_addinWishList = prodData => {
 		// data.isMyWish =! "heart" ? "heart-outline": "heart";
 		if (this.props.authEmail != "" || this.props.authMobile != '') {
-			//this.props.setWishInLocal(data);//save in local
-			this.props.setWishListItemOnServer(data); //save in server
-			this.props.addInWish(data.id);
-			this.props.addSearchItemInWish(data.id);
+			var data = [];
+                data["id"] = prodData.id;
+                data["screen"] = this.props.route.name;
+            this.props.setWishListItemOnServer(data);
 		} else {
 			ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
 		}

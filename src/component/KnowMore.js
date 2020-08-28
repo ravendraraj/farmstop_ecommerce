@@ -81,12 +81,15 @@ class KnowMore extends Component {
     _addinWishList = prod => {
         // data.isMyWish =! "heart" ? "heart-outline": "heart";
         if(this.props.authEmail != "" || this.props.authMobile != ''){
-            this.props.setWishListItemOnServer(prod); //save in server
-            this.props.addInWish(prod.id);
+            var data = [];
+                data["id"] = prod.id;
+                data["screen"] = this.props.screen;
+            this.props.setWishListItemOnServer(data); //save in server
+            // this.props.addInWish(prod.id);
             
-            if(this.props.screen == "Search"){
-                this.props.addSearchItemInWish(prod.id);
-            }
+            // if(this.props.screen == "Search"){
+            //     this.props.addSearchItemInWish(prod.id);
+            // }
 
         }else{
             ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);

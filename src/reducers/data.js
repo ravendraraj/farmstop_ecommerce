@@ -227,10 +227,11 @@ const data = (state = initialDataState, action) => {
         };
 
         case 'ACTIVE-PROD':
+        let newActiveIdProducts = (action.id == state.activeProduct)? state.productVatiation:[];
         return {
             ...state,
             activeProduct:action.id,
-            productVatiation:[],
+            productVatiation:newActiveIdProducts,
             no_more_data:false,
             searchProductList:[],
         };
@@ -253,33 +254,37 @@ const data = (state = initialDataState, action) => {
             my_wish_list:action.payload,
         }
 
-        case 'ADD-WISH':
-            let activeProdId = action.activeProdId;
-            let updateItemList = state.productVatiation.map(item => {
-                if(item.id == activeProdId){
-                    //console.log(item);
-                    //console.log(item.isMyWish);
-                     if(item.isMyWish === 'heart-outline'){
-                            item.isMyWish = "heart";
-                      //      console.log("heart");
-                     }else{
-                       item.isMyWish = "heart-outline";
-                        //console.log("outline");
-                     } 
-                }
+        case 'SAVED_WISH':
+        let wishProd = action.prodId;
+        let wishScreen = action.screen;
+        let updateUserWishList = action.userWishList;
 
-                return item;
-              });
-              //console.log(updateItemList);
-        return {
-            ...state,
-            productVatiation :updateItemList,
-        };
-
-        case 'SEARCH-PROD-ADD-WISH':
-            let activeProd = action.activeProdId;
+        if(wishScreen == "Search")
+        {
             let updateList = state.searchProductList.map(item => {
-                if(item.id == activeProd){
+                if(item.id == wishProd){
+                     if(item.isMyWish === 'heart-outline'){
+                            item.isMyWish = "heart";
+                      //      console.log("heart");
+                     }else{
+                       item.isMyWish = "heart-outline";
+                        //console.log("outline");
+                     } 
+                }
+
+                return item;
+              });
+
+            return {
+                ...state,
+                searchProductList :updateList,
+                my_wish_list:updateUserWishList,
+            };
+
+        }else if(wishScreen == "Product"){
+
+            let updateItemList = state.productVatiation.map(item => {
+                if(item.id == wishProd){
                     //console.log(item);
                     //console.log(item.isMyWish);
                      if(item.isMyWish === 'heart-outline'){
@@ -293,11 +298,14 @@ const data = (state = initialDataState, action) => {
 
                 return item;
               });
-              //console.log(updateItemList);
-        return {
-            ...state,
-            searchProductList :updateList,
-        };
+
+            return {
+                ...state,
+                productVatiation :updateItemList,
+                my_wish_list:updateUserWishList,
+            };
+
+        }
 
         case 'ADD-PROD-QTY':
             

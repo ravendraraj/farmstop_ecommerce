@@ -178,9 +178,18 @@ class HomeScreen extends Component {
   async _getItemType(prod_id) {
     // console.log(prod_id,"Ravendra");
     await this.props.setProdId(prod_id);
-    this.props.navigation.navigate('ProductType', {
-      itemId: prod_id
-    });
+    // console.log(this.props.route,"route");
+     console.log(this.props.navigation);
+        // this.props.navigation.reset({
+        //   index: 1,
+        //   routes: [
+        //     {
+        //       name: 'Product',
+        //     },
+        //   ],
+        // })
+
+    this.props.navigation.navigate('Product');
   }
 
 

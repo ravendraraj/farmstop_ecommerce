@@ -17,6 +17,7 @@ const indicator = (state = false, action) => {
         case 'SUCCESS':
         case 'FETCH_NOTIFICATION_LIST':
         case 'REMOVE_ITEM':
+        case 'SAVED_WISH':
         case 'EDIT_PROFILE':
         case "LOCATION_FETCHED":
         case "NOT_DELIVER":

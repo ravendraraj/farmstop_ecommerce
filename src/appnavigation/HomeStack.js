@@ -38,6 +38,8 @@ import OrderDetails from '../component/OrderDetails'
 import EditProfile from '../component/EditProfile'
 import Faq from '../component/Faq'
 import Notification from '../component/Notification'
+import MyOrderList from '../component/MyOrderList'
+
 const RootStack = createStackNavigator();
 
 const HomeStack = ({navigation}) => (
@@ -50,7 +52,7 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             
-            name="MainHome" component={HomeScreen}/>
+            name="MainHome" component={TabNavProdvariation}/>
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -251,7 +253,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="Wish List" component={WishTabNav}/>
+                    name="Wish-List" component={WishTabNav}/>
 
         <RootStack.Screen 
                     options={({ navigation }) => ({
@@ -260,7 +262,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="MyOrderTab" component={MyOrderTab}/>
+                    name="MyOrderTab" component={MyOrderList}/>
                     
         <RootStack.Screen 
                     options={({ navigation }) => ({
