@@ -25,6 +25,7 @@ const indicator = (state = false, action) => {
         case "COUPON_CODE_VALIDATE":
         case "MANAGE-CART-QTY":
         case "LOGOUT":
+        case "SET_PRODUCT_VARIATION_IN_CART":
         case "ERROR_CODE":
         case "NEW_ADDRESS_SAVED":
         case "FETCH_ORDER_LIST":

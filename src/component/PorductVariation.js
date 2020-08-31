@@ -434,7 +434,7 @@ const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
     knowMore:(data)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:data.prodId,screen:data.screen}),
     addItemToCart :(data)=> dispatch(addItemToCart(data)),
-    setCartItemLocal:()=>dispatch(setCartItemLocal()),
+    setCartItemLocal:()=>dispatch(setCartItemLocal()), 
     removeFromCart :(prodId)=> dispatch({type:'REMOVE_QUANTITY_ITEM_FROM_CART',id:prodId}),
     loading:()=>dispatch({type : 'LOADING'}),
     getProductType: (data) => dispatch(getProductType(data)),

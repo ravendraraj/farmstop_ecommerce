@@ -175,7 +175,20 @@ class shippingAddress extends Component{
                         address = str;
                     }
 
-                    this.setState({displayForm:true,name:'',query:address,deliverType:'',pincode:addressItem.zipcode,houseOrFlat:house,editAddress:parseInt(addressId)});
+                    let deliverTypeString="";
+
+                    if(addressItem.addressType == "Home"){
+                        this.setState({option1:"select"});
+                        this.setState({option2:"notselect"});
+                        deliverTypeString = 'Home';
+
+                    }else{
+                        this.setState({option2:"select"});
+                        this.setState({option1:"notselect"});
+                        deliverTypeString = addressItem.addressType;
+                    }
+
+                    this.setState({displayForm:true,name:addressItem.contactName,query:address,deliverType:deliverTypeString,pincode:addressItem.zipcode,houseOrFlat:house,editAddress:parseInt(addressId)});
              }});
 
         }else{
@@ -330,6 +343,7 @@ class shippingAddress extends Component{
             addressObject["country"] = this.state.country;
             addressObject["deliverOn"] = this.state.deliverType;
             addressObject["isUpdateAddress"] = this.state.editAddress;
+            console.log(addressObject,"address testing");
         
         if(this.state.name !='' && this.state.pincode !=''  && this.state.query !='' && this.state.deliverType !='' && this.state.houseOrFlat !=""){
 

@@ -784,12 +784,13 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
 
 export const addItemToCart = (prodData) => (dispatch,getState) => {
 // export const addItemToCart = (data) => (dispatch,getState) => {
-    // dispatch({type : 'LOADING'});
+    dispatch({type : 'LOADING'});
     // console.log(prodData);
     let product = prodData.id;
     let variationId = prodData.variationId;
     let totalItem = prodData.qty;
     let screen = prodData.screen;
+    let selectedVariationPrice = prodData.selectedVariationPrice;
 
     let userId = getState().data.authUserID;
     let emailId = getState().data.authEmail;
@@ -803,6 +804,7 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
         data.append("totalqty", totalItem);
         data.append("userId", userId);
         data.append("emailId", emailId);
+        data.append("selectedVariationPrice", selectedVariationPrice);
         // console.log(userId+"--"+emailId);
         let post_req = {
             method: 'POST',
@@ -812,7 +814,8 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
                 'Content-Type': 'multipart/form-data',
             }
         }
-
+        console.log("add to cart ",post_req);
+        
         fetch(url ,post_req)
         .then(res =>{
             res.json()
@@ -1021,6 +1024,7 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
         product +=item.prod_id+',';
         varidationId +=item.selectedVariationID+',';
         totalItem +=item.selectedQty+',';
+        selectedVariationPrice +=item.selectedVariationPrice+',';
     })
 
     var data = new FormData();
@@ -1029,6 +1033,7 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
     data.append("totalqty", totalItem);
     data.append("userId", userId);
     data.append("emailId", emailId);
+    data.append("selectedVariationPrice",selectedVariationPrice);
     // console.log(userId+"--"+emailId);
     let post_req = {
         method: 'POST',
@@ -1086,8 +1091,7 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
 
 //manage cart item variation
 export const setVariationInCart = (prodData) => (dispatch,getState) => {
-       // dispatch({type : 'LOADING'});
-        // console.log(prodData);
+       dispatch({type : 'LOADING'});
         let product = prodData.prod_id;
         let variationValue = prodData.variationValue;
         let oldSelectedVariationId = prodData.selectedVariationID;
@@ -1099,12 +1103,14 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
 
             //get variation id 
             let variationId = "";
+            let variationPrice = "";
             getState().data.addedItems.map((item,index)=>{
                 if(item.prod_id == product)
                 {
                     item.variation_details.map(vari=>{
                         if(vari.varition == variationValue){
                             variationId = vari.varition_detail_id;
+                            variationPrice = vari.right_price;
                         }
                     });
                 }
@@ -1116,6 +1122,8 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
             data.append("oldVariationId", oldSelectedVariationId);
             data.append("userId", userId);
             data.append("emailId", emailId);
+            data.append("variationPrice",variationPrice);
+            data.append("token",getState().data.token);
             
             let post_req = {
                 method: 'POST',

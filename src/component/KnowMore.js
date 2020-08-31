@@ -43,7 +43,7 @@ class KnowMore extends Component {
         }
     }
     
-    async _addInCart(prodTypeId,variationId ,selectedQty){
+    async _addInCart(prodTypeId,variationId ,selectedQty,selectedVariationPrice){
         let existProd = false;
         this.props.cart.map( cartItems=>{
             if(prodTypeId == cartItems.prod_id && variationId == cartItems.selectedVariationID)
@@ -61,6 +61,7 @@ class KnowMore extends Component {
                 data["variationId"] = variationId;
                 data["screen"] = this.props.screen;
                 data["qty"] = selectedQty;
+                data["selectedVariationPrice"]= selectedVariationPrice;
                 await this.props.addItemToCart(data);
                 this.props.setCartItemLocal();
             }else{
@@ -207,7 +208,7 @@ class KnowMore extends Component {
                             <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
                             <View>
                             <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5,paddingLeft:15,paddingRight:15}}
-                                onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty)}>
+                                onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty,prodDetails.selectedVariationPrice)}>
                                 <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
                                 <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                             </TouchableOpacity>
