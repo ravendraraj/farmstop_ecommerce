@@ -285,8 +285,10 @@ class HomeScreen extends Component {
       return(
         // <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14)}}>
         <View style={{position:'absolute',bottom:10,width:"100%",alignSelf:'center'}}>
-              <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
-              <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
+            <View style={{alignSelf:'center'}}>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
+            </View>
               <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
               <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
             <Image source={constants.image.scrollIcon} style={{width:constants.vw(25),height:constants.vw(25),alignSelf:'center'}}/>  

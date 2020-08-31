@@ -104,41 +104,17 @@ class MyCart extends Component {
             let deliveryCharges = ( this.props.shippingCost== null ? 0 :this.props.shippingCost);
             deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges; 
             let discount = this.state.discount;
-            let total = subtotal+parseFloat(deliveryCharges)+tax;
+            let total = subtotal+tax;
             // if(subtotal >0){
                 return(
-                    <View style={{flex:1,width:'90%',alignSelf:'center',marginTop:30,marginBottom:80}}>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={styles.fonts}>Sub Total</Text>
-                            <Text style={styles.fonts}>{subtotal}</Text>
-                        </View>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={styles.fonts}>Taxes</Text>
-                            <Text style={styles.fonts}>{tax}</Text>
-                        </View>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={styles.fonts}>Delivery charges</Text>
-                            <Text style={styles.fonts}>{deliveryCharges}</Text>
-                        </View>
-                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={styles.fonts}>Discount</Text>
-                            <Text style={styles.fonts}>{discount}</Text>
-                        </View>
-                        {this.renderCouponMsg()}
-                        <Text style={{fontFamily:bold,fontSize:20}}>You have a coupon</Text>
-                        <View style={{flexDirection:'row'}}>
-                            <Image source={constants.image.couponImg} style={{width:60,height:40,marginTop:15}}/>
-                            <CouponTextInput placeholder="Enter coupon code" 
-                                value={this.state.couponCode}
-                                onChangeText={(text)=>this.setState({couponCode:text})}
-                                onSubmitEditing={()=>this.getCouponCodeDetails()}/>
-                        </View>
-                        <View style={{flex:1,alignSelf:'center',width:'90%'}}>
-                            <TouchableOpacity onPress={()=>this.checkProceed()}>
-                                <Text style={styles.checkout}>Checkout  Rs. {total} </Text> 
-                            </TouchableOpacity>
-                        </View>
+                    <View style={styles.checkoutBtn}>
+                        <TouchableOpacity style={{flexDirection:'row',justifyContent:'space-evenly'}}onPress={()=>this.checkProceed()}>
+                            <Text style={[styles.checkout]}>CHECKOUT </Text>
+                            <Text style={styles.checkout}> Rs. {total} </Text> 
+
+                        </TouchableOpacity>
                     </View>
+                    
                 )
         }
     }
@@ -344,11 +320,13 @@ class MyCart extends Component {
                 
                 keyExtractor={(item) => (item.id).toString()}
 
-                ListFooterComponent={
-                    this.renederCartDetails()
-                }
+                 ListFooterComponent={
+                    <View style={{height:100}}/>
+                 }
                 
                 />
+                
+                
                 </View>
             )
         }else{
@@ -374,6 +352,7 @@ class MyCart extends Component {
                             </View>
                             {this._loadLoader()}
                             {this.renederItemType()}
+                            {this.renederCartDetails()}
                         </View>
                 </View>
             )
@@ -387,7 +366,7 @@ const styles = StyleSheet.create({
       },
     MainContainer: {
      // justifyContent: 'center',
-      //flex: 1,
+      flex: 1,
       //padding: 10,
     },
     imageThumbnail: {
@@ -417,9 +396,9 @@ const styles = StyleSheet.create({
     checkout:{
         fontFamily:constants.fonts.Cardo_Bold, 
         textAlign:'center',
-        color: constants.Colors.color_btn,
-		fontSize:constants.vw(20),
-		padding: 20,
+        color: constants.Colors.color_WHITE,
+		fontSize:constants.vw(18),
+        padding:5
     },
     
     couponText:{
@@ -435,6 +414,15 @@ const styles = StyleSheet.create({
         elevation:4,
         padding:10,
         marginBottom:10,
+    },
+    checkoutBtn:{
+        width:'100%',
+        backgroundColor:constants.Colors.color_btn,
+        position:'absolute',
+        bottom:0,
+        zIndex:1,
+        elevation:60,
+        padding:7
     },
     mainHeading:{
         fontSize:20,

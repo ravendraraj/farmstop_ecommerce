@@ -76,6 +76,10 @@ _loadLoader() {
           	)}
           
           	numColumns={1}
+            ListFooterComponent={()=>(
+                    <View style={{height:100}}/>
+            )}
+            
             keyExtractor={item => item.id}
         />
       )

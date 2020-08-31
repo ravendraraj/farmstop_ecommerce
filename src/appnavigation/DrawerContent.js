@@ -10,8 +10,9 @@ import ImagePicker from 'react-native-image-picker';
 import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-class DrawerContent extends Component{
+class DrawerContent extends Component{ 
     constructor(props){
         super(props);
         this.state={
@@ -124,11 +125,12 @@ _profileRender(){
     }else{
         return(
             <View>
-                <TouchableOpacity style={styles.uploadImage} onPress={() => this._redirect('My Profile')}>
-                    
-                    <Text style={styles.profileText}>Upload</Text>
-                    <Text style={styles.profileText}>your</Text>
-                    <Text style={styles.profileText}>image</Text>
+                <TouchableOpacity style={{width:constants.vw(100),height:constants.vw(100),paddingTop:constants.vw(20),borderWidth:0,borderRadius:constants.vw(60),alignItems:'center',backgroundColor:"white",alignSelf:'center'}} onPress={() => this._redirect('My Profile')}>
+                    <Icon 
+                        name="user"
+                        color={constants.Colors.color_BLACK}
+                        size={50}
+                    />
                 </TouchableOpacity>
             </View>
         )

@@ -277,10 +277,11 @@ class SocialLoginScreen extends Component{
     }
 
     _ShowError() {
-        if (this.props.error) {
+        let errorMsg = this.props.error;
+        if ( errorMsg == "Invalid Credentials") {
             Alert.alert(
-                "Error Message",
-                this.props.error,
+                "Farmstop",
+                    'Invaild Login Details, Please enter valid details.',
                 [
                   { text: "OK", onPress: () => console.log("OK Pressed") }
                 ],
@@ -294,7 +295,7 @@ class SocialLoginScreen extends Component{
         return(
             <View style={styles.container}>
                 <ScrollView>
-                    {/* {this._ShowError()} */}
+                    {this._ShowError()}
         	        {this._loadLoader()}
                     {this._renderView()}
                 </ScrollView>

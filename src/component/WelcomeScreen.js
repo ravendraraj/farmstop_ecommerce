@@ -27,7 +27,7 @@ const slides = [
 	// },
 	{
 		key: 'three',
-		text: 'Are you a consumer and want to Buy anything "Organic"',
+		text: 'Loooking for authentic and genuine Organic Produce.',
 		image: image.appIntro3,
 		backgroundColor: '#F7BB64',
 	},
@@ -93,9 +93,10 @@ class WelcomeScreen extends Component {
 	_renderExploreMore(key){
 		if(key === 'three'){
 			return (
-				<TouchableOpacity style={{marginTop:10}} onPress={()=>this._onDone()}>
-					<Text style={{fontSize:20,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo}}>Explore More</Text>
+				<TouchableOpacity style={styles.exploreMoreBtn} onPress={()=>this._onDone()}>
+					<Text style={{fontSize:14,color:constants.Colors.color_WHITE,fontFamily:constants.fonts.Cardo_Bold}}>EXPLORE MORE</Text>
 				</TouchableOpacity>
+				
 			);
 		}
 	  };
@@ -123,11 +124,13 @@ class WelcomeScreen extends Component {
 					<View style={styles.container}>
 
 						<Image source={item.image} style={ item.key === 'two' ? styles.silder2 : styles.silder3}/>
-						<View style={{flex: 1,justifyContent:'flex-end',marginBottom:80,alignItems:'center'}}>
+						<View style={{flex: 1,justifyContent:'flex-end',marginBottom:90}}>
 							<Text style={styles.paragraph}>
 								{item.text}
 							</Text>
+							
 							{this._renderExploreMore(item.key)}
+							
 						</View>
 					</View >
 				);
@@ -207,6 +210,22 @@ const styles = StyleSheet.create({
 	barndCss:{
 		flex: 1,
 		justifyContent: 'flex-end',
+	},
+	exploreMoreBtn:{
+		alignSelf:'flex-end',
+		paddingRight:10,
+		paddingLeft:10,
+		paddingTop:5,
+		paddingBottom:5,
+		borderWidth:1,
+		borderColor:constants.Colors.color_BLACK,
+		borderRadius: 5,
+		borderColor: constants.Colors.color_heading,
+		marginBottom:constants.vw(2),
+		marginTop:4,
+		marginRight:14,
+		backgroundColor:constants.Colors.color_heading,
+		elevation:10
 	}
 });
 

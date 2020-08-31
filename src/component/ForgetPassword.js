@@ -83,8 +83,9 @@ class ForgetPassword extends Component{
         
         if(this.props.otp === ""){
             return(
-                <View style={{width:'80%',alignSelf:"center"}}>
-                        <TextHeading title="Forgot Password?"/>
+                <View>
+                <TextHeading title="Forgot Password?"/>
+                <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(10)}}>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Email Id" onChangeText={(text) => this.setState({emailId:text})}/>
                         </View>
@@ -92,6 +93,7 @@ class ForgetPassword extends Component{
                             <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
                         </TouchableOpacity>
                     </View>
+                </View>    
             )
         }else if(this.props.otp !='' && this.state.otpVerified == false){
             return(

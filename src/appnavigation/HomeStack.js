@@ -37,6 +37,7 @@ import EditProfile from '../component/EditProfile'
 import Faq from '../component/Faq'
 import Notification from '../component/Notification'
 import MyOrderList from '../component/MyOrderList'
+import ForgetPassword from '../component/ForgetPassword'
 
 const RootStack = createStackNavigator();
 
@@ -54,6 +55,16 @@ const HomeStack = ({navigation}) => (
             })}
             
             name="MainHome" component={TabNavProdvariation}/>
+
+            <RootStack.Screen 
+                    options={({ navigation }) => ({
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerTitle: () => <Header navigation={navigation} />,
+                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerTransparent:false,
+                    })}
+                    name="ForgetPassword" component={ForgetPassword}/>
+                    
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -182,7 +193,7 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="knowMoreProd" component={knowMoreProd}/>
-{/* 
+ 
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
@@ -191,7 +202,7 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="SignUp" component={SignUpScreen}/>
-
+        {/*
         <RootStack.Screen 
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,

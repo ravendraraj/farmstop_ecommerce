@@ -18,7 +18,6 @@ const Navigation = ({navigation,introDoneProps}) => {
           <RootAppStack.Screen  options={{headerShown: false}} name="DrawerScreen" component={DrawerScreen}/>
           <RootAppStack.Screen  options={{headerShown: false}} name="AppInroduction" component={WelcomeScreen}/>
           <RootAppStack.Screen  options={{headerShown: false}} name="NotLogin" component={NoneValidate}/>
-
       </RootAppStack.Navigator>
     </NavigationContainer>
   )

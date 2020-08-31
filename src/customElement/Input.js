@@ -36,16 +36,13 @@ export const PrimaryTextInput = (props) => {
 
 export const CouponTextInput = (props) => {
     return (
-        <View>
-            {/* <Text style={styles.textInputTitle}>{props.title}</Text> */}
             <View style={styles.noBorderBox}>
                 <TextInput
                     {...props}
                     selectionColor={constants.Colors.color_BLACK}
-                    style={[{ fontFamily: constants.fonts.Futura_Std_Book, }, styles.text]}
+                    style={[{ fontFamily: constants.fonts.Cardo_Regular, }, styles.text]}
                 />
             </View>
-        </View>
     );
 }
 
@@ -149,9 +146,9 @@ const styles = StyleSheet.create({
     },
     noBorderBox: {
         width:'100%',
-        marginTop: 10,
+        marginTop: 4,
         height: 60,
-        borderColor: constants.Colors.color_e6e5e5
+        borderColor: constants.Colors.color_e6e5e5,
     },
     inputSearchBox:{
         flex:1,

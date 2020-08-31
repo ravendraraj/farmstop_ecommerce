@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {View ,Text,StyleSheet, Alert,SafeAreaView,Image,ToastAndroid} from 'react-native'
 import {connect} from 'react-redux'
-import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
+import { CouponTextInput,PrimaryTextInput ,TextHeading} from '../customElement/Input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation'
@@ -9,7 +9,7 @@ import image from "../constants/Image"
 import RadioButton from '../customElement/RadioButton'
 import RazorpayCheckout from 'react-native-razorpay'
 import {razor_api_key} from '../constants/key'
-import {checkOut,checkOutOnCOD} from '../lib/api'
+import {checkOut,checkOutOnCOD,checkCouponCode} from '../lib/api'
 import {Loader} from '../customElement/Loader'
 
 class PaymentOption extends Component{
@@ -19,7 +19,8 @@ class PaymentOption extends Component{
             forget : false,
             emailId :'',
             option1:'select',
-            option2:'notselect'
+            option2:'notselect',
+            couponCode:'',
         }
     }
 
@@ -49,6 +50,30 @@ _radioHandler(){
             return(
                 <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
                     <Text style={styles.text}>{address.address}, {address.district}, {address.zipcode}, {address.country}</Text>
+                </View>
+            )
+        }
+    }
+
+    getCouponCodeDetails(){
+        
+        let coupon_Code =this.state.couponCode;
+        
+        if(coupon_Code != ''){
+            this.props.checkCouponCode({code:coupon_Code});
+            // this.couponCodeText.clear();
+        }else{
+            ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+    }
+
+    renderCouponMsg(){
+        if(this.props.coupon_msg !=''){
+            let msg = this.props.coupon_msg;
+            setTimeout(()=>{this.props.removeCouponMsg()},2000);
+            return(
+                <View style={{backgroundColor:constants.Colors.color_grey,borderRadius:4}}>
+                    <Text style={{color:constants.Colors.color_WHITE,fontFamily:constants.fonts.Cardo_Regular,fontSize:12,padding:5}}>{ msg }</Text>
                 </View>
             )
         }
@@ -121,6 +146,19 @@ _radioHandler(){
                                 <View style={styles.paymentValue}>
                                     <Text style={styles.text}>Discount</Text>
                                     <Text style={styles.textInt}>{discount == 0?0:"-"+discount}</Text>
+                                </View>
+                                <View style={{marginTop:10}}>
+                                <Text style={styles.heading}>You have a coupon</Text>
+                                {this.renderCouponMsg()}
+                                
+                                    <View style={{flexDirection:'row'}}>
+                                        <Image source={constants.image.couponImg} style={{width:50,height:30,marginTop:15}}/>
+                                        <CouponTextInput placeholder="Enter coupon code" 
+                                            value={this.state.couponCode}
+                                            onChangeText={(text)=>this.setState({couponCode:text})}
+                                            onSubmitEditing={()=>this.getCouponCodeDetails()}/>
+                                    </View>
+                                
                                 </View>
                                 <View style={[styles.paymentValue,{marginTop:15}]}>
                                     <Text style={styles.textInt}>Total</Text>
@@ -310,6 +348,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
     // itemtypeData :state.data.productVatiation,
+    coupon_msg : state.data.coupon_msg,
     cartData :state.data.addedItems,
     subtotal:state.data.total,
     animate : state.indicator,
@@ -325,9 +364,9 @@ const mapStateToProps = state => ({
     coupon_id: state.data.coupon_id,
     defaultShipingAddress:state.data.defaultShipingAddress,
     addressList:state.data.addressList,
-    coupon_value:state.data.coupon_value,
     deliveryDate:state.data.deliveryDate,
     freeDeliveryAt:state.data.freeDilveryAt,
+
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -335,6 +374,8 @@ const mapDispatchToProps = dispatch => ({
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
     checkOut:(data)=>dispatch(checkOut(data)),
     checkOutOnCOD:(data)=>dispatch(checkOutOnCOD(data)),
+    checkCouponCode :(data)=>dispatch(checkCouponCode(data)),
+    removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentOption);

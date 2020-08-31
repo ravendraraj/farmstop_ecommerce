@@ -114,7 +114,7 @@ class PorductVariation extends Component {
     }
 
     //add product in cart
-    async _addInCart(prodCatId_id,ProdVariationID,Itemid,selectedQty){
+    async _addInCart(prodCatId_id,ProdVariationID,Itemid,selectedQty,selectedVariationPrice){
         let existProd = false;
         this.props.cart.map( cartItems=>{
             if(Itemid == cartItems.prod_id && ProdVariationID == cartItems.selectedVariationID)
@@ -130,7 +130,8 @@ class PorductVariation extends Component {
             data["id"] = Itemid;
             data["variationId"] = ProdVariationID;
             data["screen"] = this.props.route.name;
-            data["qty"] = selectedQty
+            data["qty"] = selectedQty;
+            data["selectedVariationPrice"] = selectedVariationPrice;
             // var data={"id":Itemid ,"variationId":ProdVariationID ,"screen":this.props.route.name};
           if(!existProd)
             {
@@ -303,7 +304,7 @@ class PorductVariation extends Component {
 
                             <View>
                                 <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
-                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,item.selectedQty)}>
+                                    onPress={()=>this._addInCart(item.product_id,item.selectedVariationID ,item.id,item.selectedQty,item.selectedVariationPrice)}>
                                     <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
                                     <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                                 </TouchableOpacity>

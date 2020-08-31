@@ -41,9 +41,9 @@ class SignUp extends Component{
     render(){
         return(
             <View style={styles.container}>
+                <TextHeading title="Welcome To Farmstop"/>
                 <ScrollView>
-                    <View style={{width:'80%',alignSelf:"center"}}>
-                        <TextHeading title="Welcome to farmstop" fontsize={25}/>
+                    <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(20)}}>
                         <View>
                             <PrimaryTextInput placeholder="Enter Username" onChangeText={(text)=>this.setState({username:text})}/>
                         </View>
