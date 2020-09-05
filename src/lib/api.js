@@ -966,12 +966,10 @@ export const getCartItem=  (data) => async(dispatch,getState) => {
                                                 notUpdated.push(item);
                                             }
                                     });
-                                    console.log("both cart item");
+                                    
                                     if(notUpdated.length > 0){
-                                        console.log("both async cart item");
                                         updateCartItemsOnServer(notUpdated ,getState().data.authUserID , getState().data.authEmail,dispatch);
                                     }else{
-                                        console.log("both server cart item");
                                         dispatch({type:'CART_ITEM_SYNC', cartItem:serverCartItem});
                                     }
                                 }
@@ -1018,6 +1016,7 @@ function updateCartItemsOnServer(items ,userId ,emailId ,dispatch){
     let product ="";
     let varidationId ="";
     let totalItem ="";
+    let selectedVariationPrice="";
     console.log("items",items);
 
     items.map(item=>{
@@ -1157,7 +1156,7 @@ export const setVariationInCart = (prodData) => (dispatch,getState) => {
             
         }else{
             // dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:0});
-            dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId});
+            dispatch({type:"SET_PRODUCT_VARIATION_IN_CART",prod_id:product, variation:variationValue, preVarId:oldSelectedVariationId,oldPrice:prodData.oldSelectedPrice});
         }  
     }
 

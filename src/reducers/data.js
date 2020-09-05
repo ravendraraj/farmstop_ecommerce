@@ -636,9 +636,9 @@ const data = (state = initialDataState, action) => {
                                 item.selectedQtyPrice = (parseInt(item.selectedQty)*parseFloat(variation.right_price));
                                 item.selectedVariationID = variation.varition_detail_id;
                                 item.selectedVariationPrice = variation.right_price;
-                                totalOnChangeVari=(totalOnChangeVari-parseFloat(oldPriceOnPicker)+ (parseInt(item.selectedQty)*parseFloat(variation.right_price)));
+                                totalOnChangeVari=(parseFloat(totalOnChangeVari)-parseFloat(oldPriceOnPicker)+ (parseInt(item.selectedQty)*parseFloat(variation.right_price)));
                             }else if(selectedCartVariation === "Select"){
-                                // console.log("Not Select");
+                                // console.log("Not Select"); 
                                 item.selectedVariationID = "";
                                 item.selectedVariationPrice ="";
                             }
@@ -648,7 +648,7 @@ const data = (state = initialDataState, action) => {
                     return item;
                 });
 
-                console.log(state.total + "  m-"+totalOnChangeVari);
+                console.log(state.total + " final testing m-"+totalOnChangeVari);
                 return{
                     ...state,
                     addedItems:changeCart,
