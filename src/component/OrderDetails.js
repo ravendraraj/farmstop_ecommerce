@@ -54,7 +54,8 @@ class OrderDetails extends Component{
 
                     	<View style={{alignSelf:'center',paddingLeft:20,width:"60%"}}>
 	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:18}}>{fristLetterCapital(item.attribute_name)}</Text>
-	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>Qty: {item.total_item} X Rs {item.variation_price}</Text>
+	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>Qty: {item.total_item} X {item.variation_value}</Text>
+	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>Rs {item.variation_price}</Text>
                         </View>
                     </View>
                 )

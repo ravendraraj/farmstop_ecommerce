@@ -63,7 +63,8 @@ _radioHandler(){
             this.props.checkCouponCode({code:coupon_Code});
             // this.couponCodeText.clear();
         }else{
-            ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
+            // ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
+            this._errorMsg("Please enter vaild coupon code",'');
         }
     }
 
@@ -195,6 +196,38 @@ _radioHandler(){
         );
     }
 
+    _errorMsg(msg,route){
+
+        if(route !=''){
+            Alert.alert(
+              'Farmstop',msg,
+              [
+                {
+                  text: 'Ok',
+                  onPress: () => this.props.navigation.navigate(route)
+                },
+                {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel'
+                },
+              ],
+              { cancelable: false }
+            );
+        }else{
+            Alert.alert(
+              'Farmstop',msg,
+              [
+                {
+                  text: 'Ok',
+                  onPress: () => console.log('Cancel Pressed'),
+                },
+              ],
+              { cancelable: false }
+            );
+        }
+    }
+
     render(){
         return(
             <View style={styles.container}>
@@ -279,7 +312,8 @@ _radioHandler(){
                     screen_name: "PaymentOption",
                 });
             }else if(this.props.authEmail =="" || this.props.authMobile ==""){
-                ToastAndroid.showWithGravity("Please Fill email or mobile correctly", ToastAndroid.SHORT, ToastAndroid.TOP);
+                // ToastAndroid.showWithGravity("Please Fill email or mobile correctly", ToastAndroid.SHORT, ToastAndroid.TOP);
+                this._errorMsg("Please fill email or mobile number correctly.",'MyProfile');
             }
       }
     }

@@ -814,7 +814,7 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
                 'Content-Type': 'multipart/form-data',
             }
         }
-        console.log("add to cart ",post_req);
+        //console.log("add to cart ",post_req);
         
         fetch(url ,post_req)
         .then(res =>{

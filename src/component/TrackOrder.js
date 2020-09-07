@@ -39,7 +39,7 @@ _loadLoader() {
             <View>
                 <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>
                     <Text style={styles.orderDetailsText}>Order Number</Text>
-                    <Text style={styles.orderDetailsText}>{ orderDetails.payment_option == ""? "Online Payment" : "Cash on Delivery"}</Text>
+                    <Text style={styles.orderDetailsText}>{ orderDetails.payment_option == "4" ? "Online Payment" : "Cash on Delivery"}</Text>
                 </View>
                 <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>
                     <Text style={styles.orderDetailsText}>{orderDetails.order_no}</Text>

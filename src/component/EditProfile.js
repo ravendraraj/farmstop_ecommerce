@@ -55,8 +55,8 @@ class EditProfile extends Component{
         let mobile =this.state.mobile;
         if(email =='' || email =='null' || email ==null){
             ToastAndroid.showWithGravity("Please fill email", ToastAndroid.SHORT, ToastAndroid.TOP);
-        }else if(mobile =='' || mobile =='null' || mobile ==null){
-            ToastAndroid.showWithGravity("Please fill mobile", ToastAndroid.SHORT, ToastAndroid.TOP);
+        }else if(mobile =='' || mobile =='null' || mobile ==null || mobile.length != 10 ){
+            ToastAndroid.showWithGravity("Please fill correct mobile number ", ToastAndroid.SHORT, ToastAndroid.TOP);
         }else{
             let screen_name = this.props.route.params.screen_name;
             console.log("My Profile",this.props.route);

@@ -153,7 +153,7 @@ class KnowMore extends Component {
         if(ItemList != "undefined" && ItemList !=null && prodId != null){
             // let producName = ItemList[0].pname;
             let prodDetails = ItemList.find((item) => item.id === prodId);
-            let prodDesc = prodDetails.long_description != '' ? prodDetails.long_description : 'Not Available.';
+            // let prodDesc = prodDetails.long_description != '' ? prodDetails.long_description : 'Not Available.';
             if(prodDetails.isMyWish == ''){
                 prodDetails.isMyWish = 'heart-outline';
             }
@@ -215,7 +215,12 @@ class KnowMore extends Component {
                             </View>
                         </View>
                         </View>
-                
+
+                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30,marginBottom:-50,width:'100%'}}>
+                        {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
+                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>
+                    </View>):<View/>}
+
                     <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
                     <View style={styles.wrapper}>
                         <Swiper style={{height:constants.vh(200)}} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
