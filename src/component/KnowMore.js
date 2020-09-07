@@ -5,6 +5,7 @@ import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import SocialLink from './SocialLinks'
+import HTML from 'react-native-render-html'
 //helper function
 import {fristLetterCapital,removeTags} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
@@ -216,11 +217,13 @@ class KnowMore extends Component {
                         </View>
                         </View>
 
-                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30,marginBottom:-50,width:'100%'}}>
+                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30,marginBottom:-30,width:'100%'}}>
                         {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
-                        <Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>
+                        {/*<Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>*/}
+                        <HTML html={prodDetails.long_description}
+                                tagsStyles={{p:styles.tagLayout}}
+                        />
                     </View>):<View/>}
-
                     <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
                     <View style={styles.wrapper}>
                         <Swiper style={{height:constants.vh(200)}} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
@@ -319,6 +322,10 @@ const styles = StyleSheet.create({
         borderRadius:4,
         elevation:10,
         backgroundColor:"white",
+    },
+    tagLayout:{
+        fontSize:constants.vw(16),
+        fontFamily:constants.fonts.Cardo_Regular,
     }
   });
 
