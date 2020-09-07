@@ -289,7 +289,7 @@ export const getProduct = (data) => (dispatch,getState) => {
         })
     })
     .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        //dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
         navigate("internetError");
     });
 }

@@ -136,18 +136,23 @@ class SocialLoginScreen extends Component{
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
             //Alert.alert(error.code)
+            this._LoginError();
           } else if (error.code === statusCodes.IN_PROGRESS) {
             // operation (e.g. sign in) is in progress already
             //Alert.alert(error.code)
+            this._LoginError();
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
-           console.log(error.code)
+           console.log(error)
+           this._LoginError();
           } else {
             // some other error happened
-            console.log(error.code)
+            console.log(error)
+            this._LoginError();
           }
         }
       };
+
 
 
     _renderView(){

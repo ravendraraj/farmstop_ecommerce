@@ -105,13 +105,13 @@ export const EmptyComp = (props) => {
                 <Text style={styles.welcomText}>
                     {props.welcomText}
                 </Text>
-                <Entypo name="emoji-sad" size={18} color={constants.Colors.color_intro} style={{paddingTop:4,}}/>
+                <Entypo name="emoji-sad" size={18} color={constants.Colors.color_intro} style={{paddingTop:4}}/>
             </View>
 
             {
                 props.redirectText !=""?(<View style={{width:100,alignSelf:"center"}}>
                 <TouchableOpacity style={{alignSelf:"center",marginTop:10,borderColor:constants.Colors.color_heading,borderWidth:1,borderRadius:10,padding:10}} onPress={props.onPress}>
-                    <Text style={{fontFamily: constants.fonts.Cardo_Bold, textAlignVertical: "top", fontSize: 16,color:constants.Colors.color_heading}}>
+                    <Text style={{fontFamily: constants.fonts.Cardo_Bold, textAlignVertical: "top", fontSize: 14,color:constants.Colors.color_heading}}>
                         {props.redirectText}
                     </Text>
                 </TouchableOpacity>

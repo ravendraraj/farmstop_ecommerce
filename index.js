@@ -9,6 +9,7 @@ import { createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import AppReducer from './src/reducers';
+import {name as appName} from './app.json';
 
 const loggerMiddleware = createLogger({ predicate: (getState, action) => __DEV__  });
 
@@ -26,5 +27,5 @@ const App = () => (
 );
 
 //console.ignoredYellowBox = ['Remote debugger'];
-AppRegistry.registerComponent('farmstop', () => App);
+AppRegistry.registerComponent(appName, () => App);
 export default App;

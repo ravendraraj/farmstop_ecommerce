@@ -236,11 +236,22 @@ componentWillUnmount() {
                 return(
                     <EmptyComp imageName={constants.image.emptyCart} 
                         welcomText={"Looks like you haven’t added anything to your Wish List yet!"}
-                        redirectText={"Shop Now"}
-                        onPress={()=>this.props.navigation.navigate("MainHome")}
+                        redirectText={"SHOP NOW"}
+                        onPress={()=>this._shopNow()}
                     />
                 )
             }
+        }
+    }
+
+    async _shopNow(){
+        let prodCat = this.props.itemData;
+        if(prodCat.length >0){
+            //console.log("prod  id",prodCat, prodCat[0].id);
+            await this.props.setProdId(prodCat[0].id);
+            this.props.navigation.navigate("Product");
+        }else{
+            ToastAndroid.showWithGravity("Please try again after some time", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -328,7 +339,8 @@ const mapStateToProps = state => ({
     my_wish_list :state.data.my_wish_list,
     animate : state.indicator,
     cart: state.data.addedItems,
-    authUserId:state.data.authUserID
+    authUserId:state.data.authUserID,
+    itemData: state.data.productData,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -340,6 +352,7 @@ const mapDispatchToProps = dispatch => ({
     selectProdVariationInWish :(data)=>dispatch({type:"SET_PRODUCT_VARIATION_IN_WISH",prod_id:data.prod_id, variation:data.value}),
     addItemToCart :(data)=> dispatch(addItemToCart(data)),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
+    setProdId: (data) => dispatch({ type: 'ACTIVE-PROD', id: data }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WishList);

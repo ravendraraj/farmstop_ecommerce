@@ -90,7 +90,7 @@ _loadLoader() {
                     <EmptyComp imageName={constants.image.emptyCart} 
                         welcomText={"Not found any order"}
                         redirectText={"SHOP NOW"}
-                        onPress={()=>this.props.navigation.navigate("MainHome")}
+                        onPress={()=>this.props.navigation.navigate("Home")}
                     />
                 )
             }
@@ -172,6 +172,7 @@ const mapStateToProps = state => ({
     itemData: state.data.productData,
     orderList: state.data.orderList,
     authUserID: state.data.authUserID,
+    itemData: state.data.productData,
 });
 
 const mapDispatchToProps = dispatch => ({

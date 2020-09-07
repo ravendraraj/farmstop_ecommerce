@@ -14,7 +14,7 @@ import Material from 'react-native-vector-icons/AntDesign'
 
 const Tab = createBottomTabNavigator();
 const TabNavProdvariation = ({navigation}) => (
-    <Tab.Navigator initialRouteName="HomeScreen"
+    <Tab.Navigator initialRouteName="Home"
     screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;

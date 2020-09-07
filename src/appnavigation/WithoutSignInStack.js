@@ -49,7 +49,7 @@ const WithoutSignInStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            
+             
             name="MainHome" component={TabNavProdvariation}/>
         <RootStack.Screen 
             options={({ navigation }) => ({

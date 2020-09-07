@@ -9,15 +9,14 @@ const width = Dimensions.get('window').width;
 export default function internetError(){
         return(
             <View style={styles.container}>
-                    
                 <Image source={constants.image.noInternet} style={{width:"70%",height:"50%",alignSelf:'center',marginTop:constants.vw(30)}}/>
                 <View style={{marginTop:constants.vw(30)}}>
                     <Text style={styles.text}>No Internet!</Text>
                     <Text style={styles.infoText}>Please check your internet connection</Text>
                 </View>
             </View>
-    )
-}
+        )
+    }
 
 const styles = StyleSheet.create({
     container:{

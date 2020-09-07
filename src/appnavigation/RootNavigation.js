@@ -8,5 +8,6 @@ export function navigateWithParams(name, params){
 }
 
 export function navigate(name){
+	// console.log(navigate,name);
     navigationRef.current && navigationRef.current.navigate(name);
 }

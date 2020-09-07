@@ -41,7 +41,7 @@ class PorductVariation extends Component {
 
     static async getDerivedStateFromProps(props, state) {
         let {previousActiveProdId} = state;
-        //console.log(props,state);
+        console.log(props,state);
         if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
         {
             state.previousActiveProdId = props.activeProd;
