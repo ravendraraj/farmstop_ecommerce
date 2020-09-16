@@ -16,12 +16,20 @@ class MyOrderList extends Component{
         this.state={
             trackOrderId:'',
         }
-    }
+
+        console.log("constructor");
+}
 
 componentDidMount(){
 	if(this.props.authUserID != null && this.props.orderList.length == 0){
 		this.props.getOrderList();
 	}
+
+    console.log("mount");
+}
+
+componentWillUnmount(){
+    console.log("Unmount");
 }
 
 _loadLoader() {

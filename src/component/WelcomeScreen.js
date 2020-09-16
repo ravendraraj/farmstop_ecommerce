@@ -54,18 +54,19 @@ class WelcomeScreen extends Component {
 	async componentDidMount() {
 		const res = await AsyncStorage.getItem('introHadDone');
 		if(res === "introHadDone"){
+				console.log("notification checked");
 				this.setState({ show_Main_App: true });
 				this.getAsyncData("authData").then((authData) => {
 					
 					if(authData != null){
 						// this.setState({ show_Main_App: true });
 						let objAuthData = JSON.parse(authData);
-						
+						if(this.props.userdata.authUserID =='' || this.props.userdata.authUserID == null){
 						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name,token:objAuthData.token})
-
 						setTimeout(function(){  
 							navigate('DrawerScreen');  
 						}, 1000);
+						}
 					}else{
 						navigate('NotLogin');
 					}
@@ -232,6 +233,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
 	// animate : state.indicator
+	userdata:state.data,
 });
 
 const mapDispatchToProps = dispatch => ({

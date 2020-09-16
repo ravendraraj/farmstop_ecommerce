@@ -1,10 +1,11 @@
 import {weburl} from '../constants/url'
-import { navigate } from '../appnavigation/RootNavigation'
+import { navigate,check_notification } from '../appnavigation/RootNavigation'
 import AsyncStorage from '@react-native-community/async-storage';
 import constStrings from '../constants/constStrings'
 import RazorpayCheckout from 'react-native-razorpay';
 import {razor_api_key} from '../constants/key';
 import constants from '../constants'
+import {showErrorMsg} from './helper'
 
 export const logout = (data) => async(dispatch,getState) => {
 
@@ -212,6 +213,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                     // navigate("otpVerification");
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                    showErrorMsg("Something went wrong ,Please try again. ","");
                 }
             }else{
                 if(response.status == "1"){
@@ -220,10 +222,11 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                     navigate("otpVerification");
                 }else if(response.status == "2"){
                     dispatch({ type : 'REGISTER_USER', payload : response.message});
-                    navigate("SocialLogin");
+                    showErrorMsg(data.email+" is already register. Do you want login by this "+ data.email + ".","SocialLogin");
                 }else{
                     
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                    showErrorMsg("Something went wrong ,Please try again. ","");
                 }
             }
         })
@@ -234,6 +237,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
     });
 }
 
@@ -295,7 +299,6 @@ export const getProduct = (data) => (dispatch,getState) => {
 }
 
 export const getProductType = (data) => (dispatch,getState) => {
-
     dispatch({type : 'LOADING'});
     // prodID:this.props.activeProd ,start:this.state,end:totalprod
     let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
@@ -430,11 +433,15 @@ export const setWishListItemOnServer= (data) => (dispatch,getState) => {
             if(response.status == "1"){
                 dispatch({ type : 'SAVED_WISH', payload : response.message,prodId:data.id,screen:data.screen,userWishList:response.wishList});
             }else{
-                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                // dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+                showErrorMsg("Not found any product","");
             }
         })
         .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+            showErrorMsg("Something went wrong.Please try again later","");
         })
     })
     .catch( err => {
@@ -711,18 +718,22 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
         .then(response => {
             if(response.status == "1"){
                 dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                showErrorMsg("Successfully new address saved","");
                 navigate("ShippingAddress");
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                showErrorMsg("Something went wrong ,Please try again later.","");
             }
         })
         .catch( err => {
             console.log(err);
             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            showErrorMsg("Something went wrong ,Please try again later.","");
         })
     })
     .catch( err => {
         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        showErrorMsg("Something went wrong ,Please try again later.","");
         console.log("NetWork Error");
         navigate("internetError");
     });
@@ -1295,6 +1306,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         verifyData.append("order_no", response.orderData['order_no']);
                         verifyData.append("token",getState().data.token);
                         verifyData.append("email",getState().data.authEmail);
+                        verifyData.append("total_amt", response.orderData['amount']);
 
                         let verify_post_req = {
                              method: 'POST',
@@ -1313,12 +1325,13 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                                         dispatch({type:'ORDER_SUCCESSFULL'});
                                         navigate("OrderSuccuess");        
                                     }else{
-                                        dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.PAYMENT_FAILE_MESSAGE});
+                                        dispatch({ type : 'ERROR_SUBMIT', payload : ""});
+                                        showErrorMsg("Payment failed, Please try again later.","");
                                     }
                                 })
                                 .catch( err => {
                                     dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
-
+                                    showErrorMsg("Something went wrong ,Please try again later.","");
                                 })
                             })
                             .catch( err => {
@@ -1333,14 +1346,17 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                     console.log(error);
                     // alert(`Error: ${error.code} | ${error.description}`);
                     dispatch({ type : 'ERROR_CODE', payload : response.message});
+                    showErrorMsg("Something went wrong ,Please try again later.","");
                   });
 
             }else{
                 dispatch({ type : 'ERROR_CODE', payload : response.message});
+                showErrorMsg("Something went wrong ,Please try again later.","");
             }
         })
         .catch( err => {
             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            showErrorMsg("Something went wrong ,Please try again later.","");
         })
     })
     .catch( err => {
@@ -1393,15 +1409,18 @@ export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
                     dispatch({type:'ORDER_SUCCESSFULL'});
                 }else{
                     dispatch({type : 'NETWORK_ERROR', payload : response.message});
-                    navigate("pageNotFound");
+                    showErrorMsg("Something went wrong ,Please try again later.","");
+                    // navigate("pageNotFound");
                 }
             })
             .catch( err => {
                 dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+                showErrorMsg("Something went wrong ,Please try again later.","");
             })
         })
         .catch( err => {
             dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
+            showErrorMsg("Something went wrong ,Please try again later.","");
             navigate("internetError");
         });
 }
@@ -1514,9 +1533,9 @@ export const updateProfile= (formdata) => (dispatch,getState) => {
 }
 
 export const getNotification= (data) => (dispatch,getState) => {
+    let userID = getState().data.authUserID;
     dispatch({type : 'LOADING'});
     let url = weburl + 'api-get-notification';
-
     var formData = new FormData();
         formData.append("user_id", getState().data.authUserID);
         formData.append("token",getState().data.token);

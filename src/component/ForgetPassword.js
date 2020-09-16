@@ -87,7 +87,7 @@ class ForgetPassword extends Component{
                 <TextHeading title="Forgot Password?"/>
                 <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(10)}}>
                         <View style={styles.inputBox}>
-                            <PrimaryTextInput placeholder="Enter Email Id" onChangeText={(text) => this.setState({emailId:text})}/>
+                            <PrimaryTextInput placeholder="Enter Email Id Or Register Mobile" onChangeText={(text) => this.setState({emailId:text})}/>
                         </View>
                         <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._sendOtpForForgetPass()}>
                             <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
@@ -144,10 +144,11 @@ class ForgetPassword extends Component{
         return(
             <View style={styles.container}>
                 <ScrollView>
-                {this._loadLoader()}
                     {this.renderView()}
-                    {this.showMsg()}          
-                    </ScrollView></View>
+                    {this.showMsg()}
+                </ScrollView>
+                {this._loadLoader()}
+            </View>
         )
     }
 }

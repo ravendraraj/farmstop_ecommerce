@@ -13,6 +13,7 @@ import {navigate} from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
 import Swiper from 'react-native-swiper'
 import {setWishListItemOnServer ,addItemToCart,setCartItemLocal} from '../lib/api'
+import {Loader} from '../customElement/Loader'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -252,6 +253,14 @@ class KnowMore extends Component {
         navigate("knowMoreProd");
     }
 
+    _loadLoader() {
+        if(this.props.animate) {
+            return(
+                <Loader />
+            )
+        }
+    }
+
     render() {
         return (
 
@@ -259,6 +268,7 @@ class KnowMore extends Component {
                 <ScrollView>
                     {this.renederItemType()}
                 </ScrollView>
+                {this._loadLoader()}
             </View>
         )
     }
@@ -330,6 +340,7 @@ const styles = StyleSheet.create({
   });
 
 const mapStateToProps = state => ({
+    animate : state.indicator,
     itemtypeData :state.data.productVatiation,
     prodId:state.data.knowMoreProdId,
     screen:state.data.screen,

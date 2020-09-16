@@ -35,8 +35,16 @@ class PorductVariation extends Component {
    async componentDidMount(){
         // console.log("active id=>",this.props.activeProd);
         this.setState({previousActiveProdId:this.props.activeProd});
-        if(this.props.activeProd != '')
-        await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
+        if(this.props.activeProd != ''){
+            await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
+        }else{
+           let prodCat = this.props.productData;
+            if(prodCat.length >0){
+            //console.log("prod  id",prodCat, prodCat[0].id);
+                await this.props.selectCat(prodCat[0].id);
+                await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
+            }
+        }
     }
 
     static async getDerivedStateFromProps(props, state) {

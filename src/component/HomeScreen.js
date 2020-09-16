@@ -233,7 +233,7 @@ class HomeScreen extends Component {
 
   onScrollEnd = (e) => {
     const scrollTop = e.nativeEvent.contentOffset.y;    
-     console.log(scrollTop);
+     
     if (scrollTop < headerHeight) {
       // console.log(scrollTop,"Ravendra");
       // Scrolls to top instead to y = 100
@@ -246,7 +246,7 @@ class HomeScreen extends Component {
   LoadMoreRandomData(){
     this.setState({showFooter:true});
     // Alert.alert("Hii");
-    console.log("loader");
+    //console.log("loader");
   }
 
   renederAboutFarm(){
@@ -286,8 +286,8 @@ class HomeScreen extends Component {
         // <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14)}}>
         <View style={{position:'absolute',bottom:10,width:"100%",alignSelf:'center'}}>
             <View style={{alignSelf:'center'}}>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from our farms delivered to</Text>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your home</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from farm and Delivered to</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your door step</Text>
             </View>
               <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
               <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>

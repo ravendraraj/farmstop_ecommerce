@@ -11,7 +11,6 @@ import {CouponTextInput ,PrimaryTextInput,EmptyComp} from '../customElement/Inpu
 //helper function
 import {fristLetterCapital} from '../lib/helper'
 import {Picker} from '@react-native-community/picker';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import RazorpayCheckout from 'react-native-razorpay';

@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid} from 'react-native'
+import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid,Image} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -9,8 +9,11 @@ import {getOrderList,getNotification,removeNotification} from '../lib/api'
 import {Loader} from '../customElement/Loader'
 import {TextHeading,EmptyComp} from '../customElement/Input'
 import Icons from 'react-native-vector-icons/FontAwesome'
+import {showErrorMsg} from '../lib/helper'
+import AsyncStorage from '@react-native-community/async-storage'
 
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 class Notification extends Component{
     constructor(props){
         super(props);
@@ -19,10 +22,39 @@ class Notification extends Component{
         }
     }
 
-componentDidMount(){
-	if(this.props.authUserID !=null && this.props.authUserID !=""){
-        this.props.getNotification();
-	}
+    componentDidMount(){
+    	this.updateNotification()
+    }
+
+
+updateNotification(){
+
+    if(this.props.authUserID !=null && this.props.authUserID !=""){
+        this.props.getNotifications();
+    }else{
+        this.getAsyncData("authData").then((authData) => {
+                    
+            if(authData != null){
+                let objAuthData = JSON.parse(authData);
+                this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name,token:objAuthData.token})
+                this.props.getNotifications();
+                        
+            }else{
+                this.props.navigation.navigate('SocialLogin');
+            }
+        });
+    }
+}
+
+async  getAsyncData(params) {
+    try {
+    
+        let data = await AsyncStorage.getItem(params);
+        return data;
+    
+    }catch(e) {
+            console.log(e);
+    }
 }
 
 _loadLoader() {
@@ -30,8 +62,8 @@ _loadLoader() {
             return(
                 <Loader />
             )
-        }
     }
+}
 
  renederItemType() {
     let notification = this.props.userNotifications;
@@ -45,16 +77,18 @@ _loadLoader() {
                     <View style={item.type == "order" ? styles.orderNotifications:styles.offerNotification}/>
                     <View style={{flexDirection:'column'}}>
                         <TouchableOpacity onPress={()=>{item.type == "order"?this._trackOrderOnpress(item.order_no):''}} style={{padding:10}}>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>{item.message}</Text>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16,lineHeight:25}}>{item.message}</Text>
                         </TouchableOpacity>
-                
-                        <View style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingBottom:10}}>
+
+                        { item.image_url !=""?(<Image style={{alignSelf:'center',width:"98%",height:width*0.5}} source={{ uri:item.image_url}} />):(<View/>)}
+    
+                        <View style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingBottom:10,marginTop:constants.vh(10)}}>
                             <View style={{flexDirection:'row'}}>
                                 <Icons name="bell" size={16} color={constants.Colors.color_BLACK}/>
                                 <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:14,paddingLeft:10}}>{item.date}</Text>
                             </View>
-                            <View style={{marginRight:20}}>
-                                <TouchableOpacity onPress={()=>this._removeWishList(item.id)}>
+                            <View style={{marginRight:20,}}>
+                                <TouchableOpacity style={{paddingLeft:10,paddingRight:10}} onPress={()=>this._removeWishList(item.id)}>
                                     <Icons name="trash-o" color={constants.Colors.color_BLACK} size={20}/>
                                 </TouchableOpacity>
                             </View>
@@ -65,12 +99,15 @@ _loadLoader() {
           
           	numColumns={1}
             keyExtractor={item => item.id}
+            ListFooterComponent={
+                    <View style={{height:100}}/>
+            }
         />
       )
     }else{
     	
     		if(this.props.animate == false){
-                return(
+            return(
                     <EmptyComp imageName={constants.image.emptyNotification} 
                         welcomText={"You don't have any notification yet"}
                         redirectText={""}
@@ -93,10 +130,24 @@ _loadLoader() {
     }
 
     _removeWishList(notifyId){
-        if(notifyId !=''){
-            this.props.remove_notify(notifyId)
+        if(notifyId ==''){
+            Alert.alert(
+                'Farmstop',"Do you want remove this?",
+                [
+                    {
+                        text: 'Ok',
+                        onPress: () => this.props.remove_notify(notifyId),
+                    },
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel'
+                    },
+                ],
+                { cancelable: false }
+            );
         }else{
-            ToastAndroid.showWithGravity("Something went wrong try after some time", ToastAndroid.SHORT, ToastAndroid.TOP);
+            showErrorMsg("Something went wrong,Please try after some time.",'');
         }
     }
 
@@ -158,8 +209,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    // getItemVariation: (data) => dispatch(getProductVariation(data)),
-    getNotification:()=>dispatch(getNotification()),
+    loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token}),
+    getNotifications:()=>dispatch(getNotification()),
     remove_notify:(data)=>dispatch(removeNotification(data)),
 
 });

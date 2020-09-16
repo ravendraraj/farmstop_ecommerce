@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "321830598673-5bs86mteq99ugutl0rae12of8m8p5v2u.apps.googleusercontent.com",
+          "client_id": "321830598673-86qcmugmcpqov5mqfpmc6du8ofskogca.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.farmstop",
-            "certificate_hash": "39fecfb00b1afefd48494a6463b4e69211a1984c"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

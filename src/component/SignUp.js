@@ -2,10 +2,11 @@ import React,{Component} from 'react'
 import {View ,Text,StyleSheet ,Alert} from 'react-native'
 import {connect} from 'react-redux'
 import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import {TouchableOpacity,ScrollView} from 'react-native-gesture-handler';
 import constants from '../constants'
-import {generateOtp} from '../lib/helper'
+import {generateOtp,mobileNoValidations,emailValidations,showErrorMsg,fullNameValidations,passwordValidations} from '../lib/helper'
 import {sendSignUpOtp} from '../lib/api'
+import {Loader} from '../customElement/Loader'
 
 class SignUp extends Component{
     constructor(props){
@@ -21,23 +22,52 @@ class SignUp extends Component{
         let email =this.state.email;
         let username =this.state.username;
         let password =this.state.password;
+        
+        let name = false;
+        let isCorrectEmail = false;
+        let isCorrectPass = false;
 
-        if(email !='' && username !='' && password !=''){
+        if(passwordValidations(password)){
+            isCorrectPass = true;
+        }
+
+        if(fullNameValidations(username)){
+            name = true;
+        }else{
+            console.log("username",false);
+        }
+
+        if(emailValidations(email)){
+            isCorrectEmail = true;
+        }else if(mobileNoValidations(email)){
+            isCorrectEmail = true;
+        }else{
+            console.log("email",false);
+        }
+
+        if(isCorrectEmail && name && password !=''){
             let otp = generateOtp();
             this.props.otpForsignup({username:username, email:email ,password:password,otp:otp});
         }else{
-            Alert.alert(
-                "Error Message",
-                "Please Fill All Details",
-                [
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
-                ],
-                { cancelable: false }
-              );
+            console.log("is correct email"+isCorrectEmail);
+            var msg = "Please fill ";
+                msg = (name == false) ?((isCorrectEmail == false || isCorrectPass == false)?(msg+"Username,"):(msg+"Username")):(msg+"");
+                msg = (isCorrectEmail == false) ?((isCorrectPass == false)?(msg+"Email/Mobile Number"):(msg+"Email/Mobile Number ")):(msg+"");
+                msg = (isCorrectPass == false) ?((name == false || isCorrectEmail == false)?(msg+" and Password [Should be contain alphanumeric and special character, minmum length is 6 ]"):(msg+" Password")):(msg+"");
+                msg = msg+' correctly.';
+
+            showErrorMsg(msg,'');
         }
 
     }
 
+    _loadLoader() {
+        if(this.props.animate) {
+            return(
+                <Loader />
+            )
+        }
+    }
     render(){
         return(
             <View style={styles.container}>
@@ -58,6 +88,7 @@ class SignUp extends Component{
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
+                {this._loadLoader()}
             </View>
         )
     }
@@ -75,6 +106,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
     // itemtypeData :state.data.productVatiation,
+    animate : state.indicator,
 });
 
 const mapDispatchToProps = dispatch => ({

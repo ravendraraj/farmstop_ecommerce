@@ -5,8 +5,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
 import constants from '../constants'
 import image from "../constants/Image"
-import {logout} from "../lib/api"
-import ImagePicker from 'react-native-image-picker';
+import {logout,getNotification} from "../lib/api"
+
 import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
@@ -24,74 +24,6 @@ class DrawerContent extends Component{
             imageUri:''
         }
     }
-
-     chooseFile = () => {
-        var options = {
-          title: 'Select Image',
-          customButtons: [
-            { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-          ],
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-        };
-        ImagePicker.showImagePicker(options, response => {
-          console.log('Response = ', response);
-    
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-            alert(response.customButton);
-          } else {
-            let source = response;
-            // You can also display the image using data:
-            // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-            // this.setState({
-            //   filePath: source,
-            // });
-            this.setState({imageUri:source.uri})
-            // console.log(source);
-
-            let photo={
-                temp_name:response.uri,
-                type:'image/jpeg',
-                name:response.fileName
-            }
-
-            var formData = new FormData(); 
-            formData.append("file", photo);
-
-            let post_req = {
-                method: 'POST',
-                body: photo,
-                headers: {
-                  Accept: 'application/json',
-                 'Content-Type': 'multipart/form-data',
-                }
-            }
-
-            let url = weburl+'api-uploadProfile';
-            
-            console.log("post req" ,post_req);
-            console.log(url);
-
-            fetch(url,post_req)
-                .then(response => response.json())
-                .then(success => {
-                  console.log(response)
-                })
-                .catch(error => console.log(error)
-              );
-            }
-
-
-            
-        });
-      };
     
 
     async componentDidMount() {
@@ -173,6 +105,11 @@ _redirect(routeParam){
     
     if(this.props.authUserID != null && this.props.authUserID != "null" && this.props.authUserID !=''){
         {/***this.props.navigation.navigate(routeParam);***/}
+        
+        if(routeParam === "Notification" && this.props.fetchNotification == true){
+            this.props.getNotifications();
+        }
+
         this.props.navigation.navigate(routeParam, {
             screen_name: "side_menu_bar",
         });
@@ -383,9 +320,9 @@ const styles = StyleSheet.create({
   },
 });
 const mapStateToProps = state => ({
-    // itemtypeData :state.data.productVatiation,
+    fetchNotification:state.data.fetchNotification,
     animate: state.indicator,
-    error: state.error.err,
+    error:state.error.err,
     authEmail:state.data.authEmail,
     authMobile:state.data.authMobile,
     authUserID:state.data.authUserID,
@@ -396,10 +333,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     removeError: () => dispatch({type:'REMOVE_ERROR'}),
-    // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
-    // manualLogin:(data)=>dispatch(loginValidation(data)),
-    // social_login:(data)=>dispatch(socialLogin(data)),
-    // loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
+    getNotifications:()=>dispatch(getNotification()),
     logout:(data)=>dispatch(logout()),
 });
 

@@ -1,9 +1,9 @@
 import React, {Component} from "react"
 import { connect } from 'react-redux'
-// import PushNotification from "react-native-push-notification"
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import { navigate } from '../appnavigation/RootNavigation'
-var PushNotification = require("react-native-push-notification");
+import PushNotificationIOS from "@react-native-community/push-notification-ios"
+import { navigate,check_notification } from '../appnavigation/RootNavigation'
+
+var PushNotification = require("react-native-push-notification")
 
 var deviceData = "";
 PushNotification.configure({
@@ -17,22 +17,26 @@ PushNotification.configure({
   onNotification: function (notification) {
     console.log("NOTIFICATION:", notification);
  
-    // process the notification
-                PushNotification.localNotification({
-                  autoCancel: true,
-                  bigText:notification.data.message,
-                  title: notification.data.title,
-                  message: notification.data.message,
-                  vibrate: true,
-                  vibration: 300,
-                  playSound: true,
-                  soundName: 'default',
-                })
+      PushNotification.localNotification({
+        //showWhen:true,
+        autoCancel: true,
+        bigText:notification.data.message,
+        title: notification.data.title,
+        message: notification.data.message,
+        bigPictureUrl: notification.data.image, // (optional) default: undefined
+        vibrate: true,
+        vibration: 300,
+        playSound: true,
+        soundName: 'default',
+        })
+
     // (required) Called when a remote is received or opened, or local notification is opened
-    if(notification.userInteraction == true)
+    if(notification.userInteraction === true)
     {
-      navigate("Notification");
+      console.log("open screen on touch notification");
+      check_notification();
     }
+
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
  
@@ -40,7 +44,6 @@ PushNotification.configure({
   onAction: function (notification) {
     console.log("ACTION:", notification.action);
     console.log("NOTIFICATION:", notification);
-  
     // process the action
   },
  

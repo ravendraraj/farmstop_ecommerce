@@ -29,7 +29,81 @@ _loadLoader() {
                 <Loader />
             )
         }
+}
+
+renderOrderStatus(order_status){
+    if(order_status == 2){
+        return(
+            <View style={{alignSelf:'center',marginTop:constants.vh(50)}}>
+                <Image source={constants.image.delivery} style={{width:constants.vw(100),height:constants.vw(100),alignSelf:'center'}}/>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,marginTop:constants.vh(40)}}>Order On Hold</Text>
+            </View>
+        )
+    }else if(order_status == 5){
+        return(
+            <View style={{alignSelf:'center',marginTop:constants.vh(50)}}>
+                <Image source={constants.image.delivery} style={{width:constants.vw(100),height:constants.vw(100),alignSelf:'center'}}/>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,marginTop:constants.vh(40)}}>Order Cancelled/Failed</Text>
+            </View>
+        )
+    }else if(order_status == 6){
+            return(
+            <View style={{alignSelf:'center',marginTop:constants.vh(50)}}>
+                <Image source={constants.image.refunded} style={{width:constants.vw(100),height:constants.vw(100),alignSelf:'center'}}/>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,marginTop:constants.vh(40)}}>Refunded</Text>
+            </View>
+        )
+    }else{
+        return(
+            <View style={{marginBottom:constants.vw(40),marginTop:constants.vw(20)}}>
+                <View style={styles.tractContainer}>
+                    <View>
+                        <Image source={constants.image.orderHowItWorks}
+                            style={styles.imageTrack}/>
+                    </View>
+                    <View style={{alignSelf:'center'}}>
+                        <Text style={styles.activeOrderStatus}>Order Placed</Text>
+                    </View>
+                </View>
+    
+                <Image source={constants.image.greenDottedLine} style={styles.arcImage}/>
+    
+                <View style={styles.tractContainer}>
+                    <View>
+                        <Image source={constants.image.orderHarvested}
+                        style={styles.imageTrack}/>
+                    </View>
+                    <View style={{alignSelf:'center'}}>
+                        <Text style={(order_status == 1 || order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Produce Harvested</Text>
+                    </View>
+                </View>
+
+                <Image source={(order_status == 3 || order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
+    
+                <View style={styles.tractContainer}>
+                    <View>                    
+                        <Image source={constants.image.delivery}
+                        style={styles.imageTrack}/>
+                    </View>
+                    <View style={{alignSelf:'center'}}>
+                        <Text style={(order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order in Transit</Text>
+                    </View>
+                </View>
+    
+                <Image source={(order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
+                <View style={styles.tractContainer}>
+                    <View>        
+                        <Image source={constants.image.deliverHowItWork}
+                        style={styles.imageTrack}/>
+                    </View>
+                    <View style={{alignSelf:'center'}}>
+                        <Text style={(order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order Delivered</Text>
+                    </View>
+                </View>
+            </View>
+        )
     }
+}
 
  renederItemTrackList() {
         let order_no = this.props.route.params['order_no'];
@@ -37,7 +111,7 @@ _loadLoader() {
         let order_status = orderDetails.order_status;
       return (
             <View>
-                <View style={{flexDirection:'row' ,justifyContent: 'space-between',}}>
+                <View style={{flexDirection:'row' ,justifyContent: 'space-between'}}>
                     <Text style={styles.orderDetailsText}>Order Number</Text>
                     <Text style={styles.orderDetailsText}>{ orderDetails.payment_option == "4" ? "Online Payment" : "Cash on Delivery"}</Text>
                 </View>
@@ -45,56 +119,9 @@ _loadLoader() {
                     <Text style={styles.orderDetailsText}>{orderDetails.order_no}</Text>
                     <Text style={styles.orderDetailsText}>Rs.{orderDetails.total_cost}</Text>
                 </View>
-
-                <View style={{marginBottom:constants.vw(40),marginTop:constants.vw(20)}}>
-                    <View style={styles.tractContainer}>
-                        <View>
-                            <Image source={constants.image.orderHowItWorks}
-                                style={styles.imageTrack}/>
-                        </View>
-                        <View style={{alignSelf:'center'}}>
-                            <Text style={styles.activeOrderStatus}>Order Placed</Text>
-                        </View>
-                    </View>
-
-                    <Image source={constants.image.greenDottedLine} style={styles.arcImage}/>
-
-                    <View style={styles.tractContainer}>
-                        <View>
-                            
-                            <Image source={constants.image.orderHarvested}
-                                style={styles.imageTrack}/>
-                        </View>
-                        <View style={{alignSelf:'center'}}>
-                            <Text style={(order_status == 1 || order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Produce Harvested</Text>
-                        </View>
-                    </View>
-                    <Image source={(order_status == 3 || order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
-
-                    <View style={styles.tractContainer}>
-                        <View>
-                        
-                            <Image source={constants.image.delivery}
-                                style={styles.imageTrack}/>
-                        </View>
-                        <View style={{alignSelf:'center'}}>
-                            <Text style={(order_status == 3 || order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order in Transit</Text>
-                        </View>
-                    </View>
-
-                    <Image source={(order_status == 4)?constants.image.greenDottedLine:constants.image.dotedline} style={styles.arcImage}/>
-                    <View style={styles.tractContainer}>
-                        <View>
-                        
-                            <Image source={constants.image.deliverHowItWork}
-                               style={styles.imageTrack}/>
-                        </View>
-                        <View style={{alignSelf:'center'}}>
-                            <Text style={(order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order Delivered</Text>
-                        </View>
-                    </View>
+                <View>
+                    {this.renderOrderStatus(order_status)}
                 </View>
-                <Text style={{textAlign:'center',fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Bold}}>Contact us at info@farmstop.in</Text>
             </View> 
       )
     } 
@@ -106,8 +133,13 @@ _loadLoader() {
                 	<Text style={{fontSize:25,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,marginBottom:constants.vw(20)}}>
                         Track your Order
                     </Text>
-                	{this.renederItemTrackList()}
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                	   {this.renederItemTrackList()}
+                    </ScrollView>
                 	{this._loadLoader()}
+                </View>
+                <View style={{position: 'absolute', left: 0, right: 0, bottom: 10}}>
+                    <Text style={{textAlign:'center',fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Bold}}>Contact us at info@farmstop.in</Text>
                 </View>
             </View>
         )

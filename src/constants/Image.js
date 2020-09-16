@@ -64,5 +64,6 @@ export default {
   remove:require('../images/farmstop/trash.png'),
   greenDottedLine:require('../images/farmstop/greenDottedLine.png'),
   emptyNotification:require('../images/farmstop/notificationUi.png'),
+  refunded:require('../images/farmstop/refunded.jpg'),
 };
  
