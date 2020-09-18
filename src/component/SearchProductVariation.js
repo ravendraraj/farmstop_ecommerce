@@ -252,13 +252,7 @@ class SearchProductVariation extends Component {
 						<View style={{ width: '100%', height: 20, marginBottom: 10 }}>
 						</View>
 					)}
-					ItemSeparatorComponent={() => (
-						<View style={{
-							alignSelf: 'center', height: 2, width: "90%", backgroundColor: "#000", marginBottom: 10,
-							backgroundColor: constants.Colors.color_grey
-						}}>
-						</View>
-					)}
+					
 					ListFooterComponent={() => (
 
 						<View style={{ width: '100%', height: 60 }}>

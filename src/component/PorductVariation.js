@@ -33,7 +33,7 @@ class PorductVariation extends Component {
     }
 
    async componentDidMount(){
-        // console.log("active id=>",this.props.activeProd);
+        console.log("active id=>",this.props.activeProd);
         this.setState({previousActiveProdId:this.props.activeProd});
         if(this.props.activeProd != ''){
             await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
@@ -162,9 +162,11 @@ class PorductVariation extends Component {
 
 
     _selectCat(prod_cat_id){
-        // console.log(prod_cat_id);
-        this.props.selectCat(prod_cat_id);
-        //this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+        //console.log("by product catttt",prod_cat_id);
+        if(this.props.activeProd != prod_cat_id){
+            this.props.selectCat(prod_cat_id);
+            this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+        }
     }
 
     renderItemTitle(){

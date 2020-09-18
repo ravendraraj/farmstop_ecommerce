@@ -712,8 +712,8 @@ const data = (state = initialDataState, action) => {
         case 'REMOVE_COUPON_CODE_MSG':
             return{
                 ...state,
-                coupon_msg:[],
-                coupon_value:[],    
+                coupon_msg:'',
+                coupon_value:'',    
             }
         case 'GET_APARTMENT':
             return{

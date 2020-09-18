@@ -71,7 +71,11 @@ _radioHandler(){
     renderCouponMsg(){
         if(this.props.coupon_msg !=''){
             let msg = this.props.coupon_msg;
-            setTimeout(()=>{this.props.removeCouponMsg()},2000);
+            
+            if(this.props.coupon_value ==""){
+                setTimeout(()=>{this.props.removeCouponMsg()},2000);
+            }
+
             return(
                 <View style={{backgroundColor:constants.Colors.color_grey,borderRadius:4}}>
                     <Text style={{color:constants.Colors.color_WHITE,fontFamily:constants.fonts.Cardo_Regular,fontSize:12,padding:5}}>{ msg }</Text>
@@ -86,6 +90,7 @@ _radioHandler(){
             let deliveryCharges = this.props.shippingCost;
             deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges;
             let discount = this.props.coupon_value !=""?parseFloat(this.props.coupon_value):0;
+
             let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
             return(
                     <View style={{flex:1,alignSelf:'center',width:"90%"}}>
@@ -246,8 +251,9 @@ _radioHandler(){
                 let tax = 0;
                 let deliveryCharges = this.props.shippingCost;
                 deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges;
-                let discount = 0;
-                let total = subtotal+parseFloat(deliveryCharges)+tax;
+                
+                let discount = this.props.coupon_value !=""?parseFloat(this.props.coupon_value):0;
+                let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
                 let userType = "";
                 
                 if(this.props.login_type == "MANUAL"){
