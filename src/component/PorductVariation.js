@@ -50,14 +50,16 @@ class PorductVariation extends Component {
     }
 
     static async getDerivedStateFromProps(props, state) {
-        let {previousActiveProdId} = state;
+        let {previousActiveProdId,page} = state;
         console.log("force update",previousActiveProdId +"!='' &&"+ props.activeProd +"!="+ previousActiveProdId);
         if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
         {
             console.log("getDerivedStateFromProps");
             state.previousActiveProdId = props.activeProd;
-            if(props.activeProd != '')
-            await props.getProductType({prodID:props.activeProd ,start:0,end:totalprod});
+            state.page = 1;
+            if(props.activeProd != ''){
+                await props.getProductType({prodID:props.activeProd ,start:0,end:totalprod});
+            }
 
             return null;
         }
@@ -96,9 +98,10 @@ class PorductVariation extends Component {
     }
 
     LoadMoreRandomData = async() =>{
+        console.log("loadmore",this.state.page,"-out-active id ",this.props.activeProd);
         if(this.props.activeProd !=''){
             if(this.props.no_more_data == false){
-                console.log("loadmore");
+                console.log("loadmore",this.state.page,"-inner");
                 let pageNo = this.state.page+1;
                 await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
                 this.setState({page:pageNo});
@@ -170,7 +173,7 @@ class PorductVariation extends Component {
         this.props.selectCat(prod_cat_id);
         if( this.state.previousActiveProdId == "" && this.props.activeProd != prod_cat_id){
             await this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
-            this.setState({previousActiveProdId:this.props.activeProd})
+            this.setState({previousActiveProdId:this.props.activeProd,page:1});
         }
     }
 
