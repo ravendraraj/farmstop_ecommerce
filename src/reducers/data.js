@@ -1,5 +1,5 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',token:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: null, remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
+    knowMoreProdId:null ,appIntro:'', productData: [], remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
 deliveryDate:'',defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:'',
 freeDilveryAt:'',minPurchase:'',fetchNotification:false};
 

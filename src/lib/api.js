@@ -775,10 +775,12 @@ export const selectShippingAddress =(address)=>(dispatch,getState)=>{
                         }
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : constStrings.ADDRESS_UPDATE_FAILED});
+                    showErrorMsg("Something went wrong ,Please try again later.","");
                 }
             })
             .catch( err => {
                 dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
+                showErrorMsg("Something went wrong ,Please try again later.","");
             })
         })
         .catch( err => {
@@ -1289,7 +1291,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                         }
                     }
 
-                    RazorpayCheckout.open(options).then((data) => {
+                RazorpayCheckout.open(options).then((data) => {
 
                     if(data.razorpay_payment_id !="")
                     {

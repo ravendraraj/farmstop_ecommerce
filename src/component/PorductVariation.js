@@ -33,14 +33,16 @@ class PorductVariation extends Component {
     }
 
    async componentDidMount(){
-        console.log("active id=>",this.props.activeProd);
+        console.log("active id componentDidMount=>",this.props.activeProd);
         this.setState({previousActiveProdId:this.props.activeProd});
         if(this.props.activeProd != ''){
+            console.log("prod  id if component ");
             await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
         }else{
+            console.log("active id else componentDidMount=>",this.props.activeProd);
            let prodCat = this.props.productData;
             if(prodCat.length >0){
-            //console.log("prod  id",prodCat, prodCat[0].id);
+            console.log("prod  id else component ",prodCat, prodCat[0].id);
                 await this.props.selectCat(prodCat[0].id);
                 await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
             }
@@ -49,9 +51,10 @@ class PorductVariation extends Component {
 
     static async getDerivedStateFromProps(props, state) {
         let {previousActiveProdId} = state;
-        //console.log(props,state);
+        console.log("force update",previousActiveProdId +"!='' &&"+ props.activeProd +"!="+ previousActiveProdId);
         if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
         {
+            console.log("getDerivedStateFromProps");
             state.previousActiveProdId = props.activeProd;
             if(props.activeProd != '')
             await props.getProductType({prodID:props.activeProd ,start:0,end:totalprod});
@@ -95,6 +98,7 @@ class PorductVariation extends Component {
     LoadMoreRandomData = async() =>{
         if(this.props.activeProd !=''){
             if(this.props.no_more_data == false){
+                console.log("loadmore");
                 let pageNo = this.state.page+1;
                 await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
                 this.setState({page:pageNo});
@@ -161,11 +165,12 @@ class PorductVariation extends Component {
     }
 
 
-    _selectCat(prod_cat_id){
-        //console.log("by product catttt",prod_cat_id);
-        if(this.props.activeProd != prod_cat_id){
-            this.props.selectCat(prod_cat_id);
-            this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+    async _selectCat(prod_cat_id){
+        console.log("selected   by product catttt",prod_cat_id,this.state.previousActiveProdId);
+        this.props.selectCat(prod_cat_id);
+        if( this.state.previousActiveProdId == "" && this.props.activeProd != prod_cat_id){
+            await this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+            this.setState({previousActiveProdId:this.props.activeProd})
         }
     }
 
@@ -245,7 +250,7 @@ class PorductVariation extends Component {
 
         return(
             <View>
-                {this.renderItemTitle()}
+                {/*this.renderItemTitle()*/}
             <FlatList
             data={updateItemList}
             renderItem={({ item }) => (
@@ -369,7 +374,7 @@ class PorductVariation extends Component {
                     /> */}
                     { this._loadLoader() }
                     <View style={styles.MainContainer}>
-                        {/* {this.renderItemTile()} */}
+                        {this.renderItemTitle()}
                         {this.renederItemType()}
                     </View>
                 {/* </ScrollView> */}
