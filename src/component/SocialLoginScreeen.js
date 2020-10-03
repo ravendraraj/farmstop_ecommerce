@@ -301,9 +301,9 @@ class SocialLoginScreen extends Component{
             <View style={styles.container}>
                 <ScrollView>
                     {this._ShowError()}
-        	        {this._loadLoader()}
                     {this._renderView()}
                 </ScrollView>
+                {this._loadLoader()}
             </View>
         )
     }

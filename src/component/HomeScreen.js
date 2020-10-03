@@ -359,10 +359,10 @@ class HomeScreen extends Component {
                     />*/}
           <View style={styles.MainContainer}>
             {this._ShowError()}
-            {this._loadLoader()}
             {this.renederItemType()}
             {this.renderSourceSection()}
           </View>
+          {this._loadLoader()}
         </View>
       //</ImageBackground>
     )

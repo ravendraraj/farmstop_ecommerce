@@ -145,7 +145,7 @@ class WelcomeScreen extends Component {
 				<View style={styles.container}>
 					<View style={{flex:1,justifyContent:'center'}}>
 					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
-					<Text style={styles.welcomText}>Welcome To Farmstop</Text>
+					<Text style={styles.welcomText}>Welcome to farmstop</Text>
 					</View>
 					<PushController/>
 				</View>

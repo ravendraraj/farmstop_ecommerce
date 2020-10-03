@@ -139,8 +139,8 @@ _trackOrder(){
                 <View style={{width:'100%',alignSelf:"center"}}>
                     <TextHeading title="My Orders"/>
                 	{this.renederItemType()}
-                	{this._loadLoader()}
                 </View>
+                {this._loadLoader()}
             </View>
         )
     }

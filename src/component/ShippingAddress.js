@@ -368,7 +368,8 @@ class shippingAddress extends Component{
         return(
             <View style={styles.container}>
                 <TextHeading title="My Account"/>
-                <SafeAreaView>
+                {this._loadLoader()}
+                <SafeAreaView style={styles.container}>
                     <View style={{width:"100%",alignSelf:'center'}}>
                         <ScrollView>
                         <View style={{width:"95%",alignSelf:'center',marginBottom:30}}>
@@ -376,7 +377,6 @@ class shippingAddress extends Component{
                             {this.renderAddAnotherAddressBtn()}
                             <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18,marginTop:20}}>Current Addresses</Text>
                             {this.renderAddresList()}
-                            {this._loadLoader()}
                         </View>
                         </ScrollView>
                     </View>

@@ -285,7 +285,7 @@ _radioHandler(){
                     orderDetails['subtotal'] = subtotal;
                     orderDetails['shhipingCost'] = deliveryCharges;
                     
-                    if(this.props.coupon_id != null){
+                    if(this.props.coupon_id != null && this.props.coupon_value !="" ){
                         orderDetails['coupon_id'] = this.props.coupon_id;
                     }else{
                         orderDetails['coupon_id'] = "";

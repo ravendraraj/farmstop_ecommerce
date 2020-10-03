@@ -709,6 +709,15 @@ const data = (state = initialDataState, action) => {
 
             }
 
+        case 'COUPON_CODE_REFRESH':
+            return{
+                ...state,
+                coupon_msg:'',
+                coupon_value:'',
+                coupon_id:null,
+
+            }
+
         case 'REMOVE_COUPON_CODE_MSG':
             return{
                 ...state,

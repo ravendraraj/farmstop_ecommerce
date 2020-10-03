@@ -288,6 +288,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:constants.vw(130),
       height:constants.vw(130),
+      backgroundColor:constants.Colors.color_imgbg,
     },
     row:{
         flexDirection: 'row', 
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:constants.vw(120),
       height:constants.vw(110),
+      backgroundColor:constants.Colors.color_imgbg,
     },
     sliderTextComp:{
         fontSize:constants.vw(18),

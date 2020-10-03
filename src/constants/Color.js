@@ -14,5 +14,7 @@ const Colors = {
   color_cartText:"#80b435",
   color_green:'#267219',
   color_btn:'#41A317',
+
+  color_imgbg:'#DCDBD9',
 };
 export default Colors;

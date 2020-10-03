@@ -189,7 +189,7 @@ async _logOutEvent(){
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
                         <View style={{flexDirection:'row'}}>
-                            <Image source={constants.image.profile} style={{width:constants.vw(32),height:constants.vw(32)}}/>
+                            <Image source={constants.image.profile} style={{width:constants.vw(26),height:constants.vw(30)}}/>
                             <Text style={styles.MenueLable}>My Account</Text>
                         </View>
                         <Icons name={(this.state.displayMyAccChild== true)?"angle-down":"angle-right"} size={14} style={{marginTop:5}}/>
@@ -259,7 +259,8 @@ async _logOutEvent(){
 
 const styles = StyleSheet.create({
 	MenueLable: {
-        fontFamily:constants.fonts.CardoBOLD,
+        //fontFamily:constants.fonts.CardoBOLD,
+        fontFamily:constants.fonts.Cardo_Regular,
         fontSize:constants.vw(18),
         paddingLeft:10
         },
@@ -277,8 +278,8 @@ const styles = StyleSheet.create({
         width:'90%'
     },
     icon:{
-        width:constants.vw(30),
-        height:constants.vw(30)
+        width:constants.vw(25),
+        height:constants.vw(25)
     },
     withOutIcon:{
         fontFamily:constants.fonts.Cardo_Bold,

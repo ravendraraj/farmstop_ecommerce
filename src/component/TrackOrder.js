@@ -136,11 +136,11 @@ renderOrderStatus(order_status){
                     <ScrollView showsVerticalScrollIndicator={false}>
                 	   {this.renederItemTrackList()}
                     </ScrollView>
-                	{this._loadLoader()}
                 </View>
                 <View style={{position: 'absolute', left: 0, right: 0, bottom: 10}}>
                     <Text style={{textAlign:'center',fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Bold}}>Contact us at info@farmstop.in</Text>
                 </View>
+                {this._loadLoader()}
             </View>
         )
     }

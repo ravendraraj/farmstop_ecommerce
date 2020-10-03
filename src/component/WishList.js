@@ -294,6 +294,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:width/3.5,
       height:width/4,
+      backgroundColor:constants.Colors.color_imgbg,
     },
     row:{
         flexDirection: 'row', 

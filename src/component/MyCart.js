@@ -181,6 +181,12 @@ class MyCart extends Component {
 
             await this.props.setQtyInCart(data);
             await this.props.setCartItemLocal();
+            
+            //refresh coupon on updated cart
+            if(this.props.coupon_value !=""){
+                this.props.refreshCouponCode();
+            }
+
         }else{
             ToastAndroid.showWithGravity("Quantity of product not become 0", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -208,6 +214,11 @@ class MyCart extends Component {
 
             await this.props.setVariationInCart(data);
             await this.props.setCartItemLocal();
+                    //refresh coupon on updated cart
+            if(this.props.coupon_value !=""){
+                this.props.refreshCouponCode();
+            }
+
         }else{
             ToastAndroid.showWithGravity(descOfDuplicateItem+" is already in your cart.", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
@@ -228,8 +239,13 @@ class MyCart extends Component {
         data["cart_item_id"] =cart_item_id;
         data["cart_id"] = cart_id;
 
-        await this.props.deleteItem(data);
+        await this.props.deleteItem(data); 
         this.props.setCartItemLocal();
+
+        //refresh coupon on updated cart
+        if(this.props.coupon_value !=""){
+            this.props.refreshCouponCode();
+        }
 
     } 
 
@@ -468,7 +484,8 @@ const mapDispatchToProps = dispatch => ({
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
     checkOut:(data)=>dispatch(checkOut(data)),
     deleteItem:(data)=>dispatch(deleteItem(data)),
-    getDeliveryDate:()=>dispatch(getDeliveryDate())
+    getDeliveryDate:()=>dispatch(getDeliveryDate()),
+    refreshCouponCode:()=>dispatch({type:'COUPON_CODE_REFRESH'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCart);

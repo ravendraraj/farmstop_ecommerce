@@ -405,6 +405,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:constants.vw(110),
       height:constants.vw(100),
+      backgroundColor:constants.Colors.color_imgbg,
     },
     row:{
         flexDirection: 'row', 

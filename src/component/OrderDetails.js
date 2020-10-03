@@ -37,9 +37,9 @@ class OrderDetails extends Component{
 				<ScrollView>
 		            <View style={{width:'100%',alignSelf:"center"}}>
 		                {this.renderOrderDetails()}
-						{this._loadLoader()}
 					</View>
 				</ScrollView>
+				{this._loadLoader()}
 			</View>
 		)
 	}

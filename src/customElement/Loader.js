@@ -8,29 +8,35 @@ import {
     StyleSheet,
     Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export const Loader = () => { 
     return(
-        <View style={Styles.container}>
-            <ActivityIndicator size="large" color='#6a0912'/>
-        </View>
+
+              <SafeAreaView style={[Styles.overlay,{ alignItems: 'center', justifyContent: 'center' }]}>
+                <View>
+                    <ActivityIndicator size="large" />
+                </View>
+            </SafeAreaView>
     );
 }
 
 const Styles = StyleSheet.create({
-    container: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 20,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      width: Dimensions.get('window').width,
-      height: Dimensions.get('window').height,
-      zIndex: 10,
-      opacity: 0.6,
-
-    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        flex:1,
+        width: windowWidth,
+        height: windowHeight,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5,
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
+    }
 });

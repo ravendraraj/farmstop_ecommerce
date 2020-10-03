@@ -201,7 +201,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
 
     let url = weburl + 'api-sendOtp?source='+data.email+"&otp="+data.otp+"&username="+data.username;//geting all product
     console.log(url);
-
+ 
     fetch(url)
     .then(res =>{
         res.json()
@@ -213,7 +213,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                     // navigate("otpVerification");
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
-                    showErrorMsg("Something went wrong ,Please try again. ","");
+                    showErrorMsg(response.message,"");
                 }
             }else{
                 if(response.status == "1"){
@@ -572,10 +572,28 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
 
 export const checkCouponCode= (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
-    let url = weburl + 'api-validate-coupnCode/'+data.code;
+    //let url = weburl + 'api-validate-coupnCode/'+data.code;
+    let url = weburl + 'api-validate-coupon';
     console.log(url);
 
-    fetch(url)
+    var formdata = new FormData();
+    formdata.append("userId", getState().data.authUserID);
+    formdata.append("coupon_code",data.code);
+    formdata.append("total", getState().data.total);
+    formdata.append("token", getState().data.token);
+    formdata.append("cart_items",JSON.stringify(getState().data.addedItems));
+
+
+    let post_req = {
+        method: 'POST',
+        body: formdata,
+        headers: {
+         Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        }
+    }
+    console.log("req on coupon validate",post_req);
+    fetch(url,post_req)
     .then(res =>{
         res.json()
         .then(response => {
@@ -836,6 +854,11 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
                 //console.log(response);
                 if(response.status == "1"){
                     dispatch({ type : 'ADD_TO_CART', screen:screen ,id:product ,selectedVariationID: variationId ,cart_item_id:response.cart_item_id});
+                    
+                    if(getState().data.coupon_value !=""){
+                        dispatch({type:"COUPON_CODE_REFRESH"});
+                    }
+
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
                 }

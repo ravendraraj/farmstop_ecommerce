@@ -128,10 +128,10 @@ class ForgetPassword extends Component{
 
     showMsg(){
         if(this.props.err){
-            ToastAndroid.showWithGravity(this.props.err, ToastAndroid.SHORT, ToastAndroid.TOP);
+            //ToastAndroid.showWithGravity(this.props.err, ToastAndroid.SHORT, ToastAndroid.TOP);
             this.props.removeError();
         }else if(this.props.success){
-            ToastAndroid.showWithGravity(this.props.success, ToastAndroid.SHORT, ToastAndroid.TOP);
+            //ToastAndroid.showWithGravity(this.props.success, ToastAndroid.SHORT, ToastAndroid.TOP);
             setTimeout(() => {
                 this.props.navigation.navigate("SocialLogin");
               }, 2000);
