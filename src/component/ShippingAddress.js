@@ -11,6 +11,7 @@ import { Loader } from '../customElement/Loader'
 import Icons from 'react-native-vector-icons/SimpleLineIcons'
 import RadioButton from '../customElement/RadioButton'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class shippingAddress extends Component{
     
@@ -40,7 +41,7 @@ class shippingAddress extends Component{
         }
 
         if(this.props.apartmentList.length <= 0){
-            await this.props.getAppartment();
+            // await this.props.getAppartment();
         }
     }
 
@@ -115,7 +116,7 @@ class shippingAddress extends Component{
             return(
                 userAddressList.map((addressRow,id)=>{
                     return (
-                        <View style={this.props.defaultShipingAddress == addressRow.id ?styles.defaultAddress:styles.addressContainer}>
+                        <View style={this.props.defaultShipingAddress == addressRow.id ?styles.defaultAddress:styles.addressContainer} key={id}>
                             <Text style={styles.addressLine}>
                                 {addressRow.address},
                             </Text>
@@ -249,6 +250,15 @@ class shippingAddress extends Component{
             }
         }
 
+    async fetchAppartment(searchKey){
+        let {query} = this.state;
+        this.setState({ query: searchKey});
+
+        if(query !="" && query.length >=2){
+            await this.props.getAppartment({keyword:query});
+        }
+    }
+
     renderForm(){
         const { query } = this.state;
 		const productList = this.findAppartment(query);
@@ -269,7 +279,7 @@ class shippingAddress extends Component{
                         containerStyle={styles.autocompleteContainer}
                         inputContainerStyle={{ borderWidth: 0 }}
                         style={{ color: constants.Colors.color_grey, fontSize: 18 }}
-
+                        listContainerStyle={{borderWidth:0}}
                         listStyle={{ borderWidth: 0 }}
                         //data to show in suggestion
                         data={productList.length === 1 && comp(query, productList[0].apartment) ? [] : productList}
@@ -277,7 +287,8 @@ class shippingAddress extends Component{
                         defaultValue={query}
                         /*onchange of the text changing the state of the query which will trigger
                         the findAppartment method to show the suggestions*/
-                        onChangeText={text => this.setState({ query: text })}
+                        // onChangeText={text => this.setState({ query: text})}
+                        onChangeText={text => this.fetchAppartment(text)}
                         onSubmitEditing ={()=> this.seacrhProduct(this.state.query)}
                         placeholder="Appartment or Location"
                         renderItem={({ item }) => (
@@ -366,10 +377,14 @@ class shippingAddress extends Component{
 
     render(){
         return(
-            <View style={styles.container}>
-                <TextHeading title="My Account"/>
-                {this._loadLoader()}
                 <SafeAreaView style={styles.container}>
+                    <TextHeading title="My Account"/>
+                    {this._loadLoader()}
+                    <KeyboardAwareScrollView 
+                        keyboardShouldPersistTaps={'handled'}
+                        extraScrollHeight={10}
+                        enableOnAndroid={true}
+                    >
                     <View style={{width:"100%",alignSelf:'center'}}>
                         <ScrollView>
                         <View style={{width:"95%",alignSelf:'center',marginBottom:30}}>
@@ -380,8 +395,9 @@ class shippingAddress extends Component{
                         </View>
                         </ScrollView>
                     </View>
+                    </KeyboardAwareScrollView>
                 </SafeAreaView>
-            </View>
+            
         )
     }
 }
@@ -478,7 +494,8 @@ const styles = StyleSheet.create({
     deliveryBtntext:{
         fontFamily:constants.fonts.Cardo_Bold,
         color:constants.Colors.color_BLACK,
-        fontSize:constants.vw(16)
+        fontSize:constants.vw(16),
+        width:constants.width*0.5
     },
     deliveryBtn:{
         paddingLeft:constants.vw(10),
@@ -500,7 +517,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getAddressList:() =>dispatch(getUserAddressList()),
-    getAppartment : ()=>dispatch(getAppartment()),
+    getAppartment : (data)=>dispatch(getAppartment(data)),
     removeCouponMsg:()=>dispatch({type:'REMOVE_COUPON_CODE_MSG'}),
     checkDeliveryOnPincode:(data)=>dispatch(checkDeliveryOnPincode(data)),
     addNewAddress:(data)=>dispatch(addNewShippingAddress(data)),

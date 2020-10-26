@@ -3,6 +3,7 @@ const indicator = (state = false, action) => {
         case 'LOADING' :
             return true;
         case 'PRODUCT_FETCH':
+        case 'PRODUCT_VARIATION_ON_CAT':
         case 'ERROR_SUBMIT':
         case 'DATA_FETCHED':
         case 'CANCEL_LOADING' :

@@ -123,16 +123,18 @@ class KnowMore extends Component {
             this.props.itemtypeData.map((item,id)=>{
                 if(this.props.prodId != item.id && i++ < 6){
                     return (
-                        <View style={styles.prodBlock}>
-                            <View>
-                                <TouchableOpacity style={{alignSelf:'center',marginTop:constants.vh(40)}} onPress={()=>{this._knowMore(item.id)}}>
+                        <View style={styles.prodBlock} key={id}>
+                            <View style={{width:constants.width*0.4,justifyContent:'center',alignItems:'center'}}>
+                                <TouchableOpacity onPress={()=>{this._knowMore(item.id)}}>
                                     <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{marginTop:constants.vh(40)}}>
+                            <View style={{width:constants.width*0.4,justifyContent:'center',alignItems:'center'}}>
+                                <View>
                                 <Text style={styles.sliderTextComp}>Farm Fresh</Text>
                                 <Text style={styles.sliderTextProd}>{fristLetterCapital(item.attribute_name)}</Text>
                                 <Text style={styles.sliderTextPrice}>Rs.{item.price}</Text>
+                                </View>
                             </View>
                         </View>
                     )
@@ -151,12 +153,13 @@ class KnowMore extends Component {
         }
 
         let prodId = this.props.prodId;
-    
+     
         if(ItemList != "undefined" && ItemList !=null && prodId != null){
             // let producName = ItemList[0].pname;
             let prodDetails = ItemList.find((item) => item.id === prodId);
             // let prodDesc = prodDetails.long_description != '' ? prodDetails.long_description : 'Not Available.';
-            if(prodDetails.isMyWish == ''){
+
+            if((this.props.authUserId !="" || this.props.authUserId !=null) && prodDetails.isMyWish == ''){
                 prodDetails.isMyWish = 'heart-outline';
             }
 
@@ -164,11 +167,11 @@ class KnowMore extends Component {
                 <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
                     <Text style={{fontSize:constants.vw(20),textAlign:'center',fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
                     <View style={{alignSelf:'center'}}>
+                        {(this.props.authUserId !="")?(<TouchableOpacity style={styles.wishIconBox}
+                                                                        onPress={()=>this._addinWishList(prodDetails)}>
+                                                                            <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={25}/>
+                                                                        </TouchableOpacity>):(<View/>)}
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
-                        <TouchableOpacity style={{alignSelf:'flex-end',marginTop:-20,marginRight:-30}}
-                        onPress={()=>this._addinWishList(prodDetails)}>
-                            <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={30}/>
-                        </TouchableOpacity>
                     </View>
                     
                         <View style={{width:'85%',alignSelf:'center'}}>
@@ -209,10 +212,10 @@ class KnowMore extends Component {
                         <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
                             <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
                             <View>
-                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5,paddingLeft:15,paddingRight:15}}
+                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height:30,paddingTop:5,paddingLeft:15,paddingRight:15}}
                                 onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty,prodDetails.selectedVariationPrice)}>
                                 <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
-                                <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
+                                <Text style={{fontSize:15,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
                             </TouchableOpacity>
                             </View>
                         </View>
@@ -227,7 +230,7 @@ class KnowMore extends Component {
                     </View>):<View/>}
                     <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
                     <View style={styles.wrapper}>
-                        <Swiper style={{height:constants.vh(200)}} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
+                        <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
                             {this._swiper()}
                         </Swiper>
                     </View>
@@ -284,11 +287,28 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 10,
     },
+    wishIconBox:
+    {
+        position:'absolute',
+        top:10,
+        right:10,
+        zIndex:4,
+        backgroundColor:constants.Colors.color_WHITE,
+        padding:2,
+        borderRadius:20,
+        justifyContent:"center",
+        alignItems:'center',
+        elevation:8
+    },
     singleImg: {
       alignItems: 'center',
-      width:constants.vw(130),
-      height:constants.vw(130),
-      backgroundColor:constants.Colors.color_imgbg,
+      // width:constants.vw(130),
+      // height:constants.vw(130),
+      // resizeMode:'contain',
+
+      width:constants.width*0.9,
+      height:constants.width*0.9,
+      resizeMode:'contain',
     },
     row:{
         flexDirection: 'row', 
@@ -305,7 +325,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:constants.vw(120),
       height:constants.vw(110),
-      backgroundColor:constants.Colors.color_imgbg,
+      resizeMode:'contain',
     },
     sliderTextComp:{
         fontSize:constants.vw(18),
@@ -349,7 +369,8 @@ const mapStateToProps = state => ({
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
     searchProductList: state.data.searchProductList,
-    cart: state.data.addedItems
+    cart: state.data.addedItems,
+    authUserId:state.data.authUserID,
 
 });
 

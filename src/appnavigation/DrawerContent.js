@@ -229,6 +229,10 @@ async _logOutEvent(){
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     <View style={{marginLeft:25}}>
+                        <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('Organic Certification')}}>
+                            <Text style={styles.MenueLable}>Certificate</Text>
+                        </TouchableOpacity>
+
                         <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('AboutFarm')}}>
                             <Text style={styles.MenueLable}>About Us</Text>
                         </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid,Image} from 'react-native'
+import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid,Image,RefreshControl,SafeAreaView} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -19,11 +19,12 @@ class Notification extends Component{
         super(props);
         this.state={
             trackOrderId:'',
+            refreshing:false,
         }
     }
 
     componentDidMount(){
-    	this.updateNotification()
+        this.updateNotification()
     }
 
 
@@ -58,10 +59,80 @@ async  getAsyncData(params) {
 }
 
 _loadLoader() {
-        if(this.props.animate) {
+        if(this.props.animate){
             return(
                 <Loader />
-            )
+        )
+    }
+}
+
+renderImageMsg(item){
+    // console.log("notification url=>",(item.image_url).replace(' ','_'));
+    if(item.image_url !=""){
+        return(
+            <View style={constants.width >300 ?{flexDirection:"row"}:{}}>
+                <View style={{padding:5,width:width*0.5}}>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18,lineHeight:25}}>{item.title}</Text>
+                    <TouchableOpacity>
+                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16,lineHeight:25}}>{item.message}</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Image style={{width:width*0.4,height:width*0.4,marginTop:10}} resizeMode={"contain"} source={{uri:(item.image_url).replace(' ','_')}} />
+                </View>
+            </View>
+        )
+    }else{
+        return(
+            <View style={{padding:10}}>
+                <TouchableOpacity onPress={()=>{item.type == "order"?this._trackOrderOnpress(item.order_no):''}}>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18,lineHeight:25}}>{item.title}</Text>
+                    <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16,lineHeight:25}}>{item.message}</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+onRefresh(){
+    if(this.props.authUserID !=null && this.props.authUserID !=""){
+        this.setState({refreshing:true});
+        //setTimeout(() => {this.setState({refreshing:false})},12000);
+
+        let url = weburl + 'api-get-notification';
+        var formData = new FormData();
+            formData.append("user_id", this.props.authUserID);
+            formData.append("token",this.props.token);
+
+        let post_req = {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                }
+        }
+        
+        //console.log(url,post_req);
+
+        fetch(url,post_req)
+        .then(res =>{
+            res.json()
+            .then(response => {
+                if(response.status == "1"){
+                    this.setState({refreshing:false})
+                    this.props.refreshNotification(response);
+                }else{
+                    this.setState({refreshing:false})
+                }
+            })
+            .catch( err => {
+                this.setState({refreshing:false})
+            })
+        })
+        .catch( err => {
+            this.setState({refreshing:false})
+        });
     }
 }
 
@@ -70,19 +141,16 @@ _loadLoader() {
     if (notification.length > 0) {
       return (
         <FlatList
-          	data={notification}
-
-          	renderItem={({ item }) => (
+            data={notification}
+                // refreshControl={
+                //     <RefreshControl refreshing={this.state.refreshing} onRefresh={()=>this.onRefresh()} />
+                // }
+                renderItem={({ item }) => (
                 <View style ={styles.prodBlock}>
                     <View style={item.type == "order" ? styles.orderNotifications:styles.offerNotification}/>
                     <View style={{flexDirection:'column'}}>
-                        <TouchableOpacity onPress={()=>{item.type == "order"?this._trackOrderOnpress(item.order_no):''}} style={{padding:10}}>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16,lineHeight:25}}>{item.message}</Text>
-                        </TouchableOpacity>
-
-                        { item.image_url !=""?(<Image style={{alignSelf:'center',width:"98%",height:width*0.5}} source={{ uri:item.image_url}} />):(<View/>)}
-    
-                        <View style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingBottom:10,marginTop:constants.vh(10)}}>
+                        {this.renderImageMsg(item)}
+                        <View style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingBottom:10,marginTop:constants.vh(10),width:width*0.98}}>
                             <View style={{flexDirection:'row'}}>
                                 <Icons name="bell" size={16} color={constants.Colors.color_BLACK}/>
                                 <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:14,paddingLeft:10}}>{item.date}</Text>
@@ -95,9 +163,9 @@ _loadLoader() {
                         </View>
                     </View>
                 </View>
-          	)}
+            )}
           
-          	numColumns={1}
+            numColumns={1}
             keyExtractor={item => item.id}
             ListFooterComponent={
                     <View style={{height:100}}/>
@@ -105,8 +173,8 @@ _loadLoader() {
         />
       )
     }else{
-    	
-    		if(this.props.animate == false){
+        
+            if(this.props.animate == false){
             return(
                     <EmptyComp imageName={constants.image.emptyNotification} 
                         welcomText={"You don't have any notification yet"}
@@ -130,7 +198,7 @@ _loadLoader() {
     }
 
     _removeWishList(notifyId){
-        if(notifyId ==''){
+        if(notifyId !=''){
             Alert.alert(
                 'Farmstop',"Do you want remove this?",
                 [
@@ -153,13 +221,21 @@ _loadLoader() {
 
     render(){
         return(
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+            {/*<View style={styles.container}>*/}
                 <View style={{width:'100%',alignSelf:"center"}}>
                     <TextHeading title="My Notification"/>
-                	{this.renederItemType()}
-                	{this._loadLoader()}
+                    <ScrollView keyboardShouldPersistTaps={'handled'}
+                     refreshControl={
+                        <RefreshControl refreshing={this.state.refreshing}
+                        onRefresh = {()=>this.onRefresh()}/>
+                     }
+                    >
+                        {this.renederItemType()}
+                        {this._loadLoader()}
+                    </ScrollView>
                 </View>
-            </View>
+            </SafeAreaView>
         )
     }
 }
@@ -206,12 +282,14 @@ const mapStateToProps = state => ({
     animate : state.indicator,
     userNotifications: state.data.userNotifications,
     authUserID: state.data.authUserID,
+    token:state.data.token
 });
 
 const mapDispatchToProps = dispatch => ({
     loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token}),
     getNotifications:()=>dispatch(getNotification()),
     remove_notify:(data)=>dispatch(removeNotification(data)),
+    refreshNotification:(response)=>dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification})
 
 });
 

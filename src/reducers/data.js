@@ -192,8 +192,14 @@ const data = (state = initialDataState, action) => {
             return {
                 ...state,
                 productVatiation : action.payload,
-            };  
+            }; 
         }
+
+        case 'PRODUCT_VARIATION_ON_CAT':
+        return{
+            ...state,
+            productVatiation : action.payload,  
+        };
 
 
         case 'KNOW_MORE_ABOUT_PROD':
@@ -579,7 +585,7 @@ const data = (state = initialDataState, action) => {
             
             if(action.screen == "Search"){
                 dataSetForCart = state.searchProductList;
-            }else if(action.screen == "MyWish" || action.screen =="SearchWishItem"){
+            }else if(action.screen == "MyWish" || action.screen =="SearchWishItem" || action.screen == "Wish List"){
                 dataSetForCart = state.my_wish_list;
             }
 
@@ -595,6 +601,7 @@ const data = (state = initialDataState, action) => {
                    }
            }
             else{
+
                 let newCartItem = {
                 "id" : (state.addedItems.length+1).toString(),
                 "attribute_name":addedItem.attribute_name,

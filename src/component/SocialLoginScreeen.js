@@ -6,6 +6,7 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation';
 import Icon from 'react-native-vector-icons/AntDesign'
+import AsyncStorage from '@react-native-community/async-storage'
 // import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {gmail_api_key} from '../constants/key'
 import {AccessToken,GraphRequest,GraphRequestManager,LoginManager} from 'react-native-fbsdk'
@@ -38,7 +39,8 @@ class SocialLoginScreen extends Component{
         }
       }
 
-    componentDidMount(){
+    async componentDidMount(){
+
         GoogleSignin.configure({
             webClientId: gmail_api_key,
         });
@@ -46,6 +48,11 @@ class SocialLoginScreen extends Component{
         if(this.props.authEmail != "")
         {
             this.props.loginedIn("");
+        }
+
+        let deviceTokenData = await AsyncStorage.getItem('DEVICE_TOKEN');
+        if(deviceTokenData != null){
+            this.props.setDeviceData(JSON.parse(deviceTokenData));
         }
 
     }
@@ -59,7 +66,7 @@ class SocialLoginScreen extends Component{
     }
 
     setEmailMob(text){
-       // console.log(text);
+         //console.log(text);
         this.setState({emailIdOrMobile:text});
     }
     
@@ -348,6 +355,7 @@ const mapDispatchToProps = dispatch => ({
     manualLogin:(data)=>dispatch(loginValidation(data)),
     social_login:(data)=>dispatch(socialLogin(data)),
     loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
+    setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);

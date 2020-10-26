@@ -167,12 +167,13 @@ class PorductVariation extends Component {
         this.props.removeFromCart(itemId);
     }
 
-
+ 
     async _selectCat(prod_cat_id){
         console.log("selected   by product catttt",prod_cat_id,this.state.previousActiveProdId);
         this.props.selectCat(prod_cat_id);
         if( this.state.previousActiveProdId == "" && this.props.activeProd != prod_cat_id){
-            await this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+            //await this.props.getProductType({prodID:prod_cat_id ,start:0,end:totalprod});
+            await this.props.clickOnProductCatTab({prodID:prod_cat_id ,start:0,end:totalprod});
             this.setState({previousActiveProdId:this.props.activeProd,page:1});
         }
     }

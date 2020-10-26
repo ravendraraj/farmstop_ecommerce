@@ -8,7 +8,6 @@ import StackScreen from './HomeStack';
 //Screens
 import HomeScreen from '../component/HomeScreen';
 
-
 const Drawer = createDrawerNavigator();
 const DrawerScreen = ({navigation}) => (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>

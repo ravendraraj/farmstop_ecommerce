@@ -156,9 +156,9 @@ class GoogleLoc extends Component {
 					/>
 
 				</View>
-				{this._loadLoader()}
 				{this._showMessage()}
 			</View>
+			{this._loadLoader()}
 			</View>
 		)
 	}

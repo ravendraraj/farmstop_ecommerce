@@ -37,6 +37,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
-        backgroundColor: 'rgba(52, 52, 52, 0.8)'
+        //backgroundColor: 'rgba(52, 52, 52, 0.8)'
+        backgroundColor:'transparent'
     }
 });

@@ -1,5 +1,7 @@
 
 import React from 'react';
+import {Text} from 'react-native';
+import constants from '../constants'
 import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
 
 //screens
@@ -38,6 +40,9 @@ import Faq from '../component/Faq'
 import Notification from '../component/Notification'
 import MyOrderList from '../component/MyOrderList'
 import ForgetPassword from '../component/ForgetPassword'
+
+import OrganicCertificate from '../component/OrganicCertificate'
+import ImageViewerScreen from '../component/ImageViewerScreen'
 
 const RootStack = createStackNavigator();
 
@@ -146,6 +151,7 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="pageNotFound" component={pageNotFound404}/>
+
 
             <RootStack.Screen 
             options={({ navigation }) => ({
@@ -293,6 +299,27 @@ const HomeStack = ({navigation}) => (
                 headerTransparent:false,
             })}
             name="PaymentOption" component={PaymentOption}/>
+
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTitleStyle:{
+                    color:constants.Colors.color_heading,
+                    fontFamily:constants.fonts.Cardo_Regular,
+                },
+                headerTransparent:false,
+        })}
+        name="Organic Certification" component={OrganicCertificate}
+        />
+
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerTitle: null,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:false,
+            })}
+            name="ImageViewerScreen" component={ImageViewerScreen}/>
+
             
     </RootStack.Navigator>
 );

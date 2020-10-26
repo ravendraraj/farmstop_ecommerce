@@ -1,5 +1,7 @@
-import React, {Component} from "react"
-import { connect } from 'react-redux'
+import React, {Component} from "react";
+import { connect } from 'react-redux';
+import {Alert} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage'
 import PushNotificationIOS from "@react-native-community/push-notification-ios"
 import { navigate,check_notification } from '../appnavigation/RootNavigation'
 
@@ -8,9 +10,10 @@ var PushNotification = require("react-native-push-notification")
 var deviceData = "";
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
-  onRegister: function (token) {
-    console.log("TOKEN:", token);
-    deviceData=token
+  onRegister: function (deviceTokenData) {
+    console.log("TOKEN:", deviceTokenData);
+    AsyncStorage.setItem('DEVICE_TOKEN', JSON.stringify(deviceTokenData));
+    deviceData=deviceTokenData
   },
  
   // (required) Called when a remote is received or opened, or local notification is opened
@@ -84,7 +87,7 @@ class PushController extends Component{
     };
     componentDidMount(){
       console.log("ravendra", deviceData);
-      this.props.setDeviceData(deviceData);
+      //this.props.setDeviceData(deviceData);
     }
 
     render(){

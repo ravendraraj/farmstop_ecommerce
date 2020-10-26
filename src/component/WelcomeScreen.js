@@ -5,9 +5,10 @@ import AppIntroSlider from 'react-native-app-intro-slider'
 import image from "../constants/Image";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import constants from '../constants'
-import {navigate} from '../appnavigation/RootNavigation'
-import PushController from './PushController'
+import {updateDeviceTokenOnServer} from '../lib/api';
+import constants from '../constants';
+import {navigate} from '../appnavigation/RootNavigation';
+import PushController from './PushController';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -52,18 +53,24 @@ class WelcomeScreen extends Component {
 	
 	
 	async componentDidMount() {
+
+		let deviceTokenData = await AsyncStorage.getItem('DEVICE_TOKEN');
+        if(deviceTokenData != null){
+        	console.log("Welcome Screen");
+            this.props.setDeviceData(JSON.parse(deviceTokenData));
+        }
+        
 		const res = await AsyncStorage.getItem('introHadDone');
 		if(res === "introHadDone"){
 				console.log("notification checked");
 				this.setState({ show_Main_App: true });
 				this.getAsyncData("authData").then((authData) => {
-					
 					if(authData != null){
 						// this.setState({ show_Main_App: true });
 						let objAuthData = JSON.parse(authData);
 						if(this.props.userdata.authUserID =='' || this.props.userdata.authUserID == null){
-						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name,token:objAuthData.token})
-						setTimeout(function(){  
+						this.props.loginedIn({email:objAuthData.email, mobile:objAuthData.mobile ,userId:objAuthData.userId ,profile:objAuthData.profile,login_type:objAuthData.Login_Type,authName:objAuthData.name,token:objAuthData.token});
+						setTimeout(function(){
 							navigate('DrawerScreen');  
 						}, 1000);
 						}
@@ -139,32 +146,55 @@ class WelcomeScreen extends Component {
 		// }
 	};
 
+	// render() {
+	// 	if (this.state.show_Main_App){
+	// 		return(
+	// 			<View style={styles.container}>
+	// 				<View style={{flex:1,justifyContent:'center'}}>
+	// 				<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
+	// 				<Text style={styles.welcomText}>Welcome to farmstop</Text>
+	// 				</View>
+	// 				<PushController/>
+	// 			</View>
+	// 		);
+	// 	} else {
+	// 		return (
+	// 			// <View style={styles.container}>
+	// 			<AppIntroSlider
+	// 				renderItem={this._renderItem}
+	// 				data={slides}
+	// 				dotStyle={{ backgroundColor: 'black' }}
+	// 				activeDotStyle={{ backgroundColor: '#7F462C' }}
+	// 				showNextButton = {false}
+	// 				showDoneButton = {false}
+	// 			/>
+	// 			// </View>
+	// 		);
+	// 	}
+	// }
+
 	render() {
-		if (this.state.show_Main_App){
-			return(
-				<View style={styles.container}>
-					<View style={{flex:1,justifyContent:'center'}}>
-					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
+		return(
+			<>
+			{
+		      (this.state.show_Main_App)?(
+					<View style={{...styles.container,justifyContent:'center'}}>
+					<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.width*0.9,height:constants.width*0.9,resizeMode:'cover'}}/>
 					<Text style={styles.welcomText}>Welcome to farmstop</Text>
-					</View>
-					<PushController/>
-				</View>
-			);
-		} else {
-			return (
-				// <View style={styles.container}>
-				<AppIntroSlider
+				</View>):(<AppIntroSlider
 					renderItem={this._renderItem}
 					data={slides}
 					dotStyle={{ backgroundColor: 'black' }}
 					activeDotStyle={{ backgroundColor: '#7F462C' }}
 					showNextButton = {false}
 					showDoneButton = {false}
-				/>
-				// </View>
-			);
-		}
+				/>)
+			}
+			<PushController/>
+			</>
+		)
 	}
+
 }
 
 const styles = StyleSheet.create({
@@ -238,7 +268,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	introDone: data => dispatch({ type: 'APP_INTRO_DONE', data: data }),
-	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token})
+	loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token}),
+	//loginedIn:(data)=>dispatch(updateDeviceTokenOnServer(data)),
+	setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen);

@@ -94,7 +94,6 @@ _radioHandler(){
             let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
             return(
                     <View style={{flex:1,alignSelf:'center',width:"90%"}}>
-                        <ScrollView>
                         <View style={{}}>
                             <View>
                                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -172,7 +171,6 @@ _radioHandler(){
                                 </View>
                             </View>
                         </View>
-                        </ScrollView>
                         <View style={{flex:1, justifyContent:'flex-end',marginTop:30}}>
                             <TouchableOpacity style={styles.placeButton} onPress={()=>this.redirectOnPaymentPage()}>
                                 <Text style={styles.buttonText}>Place Order</Text>
@@ -236,10 +234,12 @@ _radioHandler(){
     render(){
         return(
             <View style={styles.container}>
+                <ScrollView>
+                    <View style={{flex:1,width:"98%",alignSelf:'center'}}>
+                        {this._renderView()}
+                    </View>
+                </ScrollView>
                 {this._loadLoader()}
-                <View style={{flex:1,width:"98%",alignSelf:'center'}}>
-                    {this._renderView()}
-                </View>
             </View>
         )
     }

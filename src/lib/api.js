@@ -3,7 +3,7 @@ import { navigate,check_notification } from '../appnavigation/RootNavigation'
 import AsyncStorage from '@react-native-community/async-storage';
 import constStrings from '../constants/constStrings'
 import RazorpayCheckout from 'react-native-razorpay';
-import {razor_api_key} from '../constants/key';
+import {razor_api_key,razor_api_keyTest} from '../constants/key';
 import constants from '../constants'
 import {showErrorMsg} from './helper'
 
@@ -17,8 +17,36 @@ export const logout = (data) => async(dispatch,getState) => {
     navigate('NotLogin');
     navigate('SocialLogin');
 }
+
+export const updateDeviceTokenOnServer =(data)=> async(dispatch,getState)=>{
+    let url = weburl + 'api-updatedDeviceToken?userId='+data.userId+'&userType='+data.login_type;
+        url+="&devicetoken="+getState().data.deviceToken+"&os="+getState().data.os+"&token="+data.token;
+    let deviceTokenData = await AsyncStorage.getItem('DEVICE_TOKEN');
+    dispatch({type:'AUTHORIZED-USER', email:data.email ,mobile:data.mobile ,userID:data.userId,profile:data.profile,login_type:data.login_type,authName:data.authName,token:data.token});
+    console.log(url);
+    
+    fetch(url)
+    .then(res =>{
+        res.json().then(response => {
+
+            if(response.status == "1"){
+                //dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
+            }else{
+                //dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+            }
+
+        }).catch( err => {
+            //dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
+    });
+}
+
 /** #################################################### User  Valiadtion Section ##############################*/
-export const loginValidation = (data) => (dispatch,getState) => {
+export const loginValidation = (data) => (dispatch,getState) =>{
 
     dispatch({type : 'LOADING'});
 
@@ -78,7 +106,6 @@ export const socialLogin = (userData) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
 
     let url = weburl + 'api-social-login';
-    console.log(url);
     
     var data = new FormData();
     data.append("id", userData["id"]);
@@ -90,7 +117,7 @@ export const socialLogin = (userData) => (dispatch,getState) => {
     data.append("image", userData["image"]);    
     data.append("devicetoken",getState().data.deviceToken);
     data.append("os",getState().data.os);
-
+    //showErrorMsg(JSON.stringify(getState().data.deviceToken),"");
     let post_req = {
         method: 'POST',
         body: data,
@@ -100,6 +127,8 @@ export const socialLogin = (userData) => (dispatch,getState) => {
         }
     }
     
+    console.log(url,post_req);
+
     fetch(url,post_req)
     .then(res =>{
         res.json()
@@ -315,6 +344,38 @@ export const getProductType = (data) => (dispatch,getState) => {
             
             if(response.status == "1"){
                 dispatch({ type : 'PRODUCT_VARIATION', payload : response.product});
+            }else{
+                dispatch({ type : 'NO_MORE_DATA', payload : true});
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+            }
+        })
+        .catch( err => {
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+        })
+    })
+    .catch( err => {
+        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+        navigate("internetError");
+    });
+}
+
+export const clickOnProductCatTab = (data) => (dispatch,getState) => {
+    dispatch({type : 'LOADING'});
+    // prodID:this.props.activeProd ,start:this.state,end:totalprod
+    let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
+    if(getState().data.authUserID != ''){
+        url = url + "&userId="+getState().data.authUserID;
+    }
+    
+    console.log(url);
+
+    fetch(url)
+    .then(res =>{
+        res.json()
+        .then(response => {
+            
+            if(response.status == "1"){
+                dispatch({ type : 'PRODUCT_VARIATION_ON_CAT', payload : response.product});
             }else{
                 dispatch({ type : 'NO_MORE_DATA', payload : true});
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -617,7 +678,8 @@ export const checkCouponCode= (data) => (dispatch,getState) => {
 
 export const getAppartment= (data) => (dispatch,getState) => {
     // dispatch({type : 'LOADING'});
-    let url = weburl + 'api-appartment';
+    console.log(data);
+    let url = weburl + 'api-appartment?key='+data.keyword;
     console.log(url);
 
     fetch(url)
@@ -845,7 +907,7 @@ export const addItemToCart = (prodData) => (dispatch,getState) => {
                 'Content-Type': 'multipart/form-data',
             }
         }
-        //console.log("add to cart ",post_req);
+        console.log("add to cart ",post_req);
         
         fetch(url ,post_req)
         .then(res =>{
@@ -1375,6 +1437,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                   });
 
             }else{
+
                 dispatch({ type : 'ERROR_CODE', payload : response.message});
                 showErrorMsg("Something went wrong ,Please try again later.","");
             }
@@ -1572,7 +1635,8 @@ export const getNotification= (data) => (dispatch,getState) => {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
             }
-        }
+    }
+    
     console.log(url,post_req);
 
     fetch(url,post_req)

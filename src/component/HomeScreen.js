@@ -11,6 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import AboutFarm from './AboutFarm'
 
+ import {fristLetterCapital} from '../lib/helper'
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
@@ -211,10 +212,10 @@ class HomeScreen extends Component {
           }
           data={ItemList}
           renderItem={({ item }) => (
-            <View style={styles.homeProdCat}>
+            <View style={{...styles.homeProdCat,justifyContent:'center',alignItems:'center'}}>
               <TouchableOpacity onPress={() => this._getItemType(item.id)}>
                 <Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />
-                <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold }}>{item.title}</Text>
+                <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold,textAlign:'center' }}>{fristLetterCapital(item.title)}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -286,8 +287,8 @@ class HomeScreen extends Component {
         // <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14)}}>
         <View style={{position:'absolute',bottom:10,width:"100%",alignSelf:'center'}}>
             <View style={{alignSelf:'center'}}>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from farm and Delivered to</Text>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your door step</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from certified farms and Delivered to</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your doorstep!</Text>
             </View>
               <Image source={constants.image.knowMoreSource} style={{width:constants.vw(310),height:constants.vw(80),alignSelf:'center'}}/>
               <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(16),alignSelf:'center'}}>scroll down to know your source</Text>
