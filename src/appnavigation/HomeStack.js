@@ -44,6 +44,8 @@ import ForgetPassword from '../component/ForgetPassword'
 import OrganicCertificate from '../component/OrganicCertificate'
 import ImageViewerScreen from '../component/ImageViewerScreen'
 
+import BasketScreen from '../component/BasketScreen'
+
 const RootStack = createStackNavigator();
 
 const HomeStack = ({navigation}) => (
@@ -55,7 +57,7 @@ const HomeStack = ({navigation}) => (
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
                 headerTitle: () => <Mainheader navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:0,elevation: 10},
                 headerTransparent:false,
             })}
             
@@ -195,10 +197,19 @@ const HomeStack = ({navigation}) => (
             options={({ navigation }) => ({
                 headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:1,elevation: 10},
                 headerTransparent:false,
             })}
             name="knowMoreProd" component={knowMoreProd}/>
+
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:1,elevation: 10},
+                headerTransparent:false,
+            })}
+        name="BasketScreen" component={BasketScreen}/>
  
         <RootStack.Screen 
             options={({ navigation }) => ({

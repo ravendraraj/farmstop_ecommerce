@@ -312,7 +312,7 @@ export const getProduct = (data) => (dispatch,getState) => {
         res.json()
         .then(response => {
             if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_FETCH', payload : response.product,freeDilveryAt:response.freeDileveryAt ,minPurchase:response.minimumPurChaseAmt});
+                dispatch({ type : 'PRODUCT_FETCH', payload : response.product,freeDilveryAt:response.freeDileveryAt ,minPurchase:response.minimumPurChaseAmt, basketList:response.basket});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }

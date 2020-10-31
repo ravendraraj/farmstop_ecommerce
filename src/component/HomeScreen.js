@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
-import { prod_image ,weburl } from '../constants/url'
+import { prod_image ,weburl,prod_variation_url } from '../constants/url'
 import constants from '../constants'
 import storeImg from '../constants/Image'
 import { navigate } from '../appnavigation/RootNavigation'
@@ -10,6 +10,8 @@ import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import AboutFarm from './AboutFarm'
+import Swiper from 'react-native-swiper'
+import HTML from 'react-native-render-html'
 
  import {fristLetterCapital} from '../lib/helper'
 //api call
@@ -194,11 +196,11 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('Product');
   }
 
-
-  renederItemType() {
+  renederItemType(){
     let ItemList = this.props.itemData;
     if (ItemList != "undefined" && ItemList != null) {
       return (
+        <View>
         <FlatList
           ref={
             (c) => {
@@ -210,6 +212,7 @@ class HomeScreen extends Component {
           contentOffset={
             {x: 0, y: headerHeight}
           }
+          ListHeaderComponent={<View style={{height:20}}/>}
           data={ItemList}
           renderItem={({ item }) => (
             <View style={{...styles.homeProdCat,justifyContent:'center',alignItems:'center'}}>
@@ -222,12 +225,43 @@ class HomeScreen extends Component {
           //Setting the number of column
           numColumns={2}
           keyExtractor={(item) => item.id}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={1}
           onEndReached={()=>this.LoadMoreRandomData()}
           ListFooterComponent={
-            this.renederAboutFarm()
+            <View>
+            {this.props.baskets.length >0?(<View style={{...styles.wrapper}}>
+                <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
+                    {this.props.baskets.map((item,id)=>{
+                        if(this.props.prodId != item.id){
+                            return (    
+                                <View style={{flexDirection:'row',justifyContent:'space-evenly'}} key={id}>
+                                    <Image source={{uri:prod_variation_url+item.fimage}} style={{width:constants.width*0.5,height:constants.width*0.4, resizeMode:'contain'}}/>
+                                    <View style={{width:constants.width*0.5}}>
+                                        <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold, color:constants.Colors.color_btn}}>{item.attribute_name}</Text>
+                                        <View style={{marginTop:constants.vh(10)}}>
+                                            <HTML html={item.short_description}
+                                                tagsStyles={{p:styles.tagLayout}}
+                                            />
+                                        </View>
+                                        <TouchableOpacity style={{borderRadius:9,borderWidth:1,borderColor:constants.Colors.color_btn,padding:5,backgroundColor:constants.Colors.color_btn,marginTop:constants.vh(20),width:constants.vw(80)}}
+                                            onPress={()=>{this.props.navigation.navigate("BasketScreen",{"basketId":item.id})}}
+                                        >
+                                            <Text style={{textAlign:'center',fontSize:14,fontFamily:constants.fonts.Cardo_Regular, color:constants.Colors.color_WHITE}}>
+                                                View More
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )
+                        }
+                        })}
+                </Swiper>
+            </View>):(<View/>)}
+            {this.renederAboutFarm()}
+            </View>
           }
         />
+        </View>
       )
     }
   }
@@ -253,13 +287,13 @@ class HomeScreen extends Component {
   renederAboutFarm(){
     if(this.state.showFooter){
       return(
-              <View style={{marginTop:constants.vh(60)}}>
+              <View style={{marginTop:constants.vh(30)}}>
                   <AboutFarm/>
               </View>
       )
     }else{
       return(
-        <View style={{width:'100%',height:height/1.5}}/>
+        <View style={{backgroundColor:'red'}}><Text style={{fontSize:30}}>Hi</Text></View>
       )
     }
   }
@@ -327,41 +361,11 @@ class HomeScreen extends Component {
       //<ImageBackground style={styles.imgBackground}
         //resizeMode='contain'
         //source={storeImg.appIntro1}>
-
         <View style={styles.container}>
-          {/* <View style={styles.SectionStyle}> */}
-          {/*<AntDesign name="search1" size={20} color={constants.Colors.color_BLACK}
-            style={styles.ImageStyle} />
-
-          <Autocomplete
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      containerStyle={styles.autocompleteContainer}
-                      inputContainerStyle={{ borderWidth: 0 }}
-                      style={{ color: constants.Colors.color_grey, fontSize: 18 }}
-          
-                      listStyle={{ borderWidth: 0 }}
-                      //data to show in suggestion
-                      data={productList.length === 1 && comp(query, productList[0].attribute_name) ? [] : productList}
-                      //default value if you want to set something in input
-                      defaultValue={query}
-                      
-                      onChangeText={text => this.setState({ query: text })}
-                      onSubmitEditing ={()=> this.seacrhProduct(this.state.query)}
-                      placeholder="Search for good health"
-                      renderItem={({ item }) => (
-                        //you can change the view you want to show in suggestion from here
-                        <TouchableOpacity onPress={() => { this.setState({ query: item.attribute_name }), this.seacrhProduct(item.attribute_name) }}>
-                          <Text style={styles.itemText}>
-                            {item.attribute_name}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    />*/}
           <View style={styles.MainContainer}>
             {this._ShowError()}
             {this.renederItemType()}
-            {this.renderSourceSection()}
+            {/*this.renderSourceSection()*/}
           </View>
           {this._loadLoader()}
         </View>
@@ -391,8 +395,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     width:'100%',
-    marginTop:constants.vw(15),
-    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   imageThumbnail: {
     alignSelf: 'center',
@@ -440,6 +444,22 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1
   },
+    wrapper:{
+        marginTop:constants.vh(10),
+        alignSelf:'center',
+        width:constants.width*0.95,
+        height:constants.width*0.5,
+        borderRadius:4,
+        backgroundColor:"white",
+        marginBottom:constants.vh(10),
+        borderColor:constants.Colors.color_lineGrey,
+        borderWidth:1,
+        elevation:2,
+        padding:5
+    },
+    tagLayout:{
+        fontFamily:constants.fonts.Cardo_Regular
+    }
 });
 
 const mapStateToProps = state => ({
@@ -450,6 +470,7 @@ const mapStateToProps = state => ({
   selectAddress:state.data.selectAddress,
   shippingPincode:state.data.shippingPincode,
   cartItemSync:state.data.cartItemSync,
+  baskets:state.data.baskets
 });
 
 const mapDispatchToProps = dispatch => ({
