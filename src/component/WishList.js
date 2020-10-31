@@ -207,11 +207,12 @@ componentWillUnmount() {
                             {/**Price section */}
                             {/**Price section */}
                             <View>
-                                <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
+                                {item.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
                                     onPress={()=>this._addInCart(item.product_id,item.selectedVariationID,item.id,item.selectedQty,item.selectedVariationPrice)}>
                                     <Material name="cart" size={19} color={constants.Colors.color_WHITE}/>
                                     <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16,marginTop:10}}>Out Of Stock</Text>)}
+
                             </View>
 
             
@@ -333,7 +334,13 @@ const styles = StyleSheet.create({
         elevation:4,
         padding:10,
         marginBottom:10,
-    }
+    },
+    prodLabel:{
+        fontSize:constants.vw(14),
+        fontFamily:constants.fonts.Cardo_Bold,
+        marginLeft:5,
+        marginBottom:4
+    },
   });
 
 const mapStateToProps = state => ({

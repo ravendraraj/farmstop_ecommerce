@@ -168,9 +168,9 @@ class KnowMore extends Component {
                     <Text style={{fontSize:constants.vw(20),textAlign:'center',fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
                     <View style={{alignSelf:'center'}}>
                         {(this.props.authUserId !="")?(<TouchableOpacity style={styles.wishIconBox}
-                                                                        onPress={()=>this._addinWishList(prodDetails)}>
-                                                                            <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={25}/>
-                                                                        </TouchableOpacity>):(<View/>)}
+                            onPress={()=>this._addinWishList(prodDetails)}>
+                                <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={22}/>
+                            </TouchableOpacity>):(<View/>)}
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
                     </View>
                     
@@ -212,11 +212,11 @@ class KnowMore extends Component {
                         <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
                             <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.selectedQtyPrice}</Text>
                             <View>
-                            <TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height:30,paddingTop:5,paddingLeft:15,paddingRight:15}}
+                            {prodDetails.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height:30,paddingTop:5,paddingLeft:15,paddingRight:15}}
                                 onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty,prodDetails.selectedVariationPrice)}>
                                 <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
                                 <Text style={{fontSize:15,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16}}>Out Of Stock</Text>)}
                             </View>
                         </View>
                         </View>
@@ -287,19 +287,6 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 10,
     },
-    wishIconBox:
-    {
-        position:'absolute',
-        top:10,
-        right:10,
-        zIndex:4,
-        backgroundColor:constants.Colors.color_WHITE,
-        padding:2,
-        borderRadius:20,
-        justifyContent:"center",
-        alignItems:'center',
-        elevation:8
-    },
     singleImg: {
       alignItems: 'center',
       // width:constants.vw(130),
@@ -358,7 +345,27 @@ const styles = StyleSheet.create({
     tagLayout:{
         fontSize:constants.vw(16),
         fontFamily:constants.fonts.Cardo_Regular,
-    }
+    },
+    prodLabel:{
+        fontSize:constants.vw(14),
+        fontFamily:constants.fonts.Cardo_Bold,
+        marginLeft:5,
+        marginBottom:4
+    },
+    wishIconBox:
+    {
+        position:'absolute',
+        top:10,
+        right:10,
+        zIndex:4,
+        padding:2,
+        backgroundColor:constants.Colors.color_WHITE,
+        width:28,
+        height:28,
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius:14,borderWidth:1,borderColor:constants.Colors.color_WHITE,elevation:6
+    },
   });
 
 const mapStateToProps = state => ({

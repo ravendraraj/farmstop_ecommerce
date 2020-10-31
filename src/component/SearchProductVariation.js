@@ -182,9 +182,9 @@ class SearchProductVariation extends Component {
 									<TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
 										<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />
 									</TouchableOpacity>
-									<TouchableOpacity style={{ position: 'absolute', top: -4, right: -25 }}
+									<TouchableOpacity style={styles.wishBox}
 										onPress={() => this._addinWishList(item)}>
-										<Material name={item.isMyWish} color={constants.Colors.color_grey} size={25} />
+										<Material name={item.isMyWish} color={constants.Colors.color_grey} size={22} />
 									</TouchableOpacity>
 
 									
@@ -236,11 +236,11 @@ class SearchProductVariation extends Component {
 									</View>
 									{/**Price section */}
 									<View>
-										<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
+										{item.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
 											onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, item.selectedQty,item.selectedVariationPrice)}>
 											<Material name="cart" size={18} color={constants.Colors.color_WHITE} />
 											<Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
-										</TouchableOpacity>
+										</TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16,marginTop:10}}>Out Of Stock</Text>)}
 									</View>
 								</View>
 							</View>
@@ -396,6 +396,23 @@ const styles = StyleSheet.create({
         elevation:4,
         padding:10,
         marginBottom:10,
+    },
+    prodLabel:{
+        fontSize:constants.vw(14),
+        fontFamily:constants.fonts.Cardo_Bold,
+        marginLeft:5,
+        marginBottom:4
+    },
+    wishBox:{
+        position:'absolute',
+        top:-4,
+        right:constants.vw(-25),
+        backgroundColor:constants.Colors.color_WHITE,
+        width:28,
+        height:28,
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius:14,borderWidth:1,borderColor:constants.Colors.color_WHITE,elevation:6
     }
 });
 

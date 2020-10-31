@@ -1,9 +1,10 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,Linking} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import SocialLinks from '../component/SocialLinks'
+import {privacy_policy} from '../constants/url'
 
 const width = Dimensions.get('window').width;
 class Faq extends Component{
@@ -245,18 +246,18 @@ class Faq extends Component{
                             </Text>
                         </View>
 
-
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>Contact Us</Text>
                         <View style={{marginTop:10}}>
                             <Text
                                 style={styles.headingContent}>
                                 If you have any questions about this Privacy Policy, please contact us:
                             </Text>
-                            <Text
-                                style={[styles.paragraph],{fontFamily:constants.fonts.Cardo_Bold,}}>
-                                By visiting this page on our website: https://www.farmstop.in/privacy-policy/
-                            </Text>
-                            
+                            <TouchableOpacity onPress={()=>Linking.openURL(privacy_policy)}>
+                                <Text
+                                    style={[styles.paragraph],{fontFamily:constants.fonts.Cardo_Bold,}}>
+                                    By visiting this page on our website: https://www.farmstop.in/privacy-policy/
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={{height:100,width:"100%"}}/>
                     </View>

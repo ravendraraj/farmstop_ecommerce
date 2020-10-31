@@ -14,7 +14,7 @@ export default function ContactScreen(){
                     <View style={{width:'90%',alignSelf:"center"}}>
                         <TextHeading title="Contact Us"/>
                         <View style={{flex:1,marginTop:constants.vw(25)}}>
-                            <Image source={constants.image.contactus} style={{width:constants.vw(340),height:constants.vw(200),alignSelf:'center'}}/>
+                            <Image source={constants.image.contactus} style={styles.contactImage}/>
                             <View style={{marginTop:constants.vw(40)}}>
                                 <Text style={styles.text}>
                                     Write to us at
@@ -47,6 +47,12 @@ const styles = StyleSheet.create({
     text:{
         fontSize:constants.vw(20),
         fontFamily:constants.fonts.Cardo_Bold
+    },
+    contactImage:{
+        alignSelf:'center',
+        width:constants.width*0.98,
+        height:constants.width*0.70,
+        resizeMode:'contain',
     }
 
 })

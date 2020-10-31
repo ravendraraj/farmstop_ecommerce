@@ -12,4 +12,5 @@ export const youtubeUrl = 'https://www.youtube.com/channel/UCD1Eu_hIA1tZVK88zsPw
 export const facebookUrl = 'https://www.facebook.com/farmstop.in/';
 export const instagramUrl= 'https://www.instagram.com/farmstop.in/';
 export const linkedInUrl = 'https://www.linkedin.com/company/farmstop-in';
+export const privacy_policy = 'https://www.farmstop.in/privacy-policy/';
 

@@ -335,7 +335,7 @@ export const getProductType = (data) => (dispatch,getState) => {
         url = url + "&userId="+getState().data.authUserID;
     }
     
-    console.log(url);
+    console.log("get product",url);
 
     fetch(url)
     .then(res =>{

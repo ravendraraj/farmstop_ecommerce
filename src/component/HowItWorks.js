@@ -33,7 +33,7 @@ class HowItWorks extends Component{
                             
                             <View style={styles.imageContainer}>
                                 <Image source={constants.image.orderHowItWorks}
-                                style={{position:'relative',right:20,zIndex:0,width:"150%",height:"120%",alignSelf:'center'}}/>
+                                style={{...styles.howImg,position:'relative',right:20,zIndex:0}}/>
                             </View>
                         </View>
 
@@ -41,7 +41,7 @@ class HowItWorks extends Component{
                         <View style={{flex:1,flexDirection:'row'}}>
                             
                             <View style={styles.imageContainer}>
-                                <Image source={constants.image.orderHarvested} style={styles.descImage}/>
+                                <Image source={constants.image.orderHarvested} style={styles.howImg}/>
                             </View>
                             <View style={styles.desc}>
                                 <Text style={styles.boldText}>Order Harvested</Text>
@@ -74,7 +74,7 @@ class HowItWorks extends Component{
 
                             <View style={styles.imageContainer}>
                                 <Image source={constants.image.deliverHowItWork} 
-                                style={{position:'relative',right:20,zIndex:0,width:"160%",height:"100%",alignSelf:'center'}}/>
+                                style={styles.howImg}/>
                             </View>
                         </View>
 
@@ -122,7 +122,9 @@ const styles = StyleSheet.create({
       fontFamily:constants.fonts.Cardo_Regular   
     },
     imageContainer:{
-        width:"30%"
+        width:"30%",
+        justifyContent:'center',
+        alignItems:'center',
     },
     descImage:{
         position:'relative',
@@ -136,6 +138,12 @@ const styles = StyleSheet.create({
         height:constants.vh(100),
         alignSelf:'center'
     },
+    howImg:{
+        width:constants.width*0.30,
+        height:constants.width*0.30,
+        alignSelf:'center',
+        resizeMode:'contain'
+    }
 
 
 })
