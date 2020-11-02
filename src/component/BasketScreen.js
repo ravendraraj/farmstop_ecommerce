@@ -61,7 +61,7 @@ class BasketScreen extends Component {
                 var data = [];
                 data["id"] = prodTypeId;
                 data["variationId"] = variationId;
-                data["screen"] = this.props.screen;
+                data["screen"] = "basketScreen";
                 data["qty"] = selectedQty;
                 data["selectedVariationPrice"]= selectedVariationPrice;
                 await this.props.addItemToCart(data);
@@ -149,11 +149,12 @@ class BasketScreen extends Component {
      
         if(ItemList != "undefined" && ItemList.length>0){
             let prodDetails = ItemList.find((item) => item.id === prodId);
+            let shortDesc = " <p> "+prodDetails.short_description+" </p>";
             return(
                 <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
-                    <Text style={{fontSize:constants.vw(20),textAlign:'center',fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
+        
                     <View style={{alignSelf:'center'}}>
-                        <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
+                        <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(/ /gi, "_"))}} style={styles.singleImg}/>
                     </View>
                     
                         <View style={{width:'85%',alignSelf:'center'}}>
@@ -170,18 +171,22 @@ class BasketScreen extends Component {
                         </View>
                         </View>
 
-                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30,marginBottom:-30,width:'100%'}}>
+                    <View style={{marginTop:20}}>
+                    <Text style={{fontSize:constants.vw(20),fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
+                    <Text style={{...styles.prodLabel,fontSize:18}}>Description</Text>
+                    {prodDetails.short_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',paddingLeft:20,marginTop:10,width:'100%'}}>
+                        <HTML html={shortDesc}
+                                tagsStyles={{p:styles.tagLayout}}
+                        />
+                    </View>):<View/>}
+                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:10,marginBottom:-30,width:'100%'}}>
                         {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
                         {/*<Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>*/}
                         <HTML html={prodDetails.long_description}
-                                tagsStyles={{p:styles.tagLayout}}
+                                tagsStyles={{p:styles.tagLayout,li:styles.tagLayout}}
                         />
                     </View>):<View/>}
-                    {prodDetails.short_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',paddingLeft:20,marginTop:30,width:'100%'}}>
-                        <HTML html={prodDetails.short_description}
-                                tagsStyles={{p:styles.tagLayout}}
-                        />
-                    </View>):<View/>}
+                    </View>
 
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
                         <Text style={{fontSize:constants.vw(25),fontFamily:bold}}>Know your source</Text>

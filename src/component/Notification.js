@@ -9,7 +9,7 @@ import {getOrderList,getNotification,removeNotification} from '../lib/api'
 import {Loader} from '../customElement/Loader'
 import {TextHeading,EmptyComp} from '../customElement/Input'
 import Icons from 'react-native-vector-icons/FontAwesome'
-import {showErrorMsg} from '../lib/helper'
+import {showErrorMsg,replaceAllSpace} from '../lib/helper'
 import AsyncStorage from '@react-native-community/async-storage'
 
 const width = Dimensions.get('window').width;
@@ -78,7 +78,7 @@ renderImageMsg(item){
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Image style={{width:width*0.4,height:width*0.4,marginTop:10}} resizeMode={"contain"} source={{uri:(item.image_url).replace(' ','_')}} />
+                    <Image style={{width:width*0.4,height:width*0.4,marginTop:10}} resizeMode={"contain"} source={{uri:replaceAllSpace(item.image_url)}} />
                 </View>
             </View>
         )

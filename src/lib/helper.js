@@ -110,3 +110,11 @@ export const passwordValidations = (password)=>{
   }
   return false;
 }
+
+
+export const replaceAllSpace=(str)=>{
+  if(str !=""){
+    return(str.replace(/ /gi, "_"));
+  }
+  return str;
+}

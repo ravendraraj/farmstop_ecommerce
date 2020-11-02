@@ -192,7 +192,7 @@ class PorductVariation extends Component {
             }
 
             return (
-                    <View style={{width:'95%',alignSelf:'center'}}>
+                    <View style={{width:'95%',alignSelf:'center',paddingTop:10}}>
                         <FlatList
                             data={categoryList}
                             horizontal={true}
@@ -264,11 +264,10 @@ class PorductVariation extends Component {
                             <TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
                                 <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
                             </TouchableOpacity>
-                            
-                            <TouchableOpacity style={styles.wishBox}
+                            {(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(                            <TouchableOpacity style={styles.wishBox}
                             onPress={()=>this._addinWishList(item)}>
                                 <Material name={item.isMyWish} color={constants.Colors.color_grey} size={22}/>
-                            </TouchableOpacity>
+                            </TouchableOpacity>)}
                                 
                             <TouchableOpacity style={{marginTop:10,alignSelf:'center'}} onPress={()=>this._knowMore(item.id)}>
                                 <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold}}>Know more</Text>
@@ -461,6 +460,7 @@ const mapStateToProps = state => ({
     activeProd : state.data.activeProduct,
     authEmail :state.data.authEmail,
     authMobile :state.data.authMobile,
+    authUserID :state.data.authUserID,
     no_more_data: state.data.no_more_data,
     productData : state.data.productData,
     activeProdCat:state.data.activeProduct,

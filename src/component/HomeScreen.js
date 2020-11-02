@@ -25,6 +25,7 @@ const headerHeight = height;
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
+    this.onEndReachedCalledDuringMomentum = true;
     this.state = {
       productList: [],
       query: '',
@@ -141,9 +142,6 @@ class HomeScreen extends Component {
                 // dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
                 navigate("internetError");
             });
-
-
-
 					},
 					(error) => {//console.log(error)
           },
@@ -159,6 +157,13 @@ class HomeScreen extends Component {
 		}
 	}
 
+  onEndReached = ({ distanceFromEnd }) => {
+    //console.log("dusitance",distanceFromEnd);
+    if(!this.onEndReachedCalledDuringMomentum){
+        this.setState({showFooter:true});
+        this.onEndReachedCalledDuringMomentum = true;
+    }
+  }
 
   findProduct(query) {
     //method called everytime when we change the value of the input
@@ -222,24 +227,28 @@ class HomeScreen extends Component {
               </TouchableOpacity>
             </View>
           )}
-          //Setting the number of column
+          
           numColumns={2}
           keyExtractor={(item) => item.id}
-          onEndReachedThreshold={1}
-          onEndReached={()=>this.LoadMoreRandomData()}
+
+          // onEndReached={this.onEndReached.bind(this)}
+          // onEndReachedThreshold={0.1}
+          // onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+          
           ListFooterComponent={
             <View>
             {this.props.baskets.length >0?(<View style={{...styles.wrapper}}>
                 <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
                     {this.props.baskets.map((item,id)=>{
                         if(this.props.prodId != item.id){
+                          let shortDesc = " <p> "+item.short_description+" </p>";
                             return (    
                                 <View style={{flexDirection:'row',justifyContent:'space-evenly'}} key={id}>
                                     <Image source={{uri:prod_variation_url+item.fimage}} style={{width:constants.width*0.5,height:constants.width*0.4, resizeMode:'contain'}}/>
                                     <View style={{width:constants.width*0.5}}>
                                         <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold, color:constants.Colors.color_btn}}>{item.attribute_name}</Text>
                                         <View style={{marginTop:constants.vh(10)}}>
-                                            <HTML html={item.short_description}
+                                            <HTML html={shortDesc}
                                                 tagsStyles={{p:styles.tagLayout}}
                                             />
                                         </View>
@@ -257,7 +266,10 @@ class HomeScreen extends Component {
                         })}
                 </Swiper>
             </View>):(<View/>)}
-            {this.renederAboutFarm()}
+            {/*this.renederAboutFarm()*/}
+            <View style={{marginTop:constants.vh(30)}}>
+                <AboutFarm/>
+            </View>
             </View>
           }
         />
@@ -293,7 +305,7 @@ class HomeScreen extends Component {
       )
     }else{
       return(
-        <View style={{backgroundColor:'red'}}><Text style={{fontSize:30}}>Hi</Text></View>
+        <View style={{height:constants.height*0.6}}/>
       )
     }
   }
@@ -319,7 +331,7 @@ class HomeScreen extends Component {
     if ( this.state.showFooter != true && ItemList != "undefined" && ItemList != null) {
       return(
         // <View style={{flex:1,justifyContent:"flex-end",marginBottom:constants.vw(14)}}>
-        <View style={{position:'absolute',bottom:10,width:"100%",alignSelf:'center'}}>
+        <View style={{position:'absolute',bottom:10,width:constants.width*0.98,alignSelf:'center',backgroundColor:'white'}}>
             <View style={{alignSelf:'center'}}>
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>Sourced from certified farms and Delivered to</Text>
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(18)}}>your doorstep!</Text>
@@ -445,20 +457,22 @@ const styles = StyleSheet.create({
     flex: 1
   },
     wrapper:{
-        marginTop:constants.vh(10),
+        marginTop:constants.vh(20),
         alignSelf:'center',
         width:constants.width*0.95,
         height:constants.width*0.5,
-        borderRadius:4,
+        borderRadius:8,
         backgroundColor:"white",
         marginBottom:constants.vh(10),
         borderColor:constants.Colors.color_lineGrey,
-        borderWidth:1,
-        elevation:2,
+        borderWidth:2,
+        elevation:3,
         padding:5
+
     },
     tagLayout:{
-        fontFamily:constants.fonts.Cardo_Regular
+        fontFamily:constants.fonts.Cardo_Regular,
+        fontSize:16
     }
 });
 

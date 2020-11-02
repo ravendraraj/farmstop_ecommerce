@@ -18,7 +18,7 @@ class AboutFarm extends Component{
         return(
             <View style={styles.container}>
                 <ScrollView>
-                    <View style={{width:'90%',alignSelf:"center"}}>
+                    <View style={{width:constants.width*0.9,alignSelf:"center"}}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
                             Farmstop Organic farms
                         </Text>
@@ -30,7 +30,7 @@ class AboutFarm extends Component{
                             <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:10,marginBottom:10}}>
                                 A glimpse of our farms
                             </Text>
-                            <Image source={constants.image.aboutFarm} style={{width:width-30,height:width-140,alignSelf:'center'}}/>
+                            <Image source={constants.image.aboutFarm} style={{width:width*0.95, height:width*0.56,resizeMode:'contain',alignSelf:'center'}}/>
                             <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_BLACK ,fontSize:18,marginTop:30}}>
                                 Please click the links below to understand how
                                 we raise crops and what goes into the farms

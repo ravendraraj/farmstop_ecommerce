@@ -588,6 +588,8 @@ const data = (state = initialDataState, action) => {
                 dataSetForCart = state.searchProductList;
             }else if(action.screen == "MyWish" || action.screen =="SearchWishItem" || action.screen == "Wish List"){
                 dataSetForCart = state.my_wish_list;
+            }else if(action.screen == "basketScreen"){
+                dataSetForCart = state.baskets;
             }
 
             let addedItem = dataSetForCart.find(item => item.id === action.id && item.selectedVariationID == action.selectedVariationID);

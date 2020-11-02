@@ -163,6 +163,8 @@ class KnowMore extends Component {
                 prodDetails.isMyWish = 'heart-outline';
             }
 
+            let description = "<p>" + prodDetails.long_description +" </p>";
+
             return(
                 <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
                     <Text style={{fontSize:constants.vw(20),textAlign:'center',fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
@@ -224,7 +226,8 @@ class KnowMore extends Component {
                     {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30,marginBottom:-30,width:'100%'}}>
                         {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
                         {/*<Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>*/}
-                        <HTML html={prodDetails.long_description}
+                    <Text style={{fontSize:18,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}>Description</Text>
+                        <HTML html={description}
                                 tagsStyles={{p:styles.tagLayout}}
                         />
                     </View>):<View/>}
@@ -343,7 +346,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
     },
     tagLayout:{
-        fontSize:constants.vw(16),
+        fontSize:constants.vw(18),
         fontFamily:constants.fonts.Cardo_Regular,
     },
     prodLabel:{

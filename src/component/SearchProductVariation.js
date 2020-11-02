@@ -182,10 +182,12 @@ class SearchProductVariation extends Component {
 									<TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
 										<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />
 									</TouchableOpacity>
-									<TouchableOpacity style={styles.wishBox}
+
+									{(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(<TouchableOpacity style={styles.wishBox}
 										onPress={() => this._addinWishList(item)}>
 										<Material name={item.isMyWish} color={constants.Colors.color_grey} size={22} />
-									</TouchableOpacity>
+									</TouchableOpacity>)}
+									
 
 									
                                     <TouchableOpacity style={{flex:2,justifyContent:'flex-end'}} onPress={()=>this._knowMore(item.id)}>
@@ -422,7 +424,8 @@ const mapStateToProps = state => ({
 	searchProductList: state.data.searchProductList,
 	productName: state.data.searchProdName,
 	activeProd: state.data.activeProduct,
-	cart: state.data.addedItems
+	cart: state.data.addedItems,
+	authUserID:state.data.authUserID
 });
 
 const mapDispatchToProps = dispatch => ({
