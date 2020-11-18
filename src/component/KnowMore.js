@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+
 import SocialLink from './SocialLinks'
 import HTML from 'react-native-render-html'
 //helper function
@@ -14,6 +16,8 @@ import {Picker} from '@react-native-community/picker';
 import Swiper from 'react-native-swiper'
 import {setWishListItemOnServer ,addItemToCart,setCartItemLocal} from '../lib/api'
 import {Loader} from '../customElement/Loader'
+import Share from 'react-native-share';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -43,6 +47,36 @@ class KnowMore extends Component {
         }else{
             ToastAndroid.showWithGravity("Please First Select Variation", ToastAndroid.SHORT, ToastAndroid.TOP);
         }
+    }
+
+    _onShare = async(content,imageUrl)=>{
+        console.log(imageUrl);
+            RNFetchBlob.fetch('GET',imageUrl)
+              .then(resp => {
+                console.log('response : ', resp);
+                console.log(resp.data);
+                let base64image = resp.data;
+                share('data:image/png;base64,' + base64image);
+              })
+              .catch(err => errorHandler(err));
+
+            share = base64image => {
+              console.log('base64image : ', base64image);
+              let shareOptions = {
+                title: 'Farmstop',
+                url: base64image,
+                message: content,
+                subject: 'https://www.farmstop.in/'
+              };
+
+              Share.open(shareOptions)
+                .then(res => {
+                  console.log(res);
+                })
+                .catch(err => {
+                  err && console.log(err);
+                });
+            };
     }
     
     async _addInCart(prodTypeId,variationId ,selectedQty,selectedVariationPrice){
@@ -163,7 +197,9 @@ class KnowMore extends Component {
                 prodDetails.isMyWish = 'heart-outline';
             }
 
-            let description = "<p>" + prodDetails.long_description +" </p>";
+            let description = "<p> "+prodDetails.long_description+" </p>";
+
+            let imageUrl = prod_variation_url+prodDetails.fimage;
 
             return(
                 <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
@@ -176,6 +212,15 @@ class KnowMore extends Component {
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
                     </View>
                     
+                        <View style={{flexDirection:'row',alignSelf:'flex-end'}}>
+                            <TouchableOpacity
+                                onPress={()=>{this._onShare(prodDetails.long_description,imageUrl)}}
+                                style={{width:30,height:30}}
+                            >
+                            <Material style={{ marginRight: 2 }} name={"share-variant"} size={20} color={constants.Colors.color_BLACK} />
+                            </TouchableOpacity>
+                        </View>
+
                         <View style={{width:'85%',alignSelf:'center'}}>
                         <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:20}}>
 

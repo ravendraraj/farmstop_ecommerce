@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,Linking} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -19,9 +19,11 @@ export default function ContactScreen(){
                                 <Text style={styles.text}>
                                     Write to us at
                                 </Text>
-                                <Text style={styles.text}>
-                                    info@farmstop.in
-                                </Text>
+                                <TouchableOpacity onPress={() => Linking.openURL('mailto:info@farmstop.in?subject=&body=')}>
+                                    <Text style={styles.text}>
+                                        info@farmstop.in
+                                    </Text>
+                                </TouchableOpacity>
                                 <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(20),marginTop:constants.vw(10),marginBottom:constants.vw(10)}}>
                                     Or
                                 </Text>

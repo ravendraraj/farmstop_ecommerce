@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput,Linking} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -100,7 +100,7 @@ renderOrderStatus(order_status){
                         <Text style={(order_status == 4)?styles.activeOrderStatus:styles.trackText}>Order Delivered</Text>
                     </View>
                 </View>
-            </View>
+            </View> 
         )
     }
 }
@@ -138,7 +138,9 @@ renderOrderStatus(order_status){
                     </ScrollView>
                 </View>
                 <View style={{position: 'absolute', left: 0, right: 0, bottom: 10}}>
+                    <TouchableOpacity onPress={() => Linking.openURL('mailto:info@farmstop.in?subject=&body=')}>
                     <Text style={{textAlign:'center',fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Bold}}>Contact us at info@farmstop.in</Text>
+                    </TouchableOpacity>
                 </View>
                 {this._loadLoader()}
             </View>
