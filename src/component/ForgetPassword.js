@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet, Alert,ToastAndroid} from 'react-native'
+import {View ,Text,StyleSheet, Alert,ToastAndroid,SafeAreaView,ImageBackground,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
+import {ButtonWithOutIcon} from '../customElement/button'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 //import { navigate } from '../appnavigation/RootNavigation';
@@ -83,44 +84,65 @@ class ForgetPassword extends Component{
         
         if(this.props.otp === ""){
             return(
-                <View>
-                <TextHeading title="Forgot Password?"/>
+                <View style={styles.form}>
+                <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Forgot Password?</Text>
                 <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(10)}}>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Email Id Or Register Mobile" onChangeText={(text) => this.setState({emailId:text})}/>
                         </View>
-                        <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._sendOtpForForgetPass()}>
-                            <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
-                        </TouchableOpacity>
+                        {/*<TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._sendOtpForForgetPass()}>
+                                                    <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Proceed</Text>
+                                                </TouchableOpacity>*/}
+                        <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(40)}}>
+                            <ButtonWithOutIcon 
+                                buttonName={"Reset"}
+                                onPress={()=>this._sendOtpForForgetPass()}
+                            />
+                        </View>
                     </View>
                 </View>    
             )
         }else if(this.props.otp !='' && this.state.otpVerified == false){
             return(
-                <View style={{width:'80%',alignSelf:"center"}}>
-                        <TextHeading title="OTP Verify" fontsize={25}/>
-                        <View style={styles.inputBox}>
-                            <PrimaryTextInput secureTextEntry={true} placeholder="Enter OTP" onChangeText={(text) => this.setState({enterOtp:text})}/>
-                        </View>
-                        
-                        <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._verifyOtp()}>
-                            <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Reset</Text>
-                        </TouchableOpacity>
+                <View style={styles.form}>
+                    <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>OTP Verification</Text>
+
+                    <View style={styles.inputBox}>
+                        <PrimaryTextInput secureTextEntry={true} placeholder="Enter OTP" onChangeText={(text) => this.setState({enterOtp:text})}/>
                     </View>
+                        
+                    {/*<TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this._verifyOtp()}>
+                                                <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Reset</Text>
+                                        </TouchableOpacity>*/}
+                    <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(40)}}>
+                        <ButtonWithOutIcon 
+                            buttonName={"Reset"}
+                            onPress={()=>this._verifyOtp()} 
+                        />
+                    </View>
+                </View>
             )
         }else if(this.props.otp !='undefined' && this.state.otpVerified == true){
             return(
-                <View style={{width:'80%',alignSelf:"center"}}>
-                        <TextHeading title="Reset Password" fontsize={25}/>
+                <View style={styles.form}>
+                        <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Reset Password</Text>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput secureTextEntry={true} placeholder="New Password" onChangeText={(text) => this.setState({newPassword:text})}/>
                         </View>
                         <View style={styles.inputBox}>
                             <PrimaryTextInput secureTextEntry={true} placeholder="Retype Password" onChangeText={(text) => this.setState({retypePassword:text})}/>
                         </View>
-                        <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this.changePassword()}>
+                        
+                        {/*<TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this.changePassword()}>
                             <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Reset</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity>*/}
+
+                        <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(40)}}>
+                            <ButtonWithOutIcon 
+                                buttonName={"Reset"}
+                                onPress={()=>this.changePassword()}
+                            />
+                        </View>
                     </View>
             )
         }
@@ -142,13 +164,20 @@ class ForgetPassword extends Component{
 
     render(){
         return(
-            <View style={styles.container}>
-                <ScrollView>
-                    {this.renderView()}
-                    {this.showMsg()}
-                </ScrollView>
-                {this._loadLoader()}
-            </View>
+            <SafeAreaView style={styles.container}>
+                <ImageBackground
+                    style={{flex: 1}}
+                    source={constants.image.commonBg}
+                    resizeMode={'cover'}
+                >
+                <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
+                    <ScrollView>
+                        {this.renderView()}
+                        {this.showMsg()}
+                    </ScrollView>
+                    {this._loadLoader()}
+                </ImageBackground>
+            </SafeAreaView>
         )
     }
 }
@@ -159,7 +188,21 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{
-        marginTop:20
+        marginTop:20,
+        alignSelf:'center',
+        width:constants.width*0.7,
+    },
+    form:{
+        marginBottom:constants.vh(10),
+        justifyContent:'center',
+        width:constants.width*0.9,
+        alignSelf:"center",
+        marginTop:constants.vh(150),
+        backgroundColor:constants.Colors.color_WHITE,
+        //backgroundColor:'rgba(255,255,255,0.9)',
+        borderRadius:constants.vw(10),
+        paddingBottom:20,
+        elevation:5,
     }
 })
 

@@ -18,8 +18,10 @@ import AboutFarm from '../component/AboutFarm'
 import otpVerify from '../component/otpVerify'
 import MyCart from '../component/MyCart'
 import ContactScreen from '../component/ContactScreen'
-import SocialLoginScreen from '../component/SocialLoginScreeen'
-// import WishList from '../component/WishList'
+
+//import SocialLoginScreen from '../component/SocialLoginScreeen'
+import SocialLoginScreen from '../appnavigation/AuthScreenStack'
+
 import GoogleLoc from '../component/GoogleLoc'
 import ShippingAddress from '../component/ShippingAddress'
 

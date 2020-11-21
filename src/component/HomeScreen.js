@@ -78,6 +78,11 @@ class HomeScreen extends Component {
   if(!this.props.cartItemSync)
     await this.props.getCartItem();
 
+  let deviceTokenData = await AsyncStorage.getItem('DEVICE_TOKEN');
+    if(deviceTokenData != null){
+      this.props.setDeviceData(JSON.parse(deviceTokenData));
+    }
+
   }
 
 
@@ -459,14 +464,14 @@ const styles = StyleSheet.create({
     wrapper:{
         marginTop:constants.vh(20),
         alignSelf:'center',
-        width:constants.width*0.95,
+        width:constants.width*0.9,
         height:constants.width*0.5,
         borderRadius:8,
         backgroundColor:"white",
         marginBottom:constants.vh(10),
         borderColor:constants.Colors.color_lineGrey,
-        borderWidth:2,
-        elevation:3,
+        borderWidth:1,
+        elevation:10,
         padding:5
 
     },
@@ -498,6 +503,7 @@ const mapDispatchToProps = dispatch => ({
   shippingAddress: (data) =>dispatch({ type : 'ASYNC_LOCATION_FETCHED',  address : data.address , shipping_cost:data.shipping_cost, pincode:data.pincode}),
   getCartItem:()=>dispatch(getCartItem()),
   checkDelivery: (data) => dispatch(checkDelivery(data)),
+  setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

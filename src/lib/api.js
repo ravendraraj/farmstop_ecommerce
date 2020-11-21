@@ -6,6 +6,55 @@ import RazorpayCheckout from 'react-native-razorpay';
 import {razor_api_key,razor_api_keyTest} from '../constants/key';
 import constants from '../constants'
 import {showErrorMsg} from './helper'
+import {getUserDataFromStorage} from '../services/async-storage'
+
+export const switchRootScreen = (data) => async(dispatch,getState) => {
+    const appIntroStatus = await AsyncStorage.getItem('introHadDone');
+    console.log("AuthIntro", appIntroStatus);
+    setTimeout(() => {
+        getUserDataFromStorage().then(value=>{
+            console.log("Yes I am call",value);
+            if(value != null){
+                console.log("userId=>>>>> ",value.userId);
+                dispatch({type:'AUTHORIZED-USER',
+                        email:value.email,
+                        mobile:value.mobile,
+                        userID:value.userId,
+                        profile:value.profile,
+                        login_type:value.Login_Type,
+                        authName:value.name,
+                        token:value.token
+                });
+                
+                dispatch({type : 'AUTH_SWITCH_ROOT',
+                    accessToken: value.token,
+                    switchApp: {
+                        isLoading: false,
+                        isAppIntro:false,
+                    }
+                });
+
+            }else{
+                console.log("Not Login");
+                let inroduction = appIntroStatus == "done"? false:true;
+                dispatch({type : 'AUTH_SWITCH_ROOT',
+                    accessToken:null,
+                    switchApp: {
+                        isLoading: false,
+                        isAppIntro:inroduction,
+                    }
+                });
+            }
+        });
+
+    },2000);
+}
+
+export const appIntroDone=()=>(dispatch,getState)=>{
+    AsyncStorage.setItem('introHadDone',"done");
+    AsyncStorage.setItem('WishItem', 'NULL'); //for wishList Storage
+    dispatch({type:'APP_INTRO_DONE'});
+}
 
 export const logout = (data) => async(dispatch,getState) => {
 
@@ -14,8 +63,8 @@ export const logout = (data) => async(dispatch,getState) => {
     await AsyncStorage.removeItem("userCart");
     await AsyncStorage.removeItem("userShippingAdd");
     dispatch({type:'LOGOUT'});
-    navigate('NotLogin');
-    navigate('SocialLogin');
+    // navigate('NotLogin');
+    // navigate('SocialLogin');
 }
 
 export const updateDeviceTokenOnServer =(data)=> async(dispatch,getState)=>{

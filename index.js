@@ -10,6 +10,7 @@ import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import AppReducer from './src/reducers';
 import {name as appName} from './app.json';
+import MainApp from './App'
 
 const loggerMiddleware = createLogger({ predicate: (getState, action) => __DEV__  });
 
@@ -22,7 +23,7 @@ let store = createStore(AppReducer, compose(
 
 const App = () => (
     <Provider store={store}>
-        <Navigation/>
+        <MainApp/>
     </Provider>
 );
 

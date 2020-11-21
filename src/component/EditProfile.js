@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import {TextHeading,PrimaryTextInput} from '../customElement/Input'
 import {ButtonWithIcon,NormalButton} from '../customElement/button'
 import {updateProfile} from "../lib/api"
+import {emailValidations, mobileNoValidations} from '../lib/helper'
 import {Loader} from '../customElement/Loader' 
 
 const width = Dimensions.get('window').width;
@@ -25,7 +26,7 @@ class EditProfile extends Component{
         if(this.props.profile != "null" && this.props.profile != "" && this.props.profile != null){
             return(
                 <Image 
-                    source={{uri:this.props.profile}} 
+                    source={{uri:this.props.profile}}
                     style={{width:constants.vw(120),height:constants.vw(120), borderWidth:2,borderRadius:constants.vw(60),alignSelf:'center'}}
                 />
             )
@@ -53,13 +54,12 @@ class EditProfile extends Component{
     _submit(){
         let email =this.state.email;
         let mobile =this.state.mobile;
-        if(email =='' || email =='null' || email ==null){
+        if(!emailValidations(email)){
             ToastAndroid.showWithGravity("Please fill email", ToastAndroid.SHORT, ToastAndroid.TOP);
-        }else if(mobile =='' || mobile =='null' || mobile ==null || mobile.length != 10 ){
+        }else if(!mobileNoValidations(mobile)){
             ToastAndroid.showWithGravity("Please fill correct mobile number ", ToastAndroid.SHORT, ToastAndroid.TOP);
         }else{
             let screen_name = this.props.route.params.screen_name;
-            console.log("My Profile",this.props.route);
             this.props.updateProfile({email,mobile,screen_name});
         }
     }

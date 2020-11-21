@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet, Alert ,Dimensions,Image} from 'react-native'
+import {View ,Text,StyleSheet, Alert ,Dimensions,Image,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -210,12 +210,20 @@ class SocialLoginScreen extends Component{
                                 Having issue signing up, please write to us at info@farmstop.in
                             </Text>
                         
-                            <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-4}} onPress={()=>this.props.navigation.navigate('MainHome')}>
+                            <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-4}} onPress={()=>this.skipLoginPage()}>
                                 <Text style={{fontSize:constants.vw(16),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
             )
+    }
+
+    skipLoginPage=()=>{
+        if(this.props.isLoignSkipProps){
+            this.props.skipLogin();
+        }else{
+            this.props.navigation.navigate('MainHome');
+        }
     }
 
     getInfoFromToken = (token) => {
@@ -306,6 +314,7 @@ class SocialLoginScreen extends Component{
     render(){
         return(
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
                 <ScrollView>
                     {this._ShowError()}
                     {this._renderView()}
@@ -347,6 +356,7 @@ const mapStateToProps = state => ({
     animate: state.indicator,
     error: state.error.err,
     authEmail :state.data.authEmail,
+    isLoignSkipProps:state.data.isLoignSkip,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -356,6 +366,7 @@ const mapDispatchToProps = dispatch => ({
     social_login:(data)=>dispatch(socialLogin(data)),
     loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
     setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
+    skipLogin:()=>dispatch({type:'SKIP_LOGIN'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);

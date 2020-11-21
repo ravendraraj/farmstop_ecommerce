@@ -20,24 +20,12 @@ const slides = [
 		brandImg: image.brandImages,
 		backgroundColor: '#F7BB64',
 	},
-	// {
-	// 	key: 'two',
-	// 	text: 'Are you farmer and want to sell anything "Organic"',
-	// 	image: image.appIntro2,
-	// 	backgroundColor: '#F7BB64',
-	// },
 	{
 		key: 'three',
 		text: 'Loooking for authentic and genuine Organic Produce.',
 		image: image.appIntro3,
 		backgroundColor: '#F7BB64',
 	},
-	// {
-	// 	key: 'sellbuyopt',
-	// 	text: 'Are you a consumer and want to Buy anything "Organic"',
-	// 	image: require('../images/slider3.png'),
-	// 	backgroundColor: '#F7BB64',
-	// },
 ];
 
 const introDoneTest = false; 
@@ -146,33 +134,6 @@ class WelcomeScreen extends Component {
 		// }
 	};
 
-	// render() {
-	// 	if (this.state.show_Main_App){
-	// 		return(
-	// 			<View style={styles.container}>
-	// 				<View style={{flex:1,justifyContent:'center'}}>
-	// 				<Image source={constants.image.welcomeLogo} style={{alignSelf:'center',width:constants.vw(300),height:constants.vw(300)}}/>
-	// 				<Text style={styles.welcomText}>Welcome to farmstop</Text>
-	// 				</View>
-	// 				<PushController/>
-	// 			</View>
-	// 		);
-	// 	} else {
-	// 		return (
-	// 			// <View style={styles.container}>
-	// 			<AppIntroSlider
-	// 				renderItem={this._renderItem}
-	// 				data={slides}
-	// 				dotStyle={{ backgroundColor: 'black' }}
-	// 				activeDotStyle={{ backgroundColor: '#7F462C' }}
-	// 				showNextButton = {false}
-	// 				showDoneButton = {false}
-	// 			/>
-	// 			// </View>
-	// 		);
-	// 	}
-	// }
-
 	render() {
 		return(
 			<>
@@ -259,7 +220,6 @@ const styles = StyleSheet.create({
 		elevation:10
 	}
 });
-
 
 const mapStateToProps = state => ({
 	// animate : state.indicator

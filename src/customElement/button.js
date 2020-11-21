@@ -37,6 +37,18 @@ export const ButtonWithIcon = (props) => {
     );
 }
 
+export const ButtonWithOutIcon = (props) => {
+    return (
+        <TouchableOpacity 
+                style={{backgroundColor:constants.Colors.color_heading,padding:8,borderRadius:constants.vw(5),alignItems:'center',elevation:5}} 
+                {...props} >
+            <View>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE,fontSize:constants.vw(22)}}>{props.buttonName}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
 export const NormalButton = (props) => {
     return (
         <TouchableOpacity 

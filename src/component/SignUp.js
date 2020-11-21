@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet ,Alert} from 'react-native'
+import {View ,Text,StyleSheet ,Alert,StatusBar, ImageBackground,SafeAreaView} from 'react-native'
 import {connect} from 'react-redux'
-import {PrimaryTextInput ,TextHeading} from '../customElement/Input'
+import {PrimaryTextInput} from '../customElement/Input'
+import {ButtonWithOutIcon} from '../customElement/button'
 import {TouchableOpacity,ScrollView} from 'react-native-gesture-handler';
 import constants from '../constants'
 import {generateOtp,mobileNoValidations,emailValidations,showErrorMsg,fullNameValidations,passwordValidations} from '../lib/helper'
@@ -70,11 +71,18 @@ class SignUp extends Component{
     }
     render(){
         return(
-            <View style={styles.container}>
-                <TextHeading title="Welcome To Farmstop"/>
+            <SafeAreaView style={styles.container}>
+                <ImageBackground
+                    style={{flex: 1}}
+                    source={constants.image.commonBg}
+                    resizeMode={'cover'}
+                >
+                <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
+                {/*<StatusBar translucent backgroundColor="transparent" />*/}
                 <ScrollView>
-                    <View style={{width:'80%',alignSelf:"center",marginTop:constants.vh(20)}}>
-                        <View>
+                    <View style={styles.form}>
+                        <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(25),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Welcome To Farmstop</Text>
+                        <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Username" onChangeText={(text)=>this.setState({username:text})}/>
                         </View>
                         <View style={styles.inputBox}>
@@ -83,13 +91,41 @@ class SignUp extends Component{
                         <View style={styles.inputBox}>
                             <PrimaryTextInput placeholder="Enter Password" secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})} onSubmitEditing={()=>this.sendOtpForSignUp()}/>
                         </View>
-                        <TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this.sendOtpForSignUp()}>
-                            <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Sign Up</Text>
-                        </TouchableOpacity>
+
+                        {/*<TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this.sendOtpForSignUp()}>
+                                                    <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Sign Up</Text>
+                                                </TouchableOpacity>*/}
+                        <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(40)}}>
+                            <ButtonWithOutIcon 
+                                buttonName={"Sign Up"}
+                                onPress={()=>this.sendOtpForSignUp()}
+                            />
+                        </View>
+                        <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(20)}}>
+                            <Text 
+                                onPress={()=>{this.props.navigation.navigate("SocialLoginScreen")}}
+                                style={{
+                                    fontSize:constants.vw(16),
+                                    fontFamily:constants.fonts.Cardo_Bold,
+                                }}
+                            >   
+                                Are you already register?
+                                <Text
+                                    onPress={()=>{this.props.navigation.navigate("SocialLoginScreen")}}
+                                    style={{
+                                        fontFamily:constants.fonts.Cardo_Bold,
+                                        color:constants.Colors.color_heading
+                                    }}
+                                >
+                                    Login Here
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </ScrollView>
                 {this._loadLoader()}
-            </View>
+                </ImageBackground>
+            </SafeAreaView>
         )
     }
 }
@@ -100,7 +136,21 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{
-        marginTop:20
+        marginTop:20,
+        alignSelf:'center',
+        width:constants.width*0.7,
+    },
+    form:{
+        marginBottom:constants.vh(10),
+        justifyContent:'center',
+        width:constants.width*0.9,
+        alignSelf:"center",
+        marginTop:constants.vh(150),
+        backgroundColor:constants.Colors.color_WHITE,
+        //backgroundColor:'rgba(255,255,255,0.9)',
+        borderRadius:constants.vw(10),
+        paddingBottom:20,
+        elevation:5,
     }
 })
 

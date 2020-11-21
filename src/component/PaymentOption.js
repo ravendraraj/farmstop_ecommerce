@@ -108,9 +108,9 @@ _radioHandler(){
                             </View>
                             <View style={{marginTop:constants.vh(10)}}>
                                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                    <Text style={styles.heading}>Saved Email Address</Text>
+                                    <Text style={styles.heading}>Saved Email Id and Mobile Number</Text>
                                     <View>
-                                    { this.props.authEmail !="" ?(<View/>):(
+                                    { this.props.authEmail !="" && this.props.authMobile !="" ?(<View/>):(
                                         <TouchableOpacity onPress={()=>{this.props.navigation.navigate("EditProfile",{screen_name:'PaymentOption'})}}>
                                             <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16,color:constants.Colors.color_intro}}>+ Add</Text>
                                         </TouchableOpacity>
@@ -120,6 +120,7 @@ _radioHandler(){
                                 </View>
                                 <View style={{marginTop:10,marginBottom:10}}>
                                     <Text style={styles.text}>{this.props.authEmail !=""?this.props.authEmail:"Add Email Id"}</Text>
+                                    <Text style={{...styles.text,marginTop:5}}>{this.props.authMobile !=""?this.props.authMobile:"Add Mobile Number"}</Text>
                                 </View>
                             </View>
                             <View style={{marginTop:constants.vh(10),flexDirection:'row'}}>

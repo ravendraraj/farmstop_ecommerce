@@ -1,14 +1,35 @@
-const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',token:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null ,appIntro:'', productData: [], remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
+const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
+    knowMoreProdId:null, productData: [], remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
 deliveryDate:'',defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:'',
-freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[]};
+freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
+    isAppIntro:true,
+    isLoading:true,
+    isLoignSkip:true,
+    token:''
+};
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
+
+    case 'AUTH_SWITCH_ROOT':
+    return{
+        ...state,
+        token:action.accessToken,
+        isLoading: false,
+        isAppIntro:action.switchApp.isAppIntro,
+    }
+
         case 'APP_INTRO_DONE':
-        return { 
+        return {
             ...state,
-            appIntro:action.data
+            isAppIntro:false,
+        };
+
+
+        case 'SKIP_LOGIN':
+        return {
+            ...state,
+            isLoignSkip:false,
         };
 
         case 'LOGIN_SUCCESS':
@@ -92,7 +113,9 @@ const data = (state = initialDataState, action) => {
                 defaultShipingAddress:"",
                 activeProduct:'',
                 orederDetails:[],
-                token:''
+                token:'',
+                
+                isAppIntro:false,
             }
         
         case 'FETECH_ADDRESS_LIST':
