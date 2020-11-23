@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions, StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -17,6 +17,7 @@ class AboutFarm extends Component{
     render(){
         return(
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{width:constants.width*0.9,alignSelf:"center"}}>
                         <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>

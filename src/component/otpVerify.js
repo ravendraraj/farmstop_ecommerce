@@ -61,9 +61,9 @@ class otpVerify extends Component{
                 <ImageBackground
                     style={{flex: 1}}
                     source={constants.image.commonBg}
-                    resizeMode={'cover'}
+                    resizeMode={'repeat'}
                 >
-                    <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
+                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     <ScrollView>
                         {this.verifyOtp()}  
                     </ScrollView>

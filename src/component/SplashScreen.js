@@ -30,7 +30,7 @@ const SplashScreen = ({navigation}) => {
           />
 
           <Text style={styles.welcomText}>Welcome to farmstop</Text>
-          <ActivityIndicator size="large" color={constants.Colors.color_welcomeActivity} style={{marginTop:15}}/>
+          <ActivityIndicator size="large" color={constants.Colors.color_heading} style={{marginTop:15}}/>
         </View>
       </View>
   );

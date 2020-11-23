@@ -16,7 +16,7 @@ import {
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-community/google-signin';
-import {loginValidation ,socialLogin} from '../lib/api'
+import {loginValidation ,socialLogin,getCartItem} from '../lib/api'
 import { Loader } from '../customElement/Loader'
 
 const width = Dimensions.get('window').width;
@@ -222,7 +222,8 @@ class SocialLoginScreen extends Component{
         if(this.props.isLoignSkipProps){
             this.props.skipLogin();
         }else{
-            this.props.navigation.navigate('MainHome');
+            //this.props.navigation.navigate('MainHome');
+            this.props.navigation.navigate('MainHome', { screen: 'Home' });
         }
     }
 
@@ -311,13 +312,30 @@ class SocialLoginScreen extends Component{
         }
       }
 
+    cartItemsSync(){
+        if(this.props.accessToken !="" && this.props.accessToken !=null){
+            if(!this.props.cartItemSync){
+                this.props.getCartItems();
+            }
+            // Alert.alert(
+            //         "Farmstop",
+            //             'Invaild Login Details, Please enter valid details.',
+            //         [
+            //           { text: "OK", onPress: () => console.log("OK Pressed") }
+            //     ],
+            //     { cancelable: false }
+            // );
+    }
+    }
+
     render(){
         return(
             <View style={styles.container}>
-                <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     {this._ShowError()}
                     {this._renderView()}
+                    {this.cartItemsSync()}
                 </ScrollView>
                 {this._loadLoader()}
             </View>
@@ -356,7 +374,9 @@ const mapStateToProps = state => ({
     animate: state.indicator,
     error: state.error.err,
     authEmail :state.data.authEmail,
+    accessToken :state.data.token,
     isLoignSkipProps:state.data.isLoignSkip,
+    cartItemSync:state.data.cartItemSync,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -367,6 +387,7 @@ const mapDispatchToProps = dispatch => ({
     loginedIn :(data) =>dispatch({type:'AUTHORIZED-USER', email:data}),
     setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
     skipLogin:()=>dispatch({type:'SKIP_LOGIN'}),
+    getCartItems:()=>dispatch(getCartItem()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);

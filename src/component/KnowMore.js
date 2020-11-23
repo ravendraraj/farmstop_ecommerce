@@ -51,21 +51,29 @@ class KnowMore extends Component {
 
     _onShare = async(content,imageUrl)=>{
         console.log(imageUrl);
+        this.props.startLoader();
+
+        let appUrl = "https://play.google.com/store/apps/details?id=com.farmstop&hl=it";
+        let webUrl = "https://www.farmstop.in/";
+
             RNFetchBlob.fetch('GET',imageUrl)
               .then(resp => {
                 console.log('response : ', resp);
+                this.props.disableLoader();
                 console.log(resp.data);
                 let base64image = resp.data;
                 share('data:image/png;base64,' + base64image);
               })
-              .catch(err => errorHandler(err));
+              .catch(err =>{errorHandler(err);
+                this.props.disableLoader();
+              });
 
             share = base64image => {
               console.log('base64image : ', base64image);
               let shareOptions = {
                 title: 'Farmstop',
                 url: base64image,
-                message: content,
+                message: "Buy fresh organic vegetables ,fruits, veggies and etc. "+appUrl,
                 subject: 'https://www.farmstop.in/'
               };
 
@@ -431,7 +439,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getItemVariation: (data) => dispatch(getProductVariation(data)),
-    
+    disableLoader:()=>dispatch({type:'ERROR_SUBMIT'}),
+    startLoader:()=>dispatch({type:'LOADING'}),
     addItemToCart :(data)=> dispatch(addItemToCart(data)),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
 

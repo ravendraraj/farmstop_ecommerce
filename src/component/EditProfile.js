@@ -1,11 +1,11 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,ToastAndroid,Alert} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,ToastAndroid,Alert,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import {TextHeading,PrimaryTextInput} from '../customElement/Input'
-import {ButtonWithIcon,NormalButton} from '../customElement/button'
+import {ButtonWithIcon,NormalButton,StickyButtonComponent} from '../customElement/button'
 import {updateProfile} from "../lib/api"
 import {emailValidations, mobileNoValidations} from '../lib/helper'
 import {Loader} from '../customElement/Loader' 
@@ -97,11 +97,13 @@ class EditProfile extends Component{
     render(){
         let email =this.props.authEmail;
         let mobile =this.props.authMobile;
-
+        
         let emailEditable = (email =='' || email =='null' || email ==null || email =="undefined")?true:false;
         let mobEditable = (mobile =='' || mobile =='null' || mobile ==null || mobile =="undefined")?true:false;
+
         return(
             <View style={styles.container}>
+            <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                {/*<TextHeading title="My Profile"/>*/}
                 <ScrollView>
                     <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
@@ -140,11 +142,13 @@ class EditProfile extends Component{
                         </View>
                     </View>
                 </ScrollView>
-                    {this._loadLoader()}
-                    {this._showMsg()}
-                    <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_heading,borderWidth:0,borderRadius:5,marginBottom:10}} onPress={()=>{(email !="" && email !="undefined" && mobile !="" && mobile !="undefined")?this._sendMessage():this._submit()}}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>SAVE</Text>
-                    </TouchableOpacity>
+                {this._loadLoader()}
+                {this._showMsg()}
+                    
+                <StickyButtonComponent
+                    onPress={()=>{(email !="" && email !="undefined" && mobile !="" && mobile !="undefined")?this._sendMessage():this._submit()}}
+                    button_title={"SAVE"}
+                />
                 
             </View>
         )
@@ -169,7 +173,7 @@ const styles = StyleSheet.create({
     profileItem:{
         flexDirection:'row',
         marginTop:10
-    }
+    },
 
 })
 

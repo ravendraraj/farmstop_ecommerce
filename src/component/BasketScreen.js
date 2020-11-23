@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,ToastAndroid,StyleSheet,TouchableOpacity,Dimensions } from 'react-native'
+import { View, Image,Text, Alert,ToastAndroid,StyleSheet,TouchableOpacity,Dimensions,StatusBar } from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -219,8 +219,8 @@ class BasketScreen extends Component {
 
     render() {
         return (
-
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     {this.renederItemType()}
                 </ScrollView>

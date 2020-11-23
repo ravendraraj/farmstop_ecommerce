@@ -105,6 +105,16 @@ export const AppartMentDropDown = (props)=>{
     )
 }
 
+export const StickyButtonComponent=(props)=>{
+    return(
+            <View style={styles.checkoutBtn}>
+            <TouchableOpacity style={{justifyContent:'flex-end',alignItems:'center'}} {...props}>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(20),padding:5,color:constants.Colors.color_WHITE}}>{props.button_title}</Text>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
     button:{
         borderColor:constants.Colors.color_grey,
@@ -132,5 +142,14 @@ const styles = StyleSheet.create({
     DropDownWrapper:{
         borderBottomWidth:3,
         borderColor: constants.Colors.color_e6e5e5
-    }
+    },
+    checkoutBtn:{
+        width:'100%',
+        backgroundColor:constants.Colors.color_btn,
+        position:'absolute',
+        bottom:0,
+        zIndex:1,
+        elevation:60,
+        padding:5
+    },
 });

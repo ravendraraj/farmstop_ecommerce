@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput,ToastAndroid} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput,ToastAndroid,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -96,7 +96,7 @@ _loadLoader() {
     		if(this.props.animate == false){
                 return(
                     <EmptyComp imageName={constants.image.emptyCart} 
-                        welcomText={"Not found any order"}
+                        welcomText={"Oops! Not found any order."}
                         redirectText={"SHOP NOW"}
                         onPress={()=>this.props.navigation.navigate("Home")}
                     />
@@ -136,6 +136,7 @@ _trackOrder(){
     render(){
         return(
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <View style={{width:'100%',alignSelf:"center"}}>
                     <TextHeading title="My Orders"/>
                 	{this.renederItemType()}

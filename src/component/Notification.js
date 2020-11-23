@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid,Image,RefreshControl,SafeAreaView} from 'react-native'
+import {View ,Text,StyleSheet,Alert,Dimensions,FlatList,ToastAndroid,Image,RefreshControl,SafeAreaView,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -223,6 +223,7 @@ onRefresh(){
         return(
             <SafeAreaView style={styles.container}>
             {/*<View style={styles.container}>*/}
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <View style={{width:'100%',alignSelf:"center"}}>
                     <TextHeading title="My Notification"/>
                     <ScrollView keyboardShouldPersistTaps={'handled'}

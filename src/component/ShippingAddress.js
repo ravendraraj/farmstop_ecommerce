@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet ,Alert,FlatList,ToastAndroid} from 'react-native'
+import {View ,Text,StyleSheet ,Alert,FlatList,ToastAndroid, StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import Autocomplete from 'react-native-autocomplete-input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -378,6 +378,7 @@ class shippingAddress extends Component{
     render(){
         return(
                 <SafeAreaView style={styles.container}>
+                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     <TextHeading title="My Account"/>
                     {this._loadLoader()}
                     <KeyboardAwareScrollView 

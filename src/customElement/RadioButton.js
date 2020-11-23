@@ -17,7 +17,7 @@ const styles =StyleSheet.create({
 		width:20,
 		borderRadius:10,
 		borderWidth:1,
-		borderColor:'black',
+		borderColor:constants.Colors.color_heading,
 		alignItems:'center',
 		justifyContent:'center',
 		marginHorizontal:10,
@@ -26,8 +26,8 @@ const styles =StyleSheet.create({
 		width:14,
 		height:14,
 		borderRadius:7,
-		borderColor:'black',
-		backgroundColor:constants.Colors.color_intro
+		borderColor:constants.Colors.color_heading,
+		backgroundColor:constants.Colors.color_heading
 	}
 
 });

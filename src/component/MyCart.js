@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput} from 'react-native'
+import { View, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions,ToastAndroid ,TextInput,StatusBar} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import {checkCouponCode ,getDeliveryDate,getCartItem,deleteItem ,setVariationInCart,setQtyInCart,setCartItemLocal,checkOut} from '../lib/api'
@@ -347,8 +347,8 @@ class MyCart extends Component {
         }else{
             return(
                 <View style={{width:'96%',alignSelf:'center'}}>
-                <EmptyComp imageName={constants.image.emptyCart} 
-                    welcomText={"You have no post orders ,Let's get you started"}
+                <EmptyComp imageName={constants.image.emptyCart}
+                    welcomText={"There is nothing in your cart."}
                     redirectText={"Shop Now"}
                     onPress={()=>this.props.navigation.navigate("MainHome")}
                 />
@@ -359,8 +359,8 @@ class MyCart extends Component {
 
     render() {
         return (
-
                 <View style={styles.container}>
+                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                         <View style={styles.MainContainer}>
                             <View style={styles.headContainer}>
                                 <TextHeading title="My Cart"/>

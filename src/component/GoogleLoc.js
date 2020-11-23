@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity,PermissionsAndroid ,ToastAndroid,Alert} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity,PermissionsAndroid ,ToastAndroid,Alert,StatusBar} from 'react-native'
 import { connect } from 'react-redux'
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation';
@@ -82,6 +82,7 @@ class GoogleLoc extends Component {
 	render() {
 		return (
 			<View style={{flex:1,backgroundColor:"white"}}>
+			<StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
 			<View style={styles.container}>
 				<View>
 					<TouchableOpacity onPress={()=>this.requestLocationPermission()} style={{flexDirection:'row',justifyContent:'center',borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginTop:14,padding:5}}>

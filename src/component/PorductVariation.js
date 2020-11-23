@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View,ScrollView, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions ,ToastAndroid} from 'react-native'
+import { View,ScrollView, Image,Text, Alert,FlatList,StyleSheet,TouchableOpacity,Dimensions ,ToastAndroid, StatusBar} from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -181,6 +181,7 @@ class PorductVariation extends Component {
     renderItemTitle(){
         var catName = this.props.productData;
         var currentProdcat = this.props.activeProdCat;
+        console.log("main upper tab",catName);
         if(catName != "undefined" && catName.length > 0 && currentProdcat  !=""){
             var categoryList = [];
             categoryList[0]=catName.find(item=>item.id == currentProdcat);
@@ -218,6 +219,10 @@ class PorductVariation extends Component {
                         />
                     </View>
             )
+        }else{
+            return(
+                <View><Text>Hi</Text></View>
+            )
         }
     }
 
@@ -254,7 +259,6 @@ class PorductVariation extends Component {
 
         return(
             <View>
-                {/*this.renderItemTitle()*/}
             <FlatList
             data={updateItemList}
             renderItem={({ item }) => (
@@ -370,6 +374,7 @@ class PorductVariation extends Component {
         return (
 
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 {/* <ScrollView > */}
                     {/* <SearchBox autoCapitalize="none"
                         //onChangeText={(val) => this.textInputChange(val)}
@@ -423,7 +428,7 @@ const styles = StyleSheet.create({
     },
     activeItem:{
         fontSize:16,
-        color:constants.Colors.color_active_cat,
+        color:constants.Colors.color_heading,
         fontFamily:constants.fonts.Cardo_Italic,
         paddingRight:15,
         paddingTop:4,

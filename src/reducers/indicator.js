@@ -1,6 +1,6 @@
 const indicator = (state = false, action) => {
     switch(action.type) {
-        case 'LOADING' :
+        case 'LOADING':
             return true;
         case 'PRODUCT_FETCH':
         case 'PRODUCT_VARIATION_ON_CAT':

@@ -101,7 +101,36 @@ export const EmptyComp = (props) => {
                 style={{width:constants.vw(220),height:constants.vw(220),alignSelf:"center"}}
             />
                   
-            <View style={{flexDirection:'row'}}>  
+            <View style={{flexDirection:'row'}}>
+                <Text style={styles.welcomText}>
+                    {props.welcomText}
+                    <Entypo name="emoji-sad" size={18} color={constants.Colors.color_intro} style={{paddingTop:4,paddingLeft:4}}/>
+                </Text>
+            </View>
+
+            {
+                props.redirectText !=""?(<View style={{width:100,alignSelf:"center",justifyContent:'center',alignItems:'center'}}>
+                <TouchableOpacity style={{alignSelf:"center",marginTop:10,borderColor:constants.Colors.color_heading,borderWidth:1,borderRadius:10,padding:constants.vw(7)}} onPress={props.onPress}>
+                    <Text style={{fontFamily: constants.fonts.Cardo_Bold,fontSize:constants.vw(14),color:constants.Colors.color_heading}}>
+                        {props.redirectText}
+                    </Text>
+                </TouchableOpacity>
+            </View>):(<View/>)
+        }
+        </View>
+    );
+}
+
+
+export const LoginErrorComp = (props) => {
+    return (
+        <View style={{alignSelf:'center',marginTop:constants.vw(60)}}>
+            <Image 
+                source={props.imageName}
+                style={{width:constants.vw(220),height:constants.vw(220),alignSelf:"center"}}
+            />
+                  
+            <View style={{flexDirection:'row',alignSelf:'center'}}>  
                 <Text style={styles.welcomText}>
                     {props.welcomText}
                 </Text>
@@ -120,7 +149,6 @@ export const EmptyComp = (props) => {
         </View>
     );
 }
-
 
 export const PasscodeTextInput = (props) => {
     return (

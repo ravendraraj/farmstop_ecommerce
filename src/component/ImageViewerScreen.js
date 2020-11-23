@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {SafeAreaView, StyleSheet, View,Modal,Text,ActivityIndicator} from 'react-native';
+import {SafeAreaView, StyleSheet, View,Modal,Text,ActivityIndicator, StatusBar} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import constants from '../constants'
 
@@ -37,6 +37,7 @@ const ImageViewerScreen = () => {
 
   return (
     <SafeAreaView style={{flex: 1,backgroundColor: constants.Colors.color_WHITE}}>
+      <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
       <View style={styles.container}>
         <ImageViewer
           imageUrls={images}

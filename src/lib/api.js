@@ -300,7 +300,7 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                     navigate("otpVerification");
                 }else if(response.status == "2"){
                     dispatch({ type : 'REGISTER_USER', payload : response.message});
-                    showErrorMsg(data.email+" is already register. Do you want login by this "+ data.email + ".","SocialLogin");
+                    showErrorMsg(data.email+" is already register. Do you want login by this "+ data.email + ".","SocialLoginScreen");
                 }else{
                     
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -506,7 +506,6 @@ export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
 
 /**################################# Wish List ################################################### */
 export const getWishListItem= (data) => (dispatch,getState) => {
-
     dispatch({type : 'LOADING'});
     let url = weburl + 'api-get-wishList?userId='+getState().data.authUserID;
     console.log(url);

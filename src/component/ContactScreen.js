@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,Linking} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,Linking, StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -10,6 +10,7 @@ const width = Dimensions.get('window').width;
 export default function ContactScreen(){
         return(
             <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{width:'90%',alignSelf:"center"}}>
                         <TextHeading title="Contact Us"/>

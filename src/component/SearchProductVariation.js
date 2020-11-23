@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert,StatusBar } from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
 import constants from '../constants'
@@ -286,6 +286,7 @@ class SearchProductVariation extends Component {
 		const comp = (a, b) => (a.toLowerCase().trim() === b.toLowerCase().trim());
 		return (
 			<View style={styles.container}>
+				<StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
 				{/* <View style={styles.SectionStyle}> */}
 				<AntDesign name="search1" size={20} color={constants.Colors.color_BLACK}
 					style={styles.ImageStyle} />

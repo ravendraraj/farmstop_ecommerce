@@ -71,6 +71,7 @@ class ForgetPassword extends Component{
             if(this.state.enterOtp == this.props.otp){
                 ToastAndroid.showWithGravity("OTP Verified ", ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.setState({otpVerified:true});
+                this.props.clearOTP();
             }else{
                 ToastAndroid.showWithGravity("Enter Correct OTP ", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
@@ -80,9 +81,8 @@ class ForgetPassword extends Component{
     }
     
 
-    renderView(){
-        
-        if(this.props.otp === ""){
+    renderView(){        
+        if(this.props.otp === "" && this.state.otpVerified == false){
             return(
                 <View style={styles.form}>
                 <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Forgot Password?</Text>
@@ -155,7 +155,7 @@ class ForgetPassword extends Component{
         }else if(this.props.success){
             //ToastAndroid.showWithGravity(this.props.success, ToastAndroid.SHORT, ToastAndroid.TOP);
             setTimeout(() => {
-                this.props.navigation.navigate("SocialLogin");
+                this.props.navigation.navigate("SocialLoginScreen");
               }, 2000);
               this.props.removeError();
         }
@@ -168,9 +168,9 @@ class ForgetPassword extends Component{
                 <ImageBackground
                     style={{flex: 1}}
                     source={constants.image.commonBg}
-                    resizeMode={'cover'}
+                    resizeMode={'repeat'}
                 >
-                <StatusBar backgroundColor={constants.Colors.color_heading} barStyle="dark-content"/>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     <ScrollView>
                         {this.renderView()}
                         {this.showMsg()}
@@ -219,6 +219,7 @@ const mapDispatchToProps = dispatch => ({
     removeError: () => dispatch({type:'REMOVE_ERROR'}),
     otpForsignup: data =>dispatch(sendSignUpOtp(data)),
     changePassword: data => dispatch(resetPassword(data)),
+    clearOTP:()=>dispatch({type:'CLEAR_OTP'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgetPassword);

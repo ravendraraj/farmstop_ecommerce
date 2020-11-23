@@ -111,7 +111,7 @@ const data = (state = initialDataState, action) => {
                 shippingCharges:null,
                 shippingPincode:null,
                 defaultShipingAddress:"",
-                activeProduct:'',
+                //activeProduct:'',
                 orederDetails:[],
                 token:'',
                 
@@ -238,6 +238,12 @@ const data = (state = initialDataState, action) => {
             ...state,
             otpVerification:action.otp,
         };
+
+        case 'CLEAR_OTP':
+        return{
+            ...state,
+            Otp:'',
+        }
 
         case 'SAVE_REGISTERTION_DETAIL':
         return{

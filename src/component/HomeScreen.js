@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert} from 'react-native'
+import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert,StatusBar} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
 import { prod_image ,weburl,prod_variation_url } from '../constants/url'
@@ -45,7 +45,6 @@ class HomeScreen extends Component {
       )
     }
   }
-
 
   async componentDidMount() {
     this.props.getItem({ start: 1, end: 6 });
@@ -208,7 +207,7 @@ class HomeScreen extends Component {
 
   renederItemType(){
     let ItemList = this.props.itemData;
-    if (ItemList != "undefined" && ItemList != null) {
+    if (ItemList != "undefined" && ItemList != null && ItemList.length>0) {
       return (
         <View>
         <FlatList
@@ -379,6 +378,7 @@ class HomeScreen extends Component {
         //resizeMode='contain'
         //source={storeImg.appIntro1}>
         <View style={styles.container}>
+          <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
           <View style={styles.MainContainer}>
             {this._ShowError()}
             {this.renederItemType()}

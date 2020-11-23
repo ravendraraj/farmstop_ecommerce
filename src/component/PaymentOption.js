@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet, Alert,SafeAreaView,Image,ToastAndroid} from 'react-native'
+import {View ,Text,StyleSheet, Alert,SafeAreaView,Image,ToastAndroid,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { CouponTextInput,PrimaryTextInput ,TextHeading} from '../customElement/Input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
@@ -100,7 +100,7 @@ _radioHandler(){
                                     <Text style={styles.heading}>Delivery Address</Text>
                                     <View>
                                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate("ShippingAddress",{screen_name:'PaymentOption'})}}>
-                                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16,color:constants.Colors.color_intro}}>Change</Text>
+                                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16,color:constants.Colors.color_heading}}>Change</Text>
                                     </TouchableOpacity>
                                     </View>
                                 </View>
@@ -112,7 +112,7 @@ _radioHandler(){
                                     <View>
                                     { this.props.authEmail !="" && this.props.authMobile !="" ?(<View/>):(
                                         <TouchableOpacity onPress={()=>{this.props.navigation.navigate("EditProfile",{screen_name:'PaymentOption'})}}>
-                                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16,color:constants.Colors.color_intro}}>+ Add</Text>
+                                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16,color:constants.Colors.color_heading}}>+ Add</Text>
                                         </TouchableOpacity>
                                         )
                                     }
@@ -235,6 +235,7 @@ _radioHandler(){
     render(){
         return(
             <View style={styles.container}>
+            <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{flex:1,width:"98%",alignSelf:'center'}}>
                         {this._renderView()}

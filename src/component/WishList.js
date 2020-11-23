@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image,Text, ToastAndroid,FlatList,StyleSheet,TouchableOpacity,Dimensions,Alert } from 'react-native'
+import { View, Image,Text, ToastAndroid,FlatList,StyleSheet,TouchableOpacity,Dimensions,Alert,StatusBar } from 'react-native'
 import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
@@ -235,11 +235,13 @@ componentWillUnmount() {
         }else{
             if(this.props.animate == false && this.props.route.name != "SearchWishItem" ){
                 return(
-                    <EmptyComp imageName={constants.image.emptyCart} 
-                        welcomText={"Looks like you haven’t added anything to your Wish List yet!"}
-                        redirectText={"SHOP NOW"}
-                        onPress={()=>this._shopNow()}
-                    />
+                    <View style={{width:constants.width*0.9,alignSelf:'center'}}>
+                        <EmptyComp imageName={constants.image.emptyCart} 
+                            welcomText={"Looks like you haven’t added anything to your WishList yet!"}
+                            redirectText={"SHOP NOW"}
+                            onPress={()=>this._shopNow()}
+                        />
+                    </View>
                 )
             }
         }
@@ -260,6 +262,7 @@ componentWillUnmount() {
         if(this.props.authUserId !=''){
             return (
                 <View style={styles.container}>
+                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     <TextHeading title="My Wish List"/>
                         <View style={styles.MainContainer}>
                             {/* {this.searchComonent()} */}

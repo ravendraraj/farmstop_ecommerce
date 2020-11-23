@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions ,ImageBackground} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions ,ImageBackground,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -11,6 +11,7 @@ class HowItWorks extends Component{
         render(){    
         return(
             <View style={styles.container}>
+            <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={styles.section}>
         

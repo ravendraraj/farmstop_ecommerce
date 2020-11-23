@@ -1,11 +1,11 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import {TextHeading} from '../customElement/Input'
-import {ButtonWithIcon} from '../customElement/button'
+import {ButtonWithIcon,StickyButtonComponent} from '../customElement/button'
 import {logout} from "../lib/api"
 
 const width = Dimensions.get('window').width;
@@ -48,6 +48,7 @@ class MyProfile extends Component{
         if(this.props.authUserID !=''){
             return(
                 <View style={styles.container}>
+                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                    {/*<TextHeading title="My Profile"/>*/}
                     <ScrollView>
                     <View style={{width:'100%',alignSelf:"center",backgroundColor:constants.Colors.color_WHITE,paddingBottom:10}}>
@@ -81,12 +82,11 @@ class MyProfile extends Component{
                         </View>
                         </View>
                     </ScrollView>
-                    <View>
-                        <TouchableOpacity style={{width:'98%',alignSelf:'center',justifyContent:'flex-end',alignItems:'center',backgroundColor:constants.Colors.color_WHITE,borderWidth:1,borderColor:constants.Colors.color_grey,borderRadius:5,marginBottom:10,backgroundColor:constants.Colors.color_heading}}
-                        onPress={()=>this.props.navigation.navigate("EditProfile",{screen_name:'MyProfile'})}>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:20,padding:10,color:constants.Colors.color_WHITE}}>Edit Profile</Text>
-                        </TouchableOpacity>
-                    </View>
+
+                    <StickyButtonComponent
+                        onPress={()=>this.props.navigation.navigate("EditProfile",{screen_name:'MyProfile'})}
+                        button_title={"Edit Profile"}
+                    />
                 </View>
             )
         }else{
@@ -126,8 +126,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity:  0.4,
         elevation: 1    
-    }
-
+    },
 })
 
 const mapStateToProps = state => ({

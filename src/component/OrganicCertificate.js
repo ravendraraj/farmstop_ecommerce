@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,SafeAreaView} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,SafeAreaView,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -11,6 +11,7 @@ const width = Dimensions.get('window').width;
 export default function OrganicCertificate(props){
         return(
             <SafeAreaView style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{width:'95%',alignSelf:"center"}}>
                         <View style={{flex:1,marginTop:constants.vw(5)}}>

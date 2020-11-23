@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput,Linking} from 'react-native'
+import {View ,Text,StyleSheet,Image ,Dimensions,FlatList,TextInput,Linking,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
@@ -129,6 +129,7 @@ renderOrderStatus(order_status){
     render(){
         return(
             <View style={styles.container}>
+            <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <View style={{width:'90%',alignSelf:"center"}}>
                 	<Text style={{fontSize:25,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,marginBottom:constants.vw(20)}}>
                         Track your Order

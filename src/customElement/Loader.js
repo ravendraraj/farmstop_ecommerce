@@ -9,18 +9,18 @@ import {
     Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import constants from '../constants'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export const Loader = () => { 
     return(
-
-              <SafeAreaView style={[Styles.overlay,{ alignItems: 'center', justifyContent: 'center' }]}>
-                <View>
-                    <ActivityIndicator size="large" />
-                </View>
-            </SafeAreaView>
+        <SafeAreaView style={[Styles.overlay,{ alignItems: 'center', justifyContent: 'center' }]}>
+            <View>
+                <ActivityIndicator size="large" color={constants.Colors.color_heading}/>
+            </View>
+        </SafeAreaView>
     );
 }
 
