@@ -161,18 +161,24 @@ async _logOutEvent(){
      return(
          <View style={{flex:1}}>
              <ScrollView>
-                <View style={{backgroundColor:constants.Colors.color_platnium}}>
+            <ImageBackground
+                style={{flex: 1}}
+                source={constants.image.commonBg}
+                resizeMode={'repeat'}
+            > 
+                <View style={{}}>
                     <TouchableOpacity onPress={()=>{this.props.navigation.closeDrawer()}} style={{alignSelf:'flex-end',padding:10}}>
                         <Icons name={"close"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                 </View>
-                 <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),backgroundColor:constants.Colors.color_platnium,paddingLeft:10}}>
+                 <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),paddingLeft:10}}>
                     {this._profileRender()}
                     <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
                         <Text style={styles.userName}>Hello !</Text>
                         <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
                     </View>
                 </View>
+            </ImageBackground>
                 <View style={{paddingLeft:0,paddingTop:10}}>
                     <View style={{paddingLeft:10}}>
                     {this._renderSignUpAndLogin()}
@@ -189,7 +195,7 @@ async _logOutEvent(){
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => this._tabMyAccount()}>
                         <View style={{flexDirection:'row'}}>
-                            <Image source={constants.image.profile} style={{width:constants.vw(26),height:constants.vw(30)}}/>
+                            <Image source={constants.image.profile} style={{width:constants.vw(18),height:constants.vw(24)}}/>
                             <Text style={styles.MenueLable}>My Account</Text>
                         </View>
                         <Icons name={(this.state.displayMyAccChild== true)?"angle-down":"angle-right"} size={14} style={{marginTop:5}}/>
@@ -212,7 +218,9 @@ async _logOutEvent(){
                         </View>
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
-                    
+
+                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginTop:constants.vw(8),marginBottom:constants.vw(8)}}/>
+
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('Faq')}}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.questionIcon} style={styles.icon}/>
@@ -228,6 +236,9 @@ async _logOutEvent(){
                         </View>
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
+
+                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginTop:constants.vw(8),marginBottom:constants.vw(8)}}/>
+
                     <View style={{marginLeft:25}}>
                         <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('Organic Certification')}}>
                             <Text style={styles.MenueLable}>Certificate</Text>
@@ -241,6 +252,9 @@ async _logOutEvent(){
                             <Text style={styles.MenueLable}>Our Farms</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginTop:constants.vw(8),marginBottom:constants.vw(8)}}/>
+
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('HowItWorks')}}>
                         <Text style={styles.withOutIcon}>How it works</Text>
                     </TouchableOpacity>
@@ -265,7 +279,7 @@ const styles = StyleSheet.create({
 	MenueLable: {
         //fontFamily:constants.fonts.CardoBOLD,
         fontFamily:constants.fonts.Cardo_Regular,
-        fontSize:constants.vw(18),
+        fontSize:constants.vw(16),
         paddingLeft:10
         },
     TopMarginMenuLable:{
@@ -282,8 +296,8 @@ const styles = StyleSheet.create({
         width:'90%'
     },
     icon:{
-        width:constants.vw(25),
-        height:constants.vw(25)
+        width:constants.vw(18),
+        height:constants.vw(18)
     },
     withOutIcon:{
         fontFamily:constants.fonts.Cardo_Bold,

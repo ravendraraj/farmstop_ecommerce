@@ -13,7 +13,7 @@ import AboutFarm from './AboutFarm'
 import Swiper from 'react-native-swiper'
 import HTML from 'react-native-render-html'
 
- import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital} from '../lib/helper'
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
@@ -38,10 +38,10 @@ class HomeScreen extends Component {
         this.props.getCartItem();
   }
 
-  _loadLoader() {
+  _loadLoader(){
     if (this.props.animate) {
       return (
-        <Loader />
+        <Loader/>
       )
     }
   }

@@ -20,5 +20,6 @@ const Colors = {
 
   color_heading:"#41A317",
   color_statusbar:"#41A317",
+  color_profileBg:"#6E7273",
 };
 export default Colors;

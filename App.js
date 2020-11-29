@@ -41,6 +41,8 @@ PushNotification.configure({
       PushNotification.localNotification({
         //showWhen:true,
         autoCancel: true,
+        largeIcon: "ic_launcher",
+        largeIconUrl:notification.data.largeIcon,
         bigText:notification.data.message,
         title: notification.data.title,
         message: notification.data.message,
@@ -49,6 +51,7 @@ PushNotification.configure({
         vibration: 300,
         playSound: true,
         soundName: 'default',
+        priority: "high",
         })
 
     // (required) Called when a remote is received or opened, or local notification is opened
@@ -82,6 +85,9 @@ PushNotification.configure({
  
   // Should the initial notification be popped automatically
   // default: true
+  //popInitialNotification: true,
+
+  senderID: '321830598673',
   popInitialNotification: true,
  
   /**

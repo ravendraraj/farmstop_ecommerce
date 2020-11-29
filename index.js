@@ -21,7 +21,7 @@ let store = createStore(AppReducer, compose(
     ),
 ));
 
-const App = () => (
+const App = () =>(
     <Provider store={store}>
         <MainApp/>
     </Provider>

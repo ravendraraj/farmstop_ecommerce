@@ -9,6 +9,7 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
+
 import constants from "../constants";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
