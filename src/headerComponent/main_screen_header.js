@@ -22,9 +22,9 @@ function main_screen_header({navigation,cartItem}){
                 <Icon name="menu" size={30} onPress={openMenue} color={constants.Colors.color_BLACK}/>
             </TouchableOpacity> */}
             <View style={{flexDirection:"row",justifyContent:'flex-end',width:'100%'}}>
-            <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("GoogleLocation")}>
-                    <Image source={constants.image.liveLocIcon} style={{width:30,height:30}}/>
-                </TouchableOpacity>
+            {/*<TouchableOpacity style={{marginRight:20}} onPress={()=>nav("GoogleLocation")}>
+                                <Image source={constants.image.liveLocIcon} style={{width:30,height:30}}/>
+                            </TouchableOpacity>*/}
 
                 <TouchableOpacity style={{marginRight:20}} onPress={()=>nav("MyCart")}>
                     <View style={styles.cartTextContainer}>

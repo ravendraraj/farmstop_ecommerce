@@ -12,6 +12,7 @@ import Icons from 'react-native-vector-icons/SimpleLineIcons'
 import RadioButton from '../customElement/RadioButton'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import CheckBox from '@react-native-community/checkbox'
 
 class shippingAddress extends Component{
     
@@ -31,7 +32,8 @@ class shippingAddress extends Component{
             displayForm:false,
             editAddress:0,
             option1:'select',
-            option2:'notselect'
+            option2:'notselect',
+            is_default:false,
         };
     }
 
@@ -189,7 +191,12 @@ class shippingAddress extends Component{
                         deliverTypeString = addressItem.addressType;
                     }
 
-                    this.setState({displayForm:true,name:addressItem.contactName,query:address,deliverType:deliverTypeString,pincode:addressItem.zipcode,houseOrFlat:house,editAddress:parseInt(addressId)});
+                    let isDefaultValue = false;
+                    if(addressItem.default_address == 1){
+                        isDefaultValue = true;
+                    }
+
+                    this.setState({displayForm:true,name:addressItem.contactName,query:address,deliverType:deliverTypeString,pincode:addressItem.zipcode,houseOrFlat:house,editAddress:parseInt(addressId),is_default:isDefaultValue});
              }});
 
         }else{
@@ -256,6 +263,24 @@ class shippingAddress extends Component{
 
         if(query !="" && query.length >=2){
             await this.props.getAppartment({keyword:query});
+        }
+    }
+
+    selectedDefaultAddress(){
+        let {is_default} = this.state;
+        console.log("check_box",is_default);
+        if(is_default == false){
+
+            this.setState({
+                is_default:true
+            });
+
+        }else{
+
+            this.setState({
+                is_default:false
+            });
+
         }
     }
 
@@ -332,6 +357,16 @@ class shippingAddress extends Component{
                         <PrimaryTextInput placeholder="Enter Other Address" value={this.state.deliverType} onChangeText={(text)=>this.setState({deliverType:text})}/>
                     </View>):(<View/>)
                 }
+
+                <View style={{flexDirection:'row',paddingTop:constants.vw(10)}}>
+                    <Text style={{fontSize:constants.vw(16),fontFamily:constants.fonts.Cardo_Bold,marginTop:constants.vw(5)}}>Default Address</Text>
+                    <CheckBox
+                        disabled={false}
+                        value={this.state.is_default}
+                        onValueChange={(newValue) => this.selectedDefaultAddress()}
+                    />
+                </View>
+
                 <View style={{width:'80%',alignSelf:'center',marginTop:20}}>
                 <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:10}} onPress={()=>this._submitForm()}>
                             <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Bold,textAlign:'center',color:constants.Colors.color_WHITE}}>Save</Text>
@@ -354,6 +389,7 @@ class shippingAddress extends Component{
             addressObject["country"] = this.state.country;
             addressObject["deliverOn"] = this.state.deliverType;
             addressObject["isUpdateAddress"] = this.state.editAddress;
+            addressObject["is_default"] = this.state.is_default;
             console.log(addressObject,"address testing");
         
         if(this.state.name !='' && this.state.pincode !=''  && this.state.query !='' && this.state.deliverType !='' && this.state.houseOrFlat !=""){

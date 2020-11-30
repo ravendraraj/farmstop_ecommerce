@@ -817,7 +817,6 @@ export const checkDeliveryOnPincode= (data) => (dispatch,getState) => {
 
 export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
-    
     let url = weburl + 'api-setUserAddess/';
     var data = new FormData();
     data.append("name", userData["name"]);
@@ -827,6 +826,7 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
     data.append("userId", getState().data.authUserID);
     data.append("address", userData["houseOrFlat"]+","+userData["address"]);
     data.append("updatable", userData["isUpdateAddress"]);
+    data.append("is_default", userData["is_default"]== true?1:0);
     data.append("token",getState().data.token);
 
     let post_req = {
@@ -845,7 +845,9 @@ export const addNewShippingAddress= (userData) => (dispatch,getState) => {
         res.json()
         .then(response => {
             if(response.status == "1"){
-                dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                console.log("NEW_ADDRESS_SAVED",response);
+                //dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                dispatch({ type : 'FETECH_ADDRESS_LIST', addressList:response.addressList});
                 showErrorMsg("Successfully new address saved","");
                 navigate("ShippingAddress");
             }else{
@@ -1398,6 +1400,8 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                  'Content-Type': 'multipart/form-data',
              }
         }
+    
+    //console.log(orderCreateUrl,post_req,checkOutData);
 
     fetch(orderCreateUrl,post_req)
     .then(res =>{
@@ -1780,7 +1784,8 @@ export const removeAddress= (data) => (dispatch,getState) => {
         .then(response => {
             console.log(response);
             if(response.status == "1"){
-                dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                //dispatch({ type : 'NEW_ADDRESS_SAVED', addressList:response.addressList});
+                dispatch({ type : 'FETECH_ADDRESS_LIST', addressList:response.addressList});
             }else{
                 dispatch({type : 'NETWORK_ERROR', payload : response.message});
             }

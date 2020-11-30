@@ -340,15 +340,13 @@ class MyCart extends Component {
                  }
                 
                 />
-                
-                
                 </View>
             )
         }else{
             return(
                 <View style={{width:'96%',alignSelf:'center'}}>
                 <EmptyComp imageName={constants.image.emptyCart}
-                    welcomText={"There is nothing in your cart."}
+                    welcomText={"Oops! Your cart seems empty."}
                     redirectText={"Shop Now"}
                     onPress={()=>this.props.navigation.navigate("MainHome")}
                 />

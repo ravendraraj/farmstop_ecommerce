@@ -269,12 +269,15 @@ _radioHandler(){
                 let cartItemIds = "";
                 let cartItems= this.props.cartData;
                 let totalItem =cartItems.length;
+
                 for(var i=0;i<totalItem ;i++){
-                    if(i < totalItem-1)
-                    {
-                        cartItemIds += cartItems[i]["cart_item_id"]+",";
-                    }else{
-                        cartItemIds += cartItems[i]["cart_item_id"];
+                    if(cartItems[i]['selectedQtyPrice'] !=0 && cartItems[i]['selectedQtyPrice'] !=""){
+                        if(i < totalItem-1)
+                        {
+                            cartItemIds += cartItems[i]["cart_item_id"]+",";
+                        }else{
+                            cartItemIds += cartItems[i]["cart_item_id"];
+                        }
                     }
                 }
                 
@@ -302,6 +305,8 @@ _radioHandler(){
                     orderDetails['deliveryDate'] = this.props.deliveryDate;
                     orderDetails['cart_items'] = cartItemIds;
 
+                    //console.log(orderDetails);
+                    
                     if(this.state.option1 == "select"){
 
                         orderDetails['paymentOption'] = "4";

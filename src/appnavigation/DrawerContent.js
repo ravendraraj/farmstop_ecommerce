@@ -186,6 +186,10 @@ async _logOutEvent(){
                     <View style={{paddingLeft:10}}>
 
                     <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
+                    {/*<TouchableOpacity 
+                        style={styles.menuTab}
+                        onPress={()=>{this.props.navigation.navigate("MainHome")}}
+                    >*/}
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.homeIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>Home</Text>

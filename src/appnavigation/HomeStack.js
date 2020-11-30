@@ -10,6 +10,7 @@ import Header from '../headerComponent/header'
 import EditHeader from '../headerComponent/editHeader'
 import Mainheader from '../headerComponent/main_screen_header'
 import NavigationDrawerStructure from '../headerComponent/NavigationDrawerStructure'
+import MainNavigationDrawerStructure from '../headerComponent/MainNavigationDrawerStructure'
 // import productVariation from '../component/PorductVariation'
 import knowMoreProd from '../component/KnowMore'
 import SignUpScreen from '../component/SignUp'
@@ -57,7 +58,7 @@ const HomeStack = ({navigation}) => (
     >
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <MainNavigationDrawerStructure navigationProps={navigation} />,
                 headerTitle: () => <Mainheader navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 10},
                 headerTransparent:false,

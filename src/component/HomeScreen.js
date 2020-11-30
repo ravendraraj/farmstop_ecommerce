@@ -15,7 +15,7 @@ import HTML from 'react-native-render-html'
 
 import {fristLetterCapital} from '../lib/helper'
 //api call
-import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery} from '../lib/api'
+import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery,getUserAddressList} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
 import SocialLinks from '../component/SocialLinks'
 const regular = constants.fonts.Cardo_Regular;
@@ -74,8 +74,13 @@ class HomeScreen extends Component {
       }
   }
 
-  if(!this.props.cartItemSync)
+  if(!this.props.cartItemSync){
     await this.props.getCartItem();
+  }
+
+  if(this.props.accessToken !="" && this.props.accessToken != null){
+    this.props.getAddressList();
+  }
 
   let deviceTokenData = await AsyncStorage.getItem('DEVICE_TOKEN');
     if(deviceTokenData != null){
@@ -489,7 +494,8 @@ const mapStateToProps = state => ({
   selectAddress:state.data.selectAddress,
   shippingPincode:state.data.shippingPincode,
   cartItemSync:state.data.cartItemSync,
-  baskets:state.data.baskets
+  baskets:state.data.baskets,
+  accessToken:state.data.token
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -504,6 +510,7 @@ const mapDispatchToProps = dispatch => ({
   getCartItem:()=>dispatch(getCartItem()),
   checkDelivery: (data) => dispatch(checkDelivery(data)),
   setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
+  getAddressList:() =>dispatch(getUserAddressList())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

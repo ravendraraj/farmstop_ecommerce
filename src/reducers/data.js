@@ -5,7 +5,8 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     isAppIntro:true,
     isLoading:true,
     isLoignSkip:true,
-    token:''
+    token:'',
+    defaultFullAddress:'',
 };
 
 const data = (state = initialDataState, action) => {
@@ -119,9 +120,24 @@ const data = (state = initialDataState, action) => {
             }
         
         case 'FETECH_ADDRESS_LIST':
+        let userAddressList = action.addressList;
+        let defaultAddressID = state.defaultShipingAddress;
+        let fullDefaultAddress = "";
+        if(userAddressList != "undefined" && userAddressList.length>0){
+            let defaultAddress = userAddressList.find(item=>item.default_address == 1);
+            console.log("Fetch",defaultAddress);
+            if(defaultAddress != undefined){
+                defaultAddressID = defaultAddress.id;
+                fullDefaultAddress= defaultAddress.address+","+defaultAddress.district+","+defaultAddress.country+","+defaultAddress.zipcode;
+
+            }
+        }
+
         return{
             ...state,
-            addressList: action.addressList,
+            addressList: userAddressList,
+            defaultShipingAddress:defaultAddressID,
+            defaultFullAddress:fullDefaultAddress
         }
 
         case 'SAVED_DEFAULT_SHIPPING_ADDRESS':
