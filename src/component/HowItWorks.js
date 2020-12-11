@@ -13,9 +13,9 @@ class HowItWorks extends Component{
             <View style={styles.container}>
             <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
-                    <View style={styles.section}>
+                    <View style={{...styles.section,paddingTop:constants.vw(10)}}>
         
-                        <TextHeading title="How it works"/>
+                        {/*<TextHeading title="How it works"/>*/}
 
                         <View style={{flex:1,flexDirection:'row'}}>
                             <View style={{width:"15%"}}>

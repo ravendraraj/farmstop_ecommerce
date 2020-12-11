@@ -284,12 +284,16 @@ class KnowMore extends Component {
                                 tagsStyles={{p:styles.tagLayout}}
                         />
                     </View>):<View/>}
-                    <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
-                    <View style={styles.wrapper}>
-                        <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
-                            {this._swiper()}
-                        </Swiper>
+                    {(this.props.itemtypeData).length>1?(
+                    <View>
+                        <Text style={{fontSize:18,fontFamily:bold,marginTop:constants.vh(60),marginBottom:constants.vh(20)}}>Recommended Products</Text>
+                        <View style={styles.wrapper}>
+                            <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
+                                {this._swiper()}
+                            </Swiper>
+                        </View>
                     </View>
+                    ):(<View/>)}
 
                     <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
                         <Text style={{fontSize:constants.vw(25),fontFamily:bold}}>Know your source</Text>

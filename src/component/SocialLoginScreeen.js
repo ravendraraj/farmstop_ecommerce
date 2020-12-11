@@ -16,7 +16,7 @@ import {
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-community/google-signin';
-import {loginValidation ,socialLogin,getCartItem} from '../lib/api'
+import {loginValidation ,socialLogin,getCartItem,getUserAddressList} from '../lib/api'
 import { Loader } from '../customElement/Loader'
 
 const width = Dimensions.get('window').width;
@@ -325,7 +325,12 @@ class SocialLoginScreen extends Component{
             //     ],
             //     { cancelable: false }
             // );
-    }
+            // if(this.props.accessToken !="" && this.props.accessToken != null){
+            if(!this.props.userAddressSync){
+                this.props.getAddressList();
+            }
+            // }
+        }
     }
 
     render(){
@@ -377,6 +382,7 @@ const mapStateToProps = state => ({
     accessToken :state.data.token,
     isLoignSkipProps:state.data.isLoignSkip,
     cartItemSync:state.data.cartItemSync,
+    userAddressSync:state.data.userAddressSync
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -388,6 +394,7 @@ const mapDispatchToProps = dispatch => ({
     setDeviceData: (data) => dispatch({ type: 'SET_DIVECE_DATA',token:data.token, os:data.os}),
     skipLogin:()=>dispatch({type:'SKIP_LOGIN'}),
     getCartItems:()=>dispatch(getCartItem()),
+    getAddressList:() =>dispatch(getUserAddressList())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SocialLoginScreen);

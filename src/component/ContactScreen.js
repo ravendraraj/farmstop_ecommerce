@@ -13,7 +13,7 @@ export default function ContactScreen(){
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{width:'90%',alignSelf:"center"}}>
-                        <TextHeading title="Contact Us"/>
+                        {/*<TextHeading title="Contact Us"/>*/}
                         <View style={{flex:1,marginTop:constants.vw(25)}}>
                             <Image source={constants.image.contactus} style={styles.contactImage}/>
                             <View style={{marginTop:constants.vw(40)}}>

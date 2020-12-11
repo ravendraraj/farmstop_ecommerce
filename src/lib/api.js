@@ -1,5 +1,5 @@
 import {weburl} from '../constants/url'
-import { navigate,check_notification } from '../appnavigation/RootNavigation'
+import { navigate,check_notification,navigateWithParams } from '../appnavigation/RootNavigation'
 import AsyncStorage from '@react-native-community/async-storage';
 import constStrings from '../constants/constStrings'
 import RazorpayCheckout from 'react-native-razorpay';
@@ -64,7 +64,7 @@ export const logout = (data) => async(dispatch,getState) => {
     await AsyncStorage.removeItem("userShippingAdd");
     dispatch({type:'LOGOUT'});
     // navigate('NotLogin');
-    // navigate('SocialLogin');
+    navigate('SocialLogin');
 }
 
 export const updateDeviceTokenOnServer =(data)=> async(dispatch,getState)=>{
@@ -251,14 +251,23 @@ export const signUpManual = (data) => (dispatch,getState) => {
         'Content-Type': 'multipart/form-data',
         }
     }
-
+    let isSkip = getState().data.isLoignSkip;
     fetch(url ,post_req)
     .then(res =>{
         res.json()
         .then(response => {
             if(response.status == "1" || response.status == "2") {
                 dispatch({ type : 'SIGNUP_SUCCESS', payload : response.message});
-                navigate("SocialLogin");
+                
+                if(isSkip){
+                    console.log(isSkip,"first");
+                    navigate("SocialLoginScreen");
+                }else{
+                    console.log(isSkip,"after skip");
+                    //navigate("SocialLogin");
+                    navigateWithParams("SocialLogin",{screen:"SocialLoginScreen"});
+                }
+
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
             }
@@ -643,6 +652,7 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
     dispatch({type : 'LOADING'});
     let url = weburl + 'api-check-delivery-loc?lat='+data.lat+"&lng="+data.lng;
     console.log(url);
+    let accessToken = getState().data.token;
 
     fetch(url)
     .then(res =>{
@@ -650,8 +660,6 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
         .then(response => {
             //console.log(response);
             if(response.status == "1"){
-                
-                
                     var userShipingAddress = {
                         "address" : response.address,
                         "postal_code":response.detail['pincode'],
@@ -661,8 +669,15 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
                     AsyncStorage.setItem('userShippingAdd', JSON.stringify(userShipingAddress));
                     dispatch({type:'SUCCESS',payload:response.message+" "+response.address});
                     dispatch({ type : 'LOCATION_FETCHED',  address : response.address , shipping_cost:response.detail['shipping_cost'], pincode:response.detail['pincode']});
-                    navigate("MainHome");
-
+                    if(data.screenName == "HomeScreen"){
+                        navigate("MainHome");
+                    }else{
+                        if((accessToken != null) && (accessToken != "") && (data.screenName == "shippingAddressScreen")){
+                          navigate("ShippingAddress");  
+                        }else{
+                            //console.log(">>>>>>>>>>>>>>>>>>",accessToken,data.screenName);
+                        }
+                    }
                 
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -676,7 +691,6 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
         dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         navigate("internetError");
     });
-
 }
 
 export const checkCouponCode= (data) => (dispatch,getState) => {

@@ -165,18 +165,12 @@ class ForgetPassword extends Component{
     render(){
         return(
             <SafeAreaView style={styles.container}>
-                <ImageBackground
-                    style={{flex: 1}}
-                    source={constants.image.commonBg}
-                    resizeMode={'repeat'}
-                >
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     <ScrollView>
                         {this.renderView()}
                         {this.showMsg()}
                     </ScrollView>
                     {this._loadLoader()}
-                </ImageBackground>
             </SafeAreaView>
         )
     }

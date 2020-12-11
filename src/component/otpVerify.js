@@ -24,7 +24,7 @@ class otpVerify extends Component{
             if(this.state.otp == this.props.otp)
             {
                 ToastAndroid.showWithGravity("OTP Verified", ToastAndroid.SHORT, ToastAndroid.CENTER);
-                this.props.signUpManual();
+                this.props.signUpManualApi();
             }
         }else{
             ToastAndroid.showWithGravity("Please Enter Vaild OTP", ToastAndroid.SHORT, ToastAndroid.CENTER);
@@ -35,7 +35,7 @@ class otpVerify extends Component{
     verifyOtp(){
             return(
                 <View style={styles.form}>
-                    <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(25),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Welcome To Farmstop</Text>                    
+                    <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(20),paddingLeft:10,paddingRight:10,fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Verify your Mobile Number/Email Id</Text>                
                     <View style={styles.inputBox}>
                         <PrimaryTextInput placeholder="Enter Your OTP" onChangeText={(text)=>this.setState({otp:text})}/>
                     </View>
@@ -57,18 +57,18 @@ class otpVerify extends Component{
 
     render(){
         return(
-            <SafeAreaView style={styles.container}>
-                <ImageBackground
-                    style={{flex: 1}}
-                    source={constants.image.commonBg}
-                    resizeMode={'repeat'}
-                >
-                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                    <ScrollView>
-                        {this.verifyOtp()}  
-                    </ScrollView>
-                </ImageBackground>
-            </SafeAreaView>
+            // <ImageBackground
+            //         style={{flex: 1}}
+            //         source={constants.image.commonBg}
+            //         resizeMode={'repeat'}
+            // >
+                <SafeAreaView style={styles.container}>
+                        <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+                        <ScrollView>
+                            {this.verifyOtp()}  
+                        </ScrollView>
+                </SafeAreaView>
+            //</ImageBackground>
         )
     }
 }
@@ -102,7 +102,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    signUpManual: () => dispatch(signUpManual()),
+    signUpManualApi:() => dispatch(signUpManual()),
     // knowMore:(prodTypeId)=> dispatch({type:'KNOW_MORE_ABOUT_PROD',prodTypeId:prodTypeId})
 });
 

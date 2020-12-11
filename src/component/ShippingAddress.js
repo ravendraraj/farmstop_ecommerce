@@ -9,23 +9,24 @@ import {getAppartment ,checkDeliveryOnPincode ,removeAddress,getUserAddressList 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Loader } from '../customElement/Loader'
 import Icons from 'react-native-vector-icons/SimpleLineIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import RadioButton from '../customElement/RadioButton'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import CheckBox from '@react-native-community/checkbox'
+import {navigateWithParams} from '../appnavigation/RootNavigation';
 
 class shippingAddress extends Component{
-    
     constructor(props) {
         super(props);
         this.state = {
             productList: [],
-            query: '',
+            query: '',//(this.props.selectAddress == null?'':this.props.selectAddress),
             name:'',
             mobile:'',
             State:'',
-            pincode:'',
-            appartment:'',
+            pincode:'',//(this.props.shippingPincode == null?'':this.props.shippingPincode),
+            appartment:'',//(this.props.selectAddress == null?'':this.props.selectAddress),
             houseOrFlat:'',
             country:'India',
             deliverType:'Home',
@@ -34,8 +35,35 @@ class shippingAddress extends Component{
             option1:'select',
             option2:'notselect',
             is_default:false,
+            searchAddress:''
         };
     }
+
+    componentDidUpdate(nextProps){
+        console.log(nextProps);
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState){
+        console.log("getDrived",nextProps, prevState);
+        let {selectAddress,shippingPincode} = nextProps;
+        let {searchAddress} = prevState;
+        if(selectAddress !=null && selectAddress != searchAddress){
+            return{
+                searchAddress:selectAddress,
+                appartment:selectAddress,
+                query:selectAddress,
+                pincode:(shippingPincode == null?'':shippingPincode),
+            }
+        }else{
+            return null;
+        }
+    }
+
+    searchAddressLocation(){
+        this.setState({searchAddress:''});
+        navigateWithParams("GoogleLocation","shippingAddressScreen");
+    }
+
 
     async componentDidMount() {
         if(this.props.addressList.length <=0 && this.props.authUserID !=''){
@@ -119,6 +147,9 @@ class shippingAddress extends Component{
                 userAddressList.map((addressRow,id)=>{
                     return (
                         <View style={this.props.defaultShipingAddress == addressRow.id ?styles.defaultAddress:styles.addressContainer} key={id}>
+                            <Text style={styles.addressLine}>
+                                {addressRow.contactName}
+                            </Text>
                             <Text style={styles.addressLine}>
                                 {addressRow.address},
                             </Text>
@@ -291,10 +322,10 @@ class shippingAddress extends Component{
         return(
             <View style={{marginLeft:10,marginTop:10}}>
                 {this.renderMsg()}
-                <View style={{width:"80%"}}>
+                <View style={styles.textInputBox}>
                     <PrimaryTextInput placeholder="Contact Name" value={this.state.name} onChangeText={(text)=>this.setState({name:text})}/>
                 </View>
-                <View style={{width:"80%"}}>
+                <View style={styles.textInputBox}>
                     <PrimaryTextInput placeholder="House number/flat number"  value={this.state.houseOrFlat} onChangeText={(text)=>this.setState({houseOrFlat:text})}/>
                 </View>
                 <View style={{width:"100%",marginTop:10}}>
@@ -326,10 +357,20 @@ class shippingAddress extends Component{
                         )}
                     />
                 </View>
-                <View style={{width:"80%",marginTop:40}}>
+
+                <View style={{...styles.textInputBox ,marginTop:40}}>
                     <PrimaryTextInput placeholder="Pincode" value={this.state.pincode} onChangeText={(text)=>this.setState({pincode:text})} onBlur={()=>this.checkDelivery()}/>
                 </View>
                 
+                <View style={{...styles.textInputBox,paddingTop:constants.vw(15)}}>
+                    <TouchableOpacity style={{flexDirection:'row'}}
+                        onPress={()=>{this.searchAddressLocation()}}
+                    >
+                        <MaterialIcon name="my-location" size={constants.vw(20)} color={"grey"}/>
+                        <Text style={{paddingLeft:10,fontSize: 16,fontFamily: constants.fonts.Cardo_Regular,color:"grey"}}>Search Address</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={{marginTop:constants.vw(20)}}>
                         <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Bold}}>Address Type</Text>
                         <View style={{flexDirection:'row',marginTop:constants.vh(10)}}>
@@ -353,7 +394,7 @@ class shippingAddress extends Component{
                     
                 </View>
                 { this.state.option2 == "select"?
-                    (<View style={{width:"80%"}}>
+                    (<View style={styles.textInputBox}>
                         <PrimaryTextInput placeholder="Enter Other Address" value={this.state.deliverType} onChangeText={(text)=>this.setState({deliverType:text})}/>
                     </View>):(<View/>)
                 }
@@ -367,7 +408,7 @@ class shippingAddress extends Component{
                     />
                 </View>
 
-                <View style={{width:'80%',alignSelf:'center',marginTop:20}}>
+                <View style={{...styles.textInputBox,alignSelf:'center',marginTop:20}}>
                 <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:10}} onPress={()=>this._submitForm()}>
                             <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Bold,textAlign:'center',color:constants.Colors.color_WHITE}}>Save</Text>
                 </TouchableOpacity>
@@ -415,7 +456,7 @@ class shippingAddress extends Component{
         return(
                 <SafeAreaView style={styles.container}>
                     <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                    <TextHeading title="My Account"/>
+                    {/*<TextHeading title="My Account"/>*/}
                     {this._loadLoader()}
                     <KeyboardAwareScrollView 
                         keyboardShouldPersistTaps={'handled'}
@@ -446,6 +487,9 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE,
         width:"100%",
         alignSelf:'center'
+    },
+    textInputBox:{
+        width:'98%'
     },
     addressContainer:{
         borderWidth:2,
@@ -481,7 +525,7 @@ const styles = StyleSheet.create({
 		backgroundColor: constants.Colors.color_WHITE,
 		borderBottomWidth: 3,
         zIndex: 2,
-        width:"80%",
+        width:"98%",
 	},
 	descriptionContainer: {
 		flex: 1,
@@ -549,7 +593,9 @@ const mapStateToProps = state => ({
     coupon_msg : state.data.coupon_msg,
     shippingCharges:state.data.shippingCharges,
     apartmentList : state.data.apartmentList,
-    defaultShipingAddress : state.data.defaultShipingAddress
+    defaultShipingAddress : state.data.defaultShipingAddress,
+    shippingPincode:state.data.shippingPincode,
+    selectAddress:state.data.selectAddress
 });
 
 const mapDispatchToProps = dispatch => ({

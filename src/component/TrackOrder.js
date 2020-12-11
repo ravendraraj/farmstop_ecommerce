@@ -130,10 +130,10 @@ renderOrderStatus(order_status){
         return(
             <View style={styles.container}>
             <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                <View style={{width:'90%',alignSelf:"center"}}>
-                	<Text style={{fontSize:25,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,marginBottom:constants.vw(20)}}>
+                <View style={{width:'90%',paddingTop:constants.vw(20),alignSelf:"center"}}>
+                    {/* <Text style={{fontSize:25,color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Italic,marginBottom:constants.vw(20)}}>
                         Track your Order
-                    </Text>
+                    </Text>*/}
                     <ScrollView showsVerticalScrollIndicator={false}>
                 	   {this.renederItemTrackList()}
                     </ScrollView>

@@ -138,7 +138,7 @@ _trackOrder(){
             <View style={styles.container}>
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <View style={{width:'100%',alignSelf:"center"}}>
-                    <TextHeading title="My Orders"/>
+                    {/*<TextHeading title="My Orders"/>*/}
                 	{this.renederItemType()}
                 </View>
                 {this._loadLoader()}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         backgroundColor:constants.Colors.color_WHITE
     },
     moreDetails:{
-        color:'red',
+        color:constants.Colors.color_heading,
         fontFamily:constants.fonts.Cardo_Regular,
         fontSize:constants.vw(18)    
     },prodBlock:{

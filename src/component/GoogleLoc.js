@@ -45,8 +45,8 @@ class GoogleLoc extends Component {
 					//Setting state Longitude to re re-render the Longitude Text
 					this.setState({ currentLatitude:currentLatitude });
 					//Setting state Latitude to re re-render the Longitude Text
-
-					this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});
+					console.log(this.props.route.params,"Address Screen");
+					this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude,screenName:this.props.route.params});
 				 },
 				 (error) => {console.log(error)},
 				 { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
@@ -71,7 +71,7 @@ class GoogleLoc extends Component {
 	}
 
 	_showMessage(){
-		console.log(this.props.success+"  -  "+this.props.error)
+		//console.log(this.props.success+"  -  "+this.props.error)
 		if(this.props.error != null){
 			ToastAndroid.showWithGravity(this.props.error, ToastAndroid.SHORT, ToastAndroid.TOP);
 			this.props.removeError();
@@ -90,12 +90,13 @@ class GoogleLoc extends Component {
 						<Text style={{paddingLeft:10,fontSize: 16,fontFamily: constants.fonts.Cardo_Regular,color:"grey"}}>Get Current Location</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{ flex: 1}}>
+				<View style={{}}>
 					<GooglePlacesAutocomplete
 						placeholder={"Enter Address"}
-						placeholderTextColor="gray"
+						placeholderTextColor="grey"
 						lavel={'geocode'}
 						minLength={2} // minimum length of text to search
+						enableHighAccuracyLocation={true}
 						autoFocus={true}
 						ref={(instance) => { this.locationRef = instance }}
 						autoCapitalize='sentences'
@@ -106,15 +107,17 @@ class GoogleLoc extends Component {
 						onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
 
 							//console.log('dataDetail', details.address_components);
-							console.log(details);
+							// console.log(details);
 
 							const addressDetails = details.address_components;
 							const geometry = details.geometry;
-							console.log(geometry.location['lat']);
-							console.log(geometry.location['lng']);
+							// console.log(geometry.location['lat']);
+							// console.log(geometry.location['lng']);
+
 							this.setState({ currentLongitude:geometry.location['lng'] });
 							this.setState({ currentLatitude:geometry.location['lat'] });
-							this.props.checkDelivery({lat:geometry.location['lat'],lng:geometry.location['lng']});
+							//console.log(this.props.route.params,"Address Screen");
+							this.props.checkDelivery({lat:geometry.location['lat'],lng:geometry.location['lng'],screenName:this.props.route.params});
 						}}
 
 						getDefaultValue={() => ''}
@@ -123,7 +126,8 @@ class GoogleLoc extends Component {
 							// available options: https://developers.google.com/places/web-service/autocomplete
 							key: 'AIzaSyDV7cINGIE3Re1ACdMWbgcseonHpubiBjE',// taken from farmstop web
 							input: 'delhi',
-							types: 'geocode'
+							types: 'geocode',
+							components: 'country:in',
 						}}
 
 						fetchDetails ={true}
@@ -131,10 +135,10 @@ class GoogleLoc extends Component {
 						styles={{
 							textInputContainer: {
 								backgroundColor: "#fff",
-								borderBottomWidth:0,
+								borderBottomWidth:0.5,
 								borderWidth:0,
 								fontSize: 20,
-								fontFamily: constants.fonts.Cardo_Bold,
+								fontFamily: constants.fonts.Cardo_Bold
 							},
 							description: {
 								fontWeight: 'bold',
@@ -151,11 +155,20 @@ class GoogleLoc extends Component {
 								borderWidth:1,
 								borderColor:constants.Colors.color_lineGrey
 							},
+							listView:{
+								position:'absolute',
+								zIndex:2,
+								top:constants.vw(50),
+								backgroundColor:constants.Colors.color_WHITE
+							}
 						}}
-
-
 					/>
-
+					{( this.props.selectedDefaultAddress != "" && this.props.selectedDefaultAddress != null)?
+						(<View style={{marginTop:constants.vw(70)}}>
+							<Text style={{fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Bold}}>Your Selected Address</Text>
+							<Text style={{fontSize:constants.vw(16),marginTop:10,fontFamily:constants.fonts.Cardo_Regular,color:constants.Colors.color_grey}}>{this.props.selectedDefaultAddress}</Text>
+						</View>):(<View/>)
+					}
 				</View>
 				{this._showMessage()}
 			</View>
@@ -169,8 +182,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
-		justifyContent:'space-between',
-		width:'90%',
+		width:constants.width*0.98,
 		alignSelf:'center'
 	},
 	inputBox: {
@@ -183,7 +195,7 @@ const mapStateToProps = state => ({
 	animate : state.indicator,
 	success: state.error.success,
 	error: state.error.err,
-	//address : state.data.selectAddress
+	selectedDefaultAddress : state.data.selectAddress,
 });
 
 const mapDispatchToProps = dispatch => ({

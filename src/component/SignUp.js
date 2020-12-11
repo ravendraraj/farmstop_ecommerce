@@ -67,15 +67,16 @@ class SignUp extends Component{
             return(
                 <Loader />
             )
-        }
+        } 
     }
+    
     render(){
         return(
-            <ImageBackground
-                style={{flex: 1}}
-                source={constants.image.commonBg}
-                resizeMode={'repeat'}
-            >
+            // <ImageBackground
+            //     style={{flex: 1}}
+            //     source={constants.image.commonBg}
+            //     resizeMode={'repeat'}
+            // >
                 <SafeAreaView style={styles.container}>
                     <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     {/*<StatusBar translucent backgroundColor="transparent" />*/}
@@ -125,7 +126,7 @@ class SignUp extends Component{
                     </ScrollView>
                     {this._loadLoader()}
                 </SafeAreaView>
-            </ImageBackground>
+            // </ImageBackground>
         )
     }
 }
@@ -133,7 +134,7 @@ class SignUp extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        // backgroundColor:constants.Colors.color_WHITE
+        backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{
         marginTop:20,

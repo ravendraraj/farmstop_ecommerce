@@ -60,7 +60,7 @@ const HomeStack = ({navigation}) => (
             options={({ navigation }) => ({
                 headerLeft: ()=> <MainNavigationDrawerStructure navigationProps={navigation} />,
                 headerTitle: () => <Mainheader navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 10},
+                headerStyle:{shadowOpacity:1,elevation: 2},
                 headerTransparent:false,
             })}
             
@@ -68,7 +68,7 @@ const HomeStack = ({navigation}) => (
 
             <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} ScreenTitle={""}/>,
                         headerTitle: () => <Header navigation={navigation} />,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
@@ -77,16 +77,16 @@ const HomeStack = ({navigation}) => (
                     
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Notifications"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
             name="Notification" component={Notification}/>
             
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                 headerTitle: () => <Header navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
@@ -96,7 +96,7 @@ const HomeStack = ({navigation}) => (
         
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                 headerTitle: () => <Header navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
@@ -108,7 +108,7 @@ const HomeStack = ({navigation}) => (
         
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"How It Works"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
@@ -119,9 +119,9 @@ const HomeStack = ({navigation}) => (
 
             <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Order Detail"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
             name="OrderDetails" component={OrderDetails}/>
@@ -139,9 +139,9 @@ const HomeStack = ({navigation}) => (
 
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Track your order"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
             name="TrackOrder" component={TrackOrder}/>
@@ -189,34 +189,34 @@ const HomeStack = ({navigation}) => (
 
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} ScreenTitle={"Your Addresses"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerStyle:{shadowOpacity:1,elevation: 2},
                 headerTransparent:false,
             })}
             name="ShippingAddress" component={ShippingAddress}/>
 
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:1,elevation: 10},
+                headerStyle:{shadowOpacity:1,elevation: 2},
                 headerTransparent:false,
             })}
             name="knowMoreProd" component={knowMoreProd}/>
 
         <RootStack.Screen
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                 headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:1,elevation: 10},
+                headerStyle:{shadowOpacity:1,elevation: 2},
                 headerTransparent:false,
             })}
         name="BasketScreen" component={BasketScreen}/>
  
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Sign Up"}/>,
                 headerTitle: () => <Header navigation={navigation} />,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
@@ -234,7 +234,7 @@ const HomeStack = ({navigation}) => (
         
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"About Farm"}/>,
                 headerTitle: null,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
@@ -243,16 +243,16 @@ const HomeStack = ({navigation}) => (
 
         <RootStack.Screen 
             options={({ navigation }) => ({
-                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                headerTitle: () => <Header navigation={navigation} />,
-                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} ScreenTitle={"My Cart"}/>,
+                headerTitle: () => <Header navigation={navigation}/>,
+                headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
             name="MyCart" component={MyCart}/>
 
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                         headerTitle: () => <Header navigation={navigation} />,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
@@ -261,7 +261,7 @@ const HomeStack = ({navigation}) => (
                     
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Contact Us"}/>,
                         headerTitle: () => <Header navigation={navigation} />,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
@@ -280,7 +280,7 @@ const HomeStack = ({navigation}) => (
                     name="SocialLogin" component={SocialLoginScreen}/> 
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
                         headerTitle: () => <Header navigation={navigation} />,
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
@@ -289,21 +289,22 @@ const HomeStack = ({navigation}) => (
 
         <RootStack.Screen 
                     options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
+                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={"Your Order"}/>,
                         headerTitle: () => <Header navigation={navigation} />,
-                        headerStyle:{shadowOpacity:0,elevation: 0},
+                        headerStyle:{shadowOpacity:1,elevation: 2},
                         headerTransparent:false,
                     })}
                     name="MyOrderTab" component={MyOrderList}/>
                     
-        <RootStack.Screen 
-                    options={({ navigation }) => ({
-                        headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation} />,
-                        headerTitle: () => <Header navigation={navigation} />,
-                        headerStyle:{shadowOpacity:0,elevation: 0},
-                        headerTransparent:false,
-                    })}
-                    name="GoogleLocation" component={GoogleLoc}/>
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerLeft: ()=> <NavigationDrawerStructure navigationProps={navigation}  ScreenTitle={""}/>,
+                headerTitle: () => <Header navigation={navigation} />,
+                headerStyle:{shadowOpacity:1,elevation: 2},
+                headerTransparent:false,
+            })}
+            name="GoogleLocation" component={GoogleLoc}
+        />
             
 
         <RootStack.Screen 

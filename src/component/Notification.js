@@ -225,7 +225,7 @@ onRefresh(){
             {/*<View style={styles.container}>*/}
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <View style={{width:'100%',alignSelf:"center"}}>
-                    <TextHeading title="My Notification"/>
+                    {/*<TextHeading title="My Notification"/>*/}
                     <ScrollView keyboardShouldPersistTaps={'handled'}
                      refreshControl={
                         <RefreshControl refreshing={this.state.refreshing}

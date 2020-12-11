@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
   NavigationContainer, 
 } from '@react-navigation/native';
 
@@ -55,11 +55,11 @@ PushNotification.configure({
         })
 
     // (required) Called when a remote is received or opened, or local notification is opened
-    if(notification.userInteraction === true)
-    {
-      console.log("open screen on touch notification");
-      check_notification();
-    }
+    // if(notification.userInteraction === true)
+    // {
+    //   console.log("open screen on touch notification");
+    //   check_notification();
+    // }
 
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },

@@ -111,7 +111,8 @@ class OrderDetails extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:constants.Colors.color_WHITE
+        backgroundColor:constants.Colors.color_WHITE,
+        paddingTop:constants.vw(20)
     },
     heading:{
     	fontFamily:constants.fonts.Cardo_Regular,

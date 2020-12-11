@@ -82,6 +82,14 @@ export const TextHeading = (props) => {
     );
 }
 
+export const ScreenTitleComp = (props) => {
+    return (
+        <View>
+            <Text style={{color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(22),paddingLeft:constants.vw(10),paddingTop:constants.vw(2)}}>{props.title}</Text>
+        </View>
+    );
+}
+
 export const TextView = (props) => {
     return (
         <View style={[styles.inputTextBox, { width: '85%', height: 127 }]}>

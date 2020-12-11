@@ -125,22 +125,22 @@ class HomeScreen extends Component {
                         
                     }else{
                         // dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
-                        Alert.alert(
-                          'Location Alert',
-                          'Delivery is not avaliable on your current address ,please select another location Location',
-                          [
-                            {
-                              text: 'Select',
-                              onPress: () => this.props.navigation.navigate("GoogleLocation")
-                            },
-                            {
-                              text: 'Cancel',
-                              onPress: () => console.log('Cancel Pressed'),
-                              style: 'cancel'
-                            },
-                          ],
-                          { cancelable: false }
-                        );
+                        // Alert.alert(
+                        //   'Location Alert',
+                        //   'Delivery is not avaliable on your current address ,please select another location Location',
+                        //   [
+                        //     {
+                        //       text: 'Select',
+                        //       onPress: () => this.props.navigation.navigate("GoogleLocation")
+                        //     },
+                        //     {
+                        //       text: 'Cancel',
+                        //       onPress: () => console.log('Cancel Pressed'),
+                        //       style: 'cancel'
+                        //     },
+                        //   ],
+                        //   { cancelable: false }
+                        // );
                     }
                 })
                 .catch( err => {

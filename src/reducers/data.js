@@ -7,6 +7,7 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     isLoignSkip:true,
     token:'',
     defaultFullAddress:'',
+    userAddressSync:false,
 };
 
 const data = (state = initialDataState, action) => {
@@ -37,6 +38,12 @@ const data = (state = initialDataState, action) => {
         return{
             ...state,
             popup:action.payload,
+        }
+
+        case 'SIGNUP_SUCCESS':
+        return{
+            ...state,
+            Otp:'',
         }
 
         case 'GET_DELIVERY_DATE':
@@ -115,8 +122,9 @@ const data = (state = initialDataState, action) => {
                 //activeProduct:'',
                 orederDetails:[],
                 token:'',
-                
+                defaultFullAddress:'',
                 isAppIntro:false,
+                userAddressSync:false,
             }
         
         case 'FETECH_ADDRESS_LIST':
@@ -137,7 +145,8 @@ const data = (state = initialDataState, action) => {
             ...state,
             addressList: userAddressList,
             defaultShipingAddress:defaultAddressID,
-            defaultFullAddress:fullDefaultAddress
+            defaultFullAddress:fullDefaultAddress,
+            userAddressSync:true,
         }
 
         case 'SAVED_DEFAULT_SHIPPING_ADDRESS':

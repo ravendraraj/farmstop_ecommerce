@@ -360,9 +360,7 @@ class MyCart extends Component {
                 <View style={styles.container}>
                     <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                         <View style={styles.MainContainer}>
-                            <View style={styles.headContainer}>
-                                <TextHeading title="My Cart"/>
-                            </View>
+                            
                             {this._loadLoader()}
                             {this.renederItemType()}
                             {this.renederCartDetails()}
