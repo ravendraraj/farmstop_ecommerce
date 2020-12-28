@@ -101,7 +101,7 @@ class HomeScreen extends Component {
 			  
 		  if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 			 Geolocation.getCurrentPosition(
-				(position) => {
+				(position) =>{
 				    const currentLongitude = JSON.stringify(position.coords.longitude);
 					  const currentLatitude = JSON.stringify(position.coords.latitude);
 				    // this.props.checkDelivery({lat:currentLatitude,lng:currentLongitude});

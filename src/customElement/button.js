@@ -115,6 +115,20 @@ export const StickyButtonComponent=(props)=>{
     )
 }
 
+
+export const NavButton=(props)=>(
+    <TouchableOpacity style={{}} {...props}>
+        <View>
+            <View style={{flexDirection:'row'}}>
+                <Image source={props.icon_url} style={styles.icon}/>
+                <Text style={styles.MenueLable}>{props.navTitle}</Text>
+            </View>
+            <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
+        </View>
+
+    </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
     button:{
         borderColor:constants.Colors.color_grey,

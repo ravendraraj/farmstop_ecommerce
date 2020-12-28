@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import constants from '../constants'
 import image from "../constants/Image"
 import {logout,getNotification} from "../lib/api"
-
+import ShareApp from '../customElement/ShareApp'
 import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
@@ -134,7 +134,7 @@ renderLogout(){
     
     if(this.props.authUserID != null && this.props.authUserID != "null" && this.props.authUserID !=''){
         return(
-            <TouchableOpacity style={{marginTop:constants.vh(20),marginBottom:constants.vh(20)}} onPress={() => this._logOutEvent()}>
+            <TouchableOpacity style={{marginTop:constants.vh(15),marginBottom:constants.vh(20)}} onPress={() => this._logOutEvent()}>
                 <Text style={styles.withOutIcon}>Logout</Text>
             </TouchableOpacity>
         )
@@ -145,8 +145,8 @@ _renderSignUpAndLogin(){
     
     if(this.props.authUserID == null || this.props.authUserID == "null" || this.props.authUserID ==''){
         return(
-            <TouchableOpacity style={{marginBottom:constants.vh(20)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
-                <Text style={styles.withOutIcon}>Singup | Login</Text>
+            <TouchableOpacity style={{marginBottom:constants.vh(10),marginTop:constants.vh(10)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
+                <Text style={{...styles.withOutIcon,color:constants.Colors.color_grey}}>Singup | Login</Text>
             </TouchableOpacity>
         )
     }
@@ -159,7 +159,7 @@ async _logOutEvent(){
  render(){
 
      return(
-         <View style={{flex:1}}>
+         <View style={{flex:1,backgroundColor:constants.Colors.color_WHITE}}>
              <ScrollView>
             <ImageBackground
                 style={{flex: 1}}
@@ -179,17 +179,16 @@ async _logOutEvent(){
                     </View>
                 </View>
             </ImageBackground>
-                <View style={{paddingLeft:0,paddingTop:10}}>
+                <View style={{paddingLeft:0}}>
                     <View style={{paddingLeft:10}}>
                     {this._renderSignUpAndLogin()}
                     </View>
                     <View style={{paddingLeft:10}}>
 
+    
+                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginBottom:constants.vw(8)}}/>
+
                     <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
-                    {/*<TouchableOpacity 
-                        style={styles.menuTab}
-                        onPress={()=>{this.props.navigation.navigate("MainHome")}}
-                    >*/}
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.homeIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>Home</Text>
@@ -203,6 +202,7 @@ async _logOutEvent(){
                             <Text style={styles.MenueLable}>My Account</Text>
                         </View>
                         <Icons name={(this.state.displayMyAccChild== true)?"angle-down":"angle-right"} size={14} style={{marginTop:5}}/>
+
                     </TouchableOpacity>
                     {this.renderMyAccTab()}
 
@@ -222,8 +222,6 @@ async _logOutEvent(){
                         </View>
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
-
-                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginTop:constants.vw(8),marginBottom:constants.vw(8)}}/>
 
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('Faq')}}>
                         <View style={{flexDirection:'row'}}>
@@ -263,6 +261,11 @@ async _logOutEvent(){
                         <Text style={styles.withOutIcon}>How it works</Text>
                     </TouchableOpacity>
 
+                    <ShareApp title={constants.constStrings.shareAppIconDrawer}/>
+                    <View style={{height:constants.vh(20)}}/>
+
+                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:constants.vw(-8),marginBottom:constants.vw(10)}}/>
+
                     <TouchableOpacity style={styles.menuTab} onPress={() => {this.props.navigation.navigate('ContactScreen')}}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.mailIcon} style={styles.icon}/>
@@ -271,6 +274,7 @@ async _logOutEvent(){
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
                     {this.renderLogout()}
+                    <View style={{height:constants.vh(20)}}/>
                     </View>
                 </View>
              </ScrollView>
@@ -284,20 +288,21 @@ const styles = StyleSheet.create({
         //fontFamily:constants.fonts.CardoBOLD,
         fontFamily:constants.fonts.Cardo_Regular,
         fontSize:constants.vw(16),
-        paddingLeft:10
+        paddingLeft:constants.vw(10),
         },
     TopMarginMenuLable:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:18,
-        marginTop:-3,
-        paddingLeft:10
+        fontSize:constants.vw(18),
+        marginTop:constants.vw(-3),
+        paddingLeft:constants.vw(10)
     },
     menuTab:{
         flexDirection:'row',
         justifyContent:'space-between',
-        marginTop:7,
-        marginBottom:7,
-        width:'90%'
+        marginTop:constants.vw(7),
+        marginBottom:constants.vw(7),
+        width:'90%',
+        padding:constants.vw(2)
     },
     icon:{
         width:constants.vw(18),
@@ -310,7 +315,7 @@ const styles = StyleSheet.create({
     profileWraper:{
         borderWidth:1,
         borderColor:'red',
-        borderRadius: 50
+        borderRadius: constants.vw(50)
     },
     profileText:{
         alignSelf:'center',
@@ -333,7 +338,7 @@ const styles = StyleSheet.create({
     },
     childMenuTab:{
         flexDirection:'row',
-        marginBottom:10,
+        marginBottom:constants.vh(10),
         width:'80%'  
     },
     imgBackground: {

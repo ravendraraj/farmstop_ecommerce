@@ -131,13 +131,14 @@ const data = (state = initialDataState, action) => {
         let userAddressList = action.addressList;
         let defaultAddressID = state.defaultShipingAddress;
         let fullDefaultAddress = "";
+        let defaultShippingCost ="";
         if(userAddressList != "undefined" && userAddressList.length>0){
             let defaultAddress = userAddressList.find(item=>item.default_address == 1);
-            console.log("Fetch",defaultAddress);
+            //console.log("Fetch",defaultAddress);
             if(defaultAddress != undefined){
                 defaultAddressID = defaultAddress.id;
                 fullDefaultAddress= defaultAddress.address+","+defaultAddress.district+","+defaultAddress.country+","+defaultAddress.zipcode;
-
+                defaultShippingCost = parseFloat(defaultAddress.shipingCost);
             }
         }
 
@@ -147,6 +148,15 @@ const data = (state = initialDataState, action) => {
             defaultShipingAddress:defaultAddressID,
             defaultFullAddress:fullDefaultAddress,
             userAddressSync:true,
+            shippingCharges:defaultShippingCost
+        }
+
+        case 'REMOVE_ADDRESS_SAVED':
+        return{
+            ...state,
+            defaultFullAddress:null,
+            shippingCharges:null,
+            defaultShipingAddress:""
         }
 
         case 'SAVED_DEFAULT_SHIPPING_ADDRESS':

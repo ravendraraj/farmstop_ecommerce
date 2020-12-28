@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import {Loader} from '../customElement/Loader'
 import {CouponTextInput ,PrimaryTextInput,EmptyComp} from '../customElement/Input'
 //helper function
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
 import {Picker} from '@react-native-community/picker';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
@@ -100,7 +100,7 @@ class MyCart extends Component {
         if(this.props.cartData.length >0){
             let subtotal = this.props.subtotal;
             let tax = 0;
-            let deliveryCharges = ( this.props.shippingCost== null ? 0 :this.props.shippingCost);
+            let deliveryCharges = ((this.props.shippingCost != null && this.props.shippingCost!= "")?this.props.shippingCost:0);
             deliveryCharges = (subtotal >= this.props.freeDeliveryAt) ? 0 :deliveryCharges; 
             let discount = this.state.discount;
             let total = subtotal+tax;
@@ -122,7 +122,7 @@ class MyCart extends Component {
         let subtotal = this.props.subtotal;
         if(subtotal >= this.props.minPurchase){ 
                 this.props.getDeliveryDate();
-                if(this.props.authUserID != null && this.props.authUserID != "" && this.props.shippingAddress != ""){
+                if(this.props.authUserID != null && this.props.authUserID != "" && (this.props.shippingAddress != "" && this.props.shippingAddress != null && this.props.shippingCost != null && this.props.shippingCost!= "")){
                     let tax = 0;
                     let deliveryCharges = this.state.deliveryCharges;
                     let discount = this.state.discount;
@@ -136,7 +136,7 @@ class MyCart extends Component {
                             screen_name: "MyCart",
                         });
 
-                    }else if(this.props.shippingAddress == ""){
+                    }else if(this.props.shippingAddress == "" || this.props.shippingAddress == null || this.props.shippingCost == null || this.props.shippingCost== ""){
                         this.props.navigation.navigate('ShippingAddress', {
                             screen_name: "cart",
                         });
@@ -268,7 +268,7 @@ class MyCart extends Component {
                         <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         
                             <View style={{alignSelf:'center',marginTop:10}}>
-                                <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                                <Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage)) }} />
                             </View>
                             <View style={{width:'50%'}}>
                                 <View style={{flexDirection:'row'}}>

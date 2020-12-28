@@ -7,13 +7,17 @@ import SearchProductVariation from '../component/SearchProductVariation'
 import constants from '../constants'
 import MyProfile from '../component/MyProfile'
 import MyWish from '../component/WishList' 
+import NotLoginScreen from '../component/NotLoginScreen'
 import HomeScreen from '../component/HomeScreen'
 import Icons from 'react-native-vector-icons/FontAwesome5'
 import Material from 'react-native-vector-icons/AntDesign'
-
+import {connect} from 'react-redux'
 
 const Tab = createBottomTabNavigator();
-const TabNavProdvariation = ({navigation}) => (
+function TabNavProdvariation(props,navigation){
+//const TabNavProdvariation = ({navigation},props) =>{
+    {console.log("bottom tab navigation",props)}
+    return(
     <Tab.Navigator initialRouteName="Home"
     screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -44,9 +48,27 @@ const TabNavProdvariation = ({navigation}) => (
         <Tab.Screen options={{tabBarVisible:false}} name="Home" component={HomeScreen} />
         <Tab.Screen name="Product" component={productVariation} />
         <Tab.Screen name="Search" component={SearchProductVariation} />
-        <Tab.Screen name="Wish List" component={MyWish} />
-        <Tab.Screen name="My Profile" component={MyProfile} />
+        <Tab.Screen name="Wish List" component={(props.data.authUserID !="" && props.data.authUserID != null)? MyWish :NotLoginScreen} />
+        <Tab.Screen name="My Profile" component={(props.data.authUserID !="" && props.data.authUserID != null)? MyProfile :NotLoginScreen} />
     </Tab.Navigator>
 )
+}
 
-export default TabNavProdvariation;
+//export default TabNavProdvariation;
+    function mapDispatchToProps(dispatch) {
+        return({
+            dispatch
+        })
+    }
+
+    function mapStateToProps(state) {
+        let auth = state.auth;
+        let indicator = state.indicator;
+        let data = state.data;
+        let error = state.error;
+        return {
+            auth,indicator,data,error
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabNavProdvariation);

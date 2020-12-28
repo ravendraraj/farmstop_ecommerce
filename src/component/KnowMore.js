@@ -9,7 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import SocialLink from './SocialLinks'
 import HTML from 'react-native-render-html'
 //helper function
-import {fristLetterCapital,removeTags} from '../lib/helper'
+import {fristLetterCapital,removeTags,replaceAllSpace} from '../lib/helper'
 import { ScrollView } from 'react-native-gesture-handler';
 import {navigate} from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
@@ -50,41 +50,34 @@ class KnowMore extends Component {
     }
 
     _onShare = async(content,imageUrl)=>{
-        console.log(imageUrl);
         this.props.startLoader();
-
         let appUrl = "https://play.google.com/store/apps/details?id=com.farmstop&hl=it";
         let webUrl = "https://www.farmstop.in/";
+            
+        RNFetchBlob.fetch('GET',replaceAllSpace(imageUrl)).then(resp => {
+            this.props.disableLoader();
+            let base64image = resp.data;
+            shareProduct('data:image/png;base64,' + base64image);
+        }).catch(err =>{
+            errorHandler(err);
+            this.props.disableLoader();
+        });
 
-            RNFetchBlob.fetch('GET',imageUrl)
-              .then(resp => {
-                console.log('response : ', resp);
-                this.props.disableLoader();
-                console.log(resp.data);
-                let base64image = resp.data;
-                share('data:image/png;base64,' + base64image);
-              })
-              .catch(err =>{errorHandler(err);
-                this.props.disableLoader();
-              });
-
-            share = base64image => {
-              console.log('base64image : ', base64image);
-              let shareOptions = {
+        const shareProduct=(base64image)=>{
+            let shareOptions = {
                 title: 'Farmstop',
                 url: base64image,
                 message: "Buy fresh organic vegetables ,fruits, veggies and etc. "+appUrl,
-                subject: 'https://www.farmstop.in/'
+                subject: 'https://www.farmstop.in/',
+                showAppsToView:true
               };
 
-              Share.open(shareOptions)
-                .then(res => {
-                  console.log(res);
-                })
-                .catch(err => {
-                  err && console.log(err);
-                });
-            };
+            Share.open(shareOptions).then(res => {
+                console.log(res);
+            }).catch(err => {
+                err && console.log(err);
+            });
+        };
     }
     
     async _addInCart(prodTypeId,variationId ,selectedQty,selectedVariationPrice){
@@ -168,7 +161,7 @@ class KnowMore extends Component {
                         <View style={styles.prodBlock} key={id}>
                             <View style={{width:constants.width*0.4,justifyContent:'center',alignItems:'center'}}>
                                 <TouchableOpacity onPress={()=>{this._knowMore(item.id)}}>
-                                    <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                                    <Image style={styles.imageThumbnail} source={{ uri:replaceAllSpace(prod_variation_url+(item.fimage)) }} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{width:constants.width*0.4,justifyContent:'center',alignItems:'center'}}>
@@ -217,15 +210,17 @@ class KnowMore extends Component {
                             onPress={()=>this._addinWishList(prodDetails)}>
                                 <Material name={prodDetails.isMyWish} color={constants.Colors.color_grey} size={22}/>
                             </TouchableOpacity>):(<View/>)}
-                        <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(' ','_'))}} style={styles.singleImg}/>
+                        <Image source={{uri:replaceAllSpace(prod_variation_url+(prodDetails.fimage))}} style={styles.singleImg}/>
                     </View>
                     
                         <View style={{flexDirection:'row',alignSelf:'flex-end'}}>
                             <TouchableOpacity
                                 onPress={()=>{this._onShare(prodDetails.long_description,imageUrl)}}
-                                style={{width:30,height:30}}
+                                style={{flexDirection:'row'}}
                             >
-                            <Material style={{ marginRight: 2 }} name={"share-variant"} size={20} color={constants.Colors.color_BLACK} />
+                                <Material style={{ marginRight: 2 }} name={"share-variant"} size={constants.vw(16)} color={constants.Colors.color_heading} />
+                                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vw(16),color:constants.Colors.color_heading}}>Share</Text>
+            
                             </TouchableOpacity>
                         </View>
 

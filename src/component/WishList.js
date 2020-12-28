@@ -7,7 +7,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Loader} from '../customElement/Loader'
 import {CouponTextInput ,TextHeading,EmptyComp} from '../customElement/Input'
 //helper function
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
 import {getWishListItem ,addItemToCart,setCartItemLocal,deleteWishItem} from  '../lib/api'
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
@@ -47,10 +47,6 @@ class WishList extends Component {
             )
         }
     }
-
-componentWillUnmount() {
-    console.log(this.props.route.name,"check");
-}
     
     setVariationType(variationValue, prod_id){
         console.log(variationValue);
@@ -154,7 +150,7 @@ componentWillUnmount() {
                 <View style={styles.prodBlock}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View style={{marginTop:constants.vw(20)}}>
-                            <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                            <Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage)) }} />
                         </View>
                         <View style={{width:'50%'}}>
                             <View style={{flexDirection:'row',marginBottom:10}}>
@@ -263,7 +259,9 @@ componentWillUnmount() {
             return (
                 <View style={styles.container}>
                     <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+                    
                     <TextHeading title="My Wish List"/>
+                    
                         <View style={styles.MainContainer}>
                             {/* {this.searchComonent()} */}
                             {this._loadLoader()}
@@ -289,16 +287,13 @@ const styles = StyleSheet.create({
       //flex: 1,
       //padding: 10,
     },
-      descriptionContainer: {
-        flex: 1,
-        justifyContent: 'center',
-      },
     imageThumbnail: {
       justifyContent: 'center',
       alignItems: 'center',
-      width:width/3.5,
-      height:width/4,
-      backgroundColor:constants.Colors.color_imgbg,
+      width:constants.vw(120),
+      height:constants.vh(120),
+      resizeMode:'contain',
+      //backgroundColor:constants.Colors.color_imgbg,
     },
     row:{
         flexDirection: 'row', 
@@ -306,30 +301,10 @@ const styles = StyleSheet.create({
         margin:1
     },
     fonts:{
-        fontSize:20,
+        fontSize:constants.vw(20),
         fontFamily:regular
     },
-    welcomText: {
-		color: constants.Colors.color_intro,
-		textAlign: 'center',
-		fontSize: 18,
-		padding: 20,
-		fontFamily:regular
-    },
-    ImageStyle: {
-        // padding: 10,
-        marginTop: 13,
-        marginLeft: 10,
-        // resizeMode: 'stretch',
-        //alignItems: 'center',
-      },
-      itemText: {
-        fontSize: 15,
-        paddingTop: 5,
-        paddingBottom: 5,
-        margin: 2,
-      },
-      prodBlock:{
+    prodBlock:{
         alignSelf:'center',
         width:'95%',
         backgroundColor:"white",

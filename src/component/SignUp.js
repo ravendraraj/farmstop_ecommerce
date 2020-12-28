@@ -9,6 +9,8 @@ import {generateOtp,mobileNoValidations,emailValidations,showErrorMsg,fullNameVa
 import {sendSignUpOtp} from '../lib/api'
 import {Loader} from '../customElement/Loader'
 
+import {Username,Password,EmailTextInput}  from '../customElement/TextInputFields'
+
 class SignUp extends Component{
     constructor(props){
         super(props);
@@ -16,6 +18,7 @@ class SignUp extends Component{
             email:'',
             username:'',
             password:'',
+            secureTextEntry:true
         }
     }
 
@@ -69,6 +72,14 @@ class SignUp extends Component{
             )
         } 
     }
+
+    changePasswordSecurety(){
+        if(this.state.secureTextEntry == false){
+            this.setState({secureTextEntry:true});
+        }else{
+            this.setState({secureTextEntry:false});
+        }
+    }
     
     render(){
         return(
@@ -82,25 +93,50 @@ class SignUp extends Component{
                     {/*<StatusBar translucent backgroundColor="transparent" />*/}
                     <ScrollView>
                         <View style={styles.form}>
-                            <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(25),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Welcome To Farmstop</Text>
-                            <View style={styles.inputBox}>
-                                <PrimaryTextInput placeholder="Enter Username" onChangeText={(text)=>this.setState({username:text})}/>
-                            </View>
-                            <View style={styles.inputBox}>
-                                <PrimaryTextInput placeholder="Enter Email/Mobile Number"  onChangeText={(text)=>this.setState({email:text})}/>
-                            </View>
-                            <View style={styles.inputBox}>
-                                <PrimaryTextInput placeholder="Enter Password" secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})} onSubmitEditing={()=>this.sendOtpForSignUp()}/>
-                            </View>
+                            <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(35),fontFamily:constants.fonts.Cardo_Bold,marginTop:constants.vh(30),marginBottom:constants.vh(5)}}>Create Account,</Text>
+                            <Text style={{color:constants.Colors.color_grey,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,marginBottom:constants.vh(30)}}>Sign up to get started!</Text>
+                            <View style={{width:"86%",alignSelf:'center'}}>
+                                <Username 
+                                    placeholder="Enter Username"
+                                    onChangeText={(text)=>this.setState({username:text})}
+                                    iconColor={this.state.username !=''?constants.Colors.color_statusbar:constants.Colors.color_grey}
+                                />
+
+                                <EmailTextInput
+                                    placeholder="Enter Email/Mobile Number"
+                                    onChangeText={(text)=>this.setState({email:text})}
+                                    iconColor={this.state.email !=''?constants.Colors.color_statusbar:constants.Colors.color_grey}
+                                />
+
+                                <Password 
+                                    secureTextEntry={this.state.secureTextEntry}
+                                    onPress={()=>{this.changePasswordSecurety()}}
+                                    onChangeText={(text)=>this.setState({password:text})}
+                                    onSubmitEditing={()=>this.sendOtpForSignUp()}
+                                    iconColor={this.state.password !=''?constants.Colors.color_statusbar:constants.Colors.color_grey}
+                                />
+                            
+                            {/*
+                                <View style={styles.inputBox}>
+                                    <PrimaryTextInput placeholder="Enter Username" onChangeText={(text)=>this.setState({username:text})}/>
+                                </View>
+                                <View style={styles.inputBox}>
+                                    <PrimaryTextInput placeholder="Enter Email/Mobile Number"  onChangeText={(text)=>this.setState({email:text})}/>
+                                </View>
+                                <View style={styles.inputBox}>
+                                    <PrimaryTextInput placeholder="Enter Password" secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})} onSubmitEditing={()=>this.sendOtpForSignUp()}/>
+                                </View>
+                            */}
 
                             {/*<TouchableOpacity style={{alignSelf:'center',marginTop:40}} onPress={()=>this.sendOtpForSignUp()}>
                                                         <Text style={{fontSize:25,color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold}}>Sign Up</Text>
                                                     </TouchableOpacity>*/}
-                            <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(40)}}>
+                            <View style={{width:'100%',alignSelf:'center',marginTop:constants.vh(40)}}>
                                 <ButtonWithOutIcon 
                                     buttonName={"Sign Up"}
                                     onPress={()=>this.sendOtpForSignUp()}
                                 />
+                            </View>
                             </View>
                             <View style={{width:'90%',alignSelf:'center',marginTop:constants.vh(20)}}>
                                 <Text 
@@ -146,12 +182,12 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         width:constants.width*0.9,
         alignSelf:"center",
-        marginTop:constants.vh(150),
+        marginTop:constants.vh(80),
         backgroundColor:constants.Colors.color_WHITE,
         //backgroundColor:'rgba(255,255,255,0.9)',
         borderRadius:constants.vw(10),
         paddingBottom:20,
-        elevation:5,
+        //elevation:5,
     }
 })
 

@@ -4,8 +4,10 @@ import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import {TextHeading} from '../customElement/Input'
 import {ButtonWithIcon,StickyButtonComponent} from '../customElement/button'
+import ShareApp from '../customElement/ShareApp'
 import {logout} from "../lib/api"
 
 const width = Dimensions.get('window').width;
@@ -70,16 +72,28 @@ class MyProfile extends Component{
 
                                 {this.renderProfileImage()}
                                 <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,marginTop:10,alignSelf:'center'}}>{this.props.userName}</Text>
-                                <Text style={{fontSize:17,fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',color:constants.Colors.color_grey}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
-                                <Text style={{fontSize:16,fontFamily:constants.fonts.Cardo_Regular,marginTop:0,alignSelf:'center'}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
+                                
+                                <View style={{flexDirection:'row',alignSelf:'center'}}>
+                                    <Material name={"email-outline"} size={constants.vh(20)} color={constants.Colors.color_grey}/>
+                                    <Text style={{fontSize:constants.vh(17),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',color:constants.Colors.color_grey,marginLeft:constants.vw(5)}}>{(this.props.authEmail != null && this.props.authEmail != "")?this.props.authEmail:'Not available'}</Text>
+                                </View>
+                                <View style={{flexDirection:'row',alignSelf:'center'}}>
+                                    <Material name={"phone"} size={constants.vh(20)} color={constants.Colors.color_grey}/>
+                                    <Text style={{fontSize:constants.vh(17),fontFamily:constants.fonts.Cardo_Regular,marginLeft:constants.vw(5)}}>{ (this.props.authMobile != "null" && this.props.authMobile != "null" && this.props.authMobile != "")? this.props.authMobile: 'Not available'}</Text>
+                                </View>
                             </View>
                         </View>
                         <View style={{width:'95%',alignSelf:'center',marginTop:constants.vw(40)}}>
+
                             <ButtonWithIcon buttonName={"Your Orders"} leftIcon={constants.image.myOrderIcon} rightIcon={"arrow-right"} isImg={true} onPress={()=>{this.props.navigation.navigate("MyOrderTab")}}/>
                             <ButtonWithIcon buttonName={"Address"} leftIcon={"location-pin"} rightIcon={"arrow-right"} isImg={false} onPress={()=>{this.props.navigation.navigate("ShippingAddress",{screen_name: "side_menu_bar"})}}/>
-                            <ButtonWithIcon buttonName={"Logout"} leftIcon={"logout"} rightIcon={""} isImg={false} onPress={()=>this._logOutEvent()}/>
+                            {/*<ButtonWithIcon buttonName={"Logout"} leftIcon={"logout"} rightIcon={""} isImg={false} onPress={()=>this._logOutEvent()}/>*/}
                             
                         </View>
+                        <View style={{width:'95%',alignSelf:'center',marginTop:constants.vw(20)}}>
+                            <ShareApp title={constants.constStrings.shareAppIconProfile}/>
+                        </View>
+
                         </View>
                     </ScrollView>
 
@@ -114,19 +128,7 @@ const styles = StyleSheet.create({
     profileItem:{
         flexDirection:'row',
         marginTop:10
-    },
-    blockShadow:{
-        width:'100%',
-        alignSelf:'center',
-        marginTop:constants.vh(30),
-        backgroundColor:constants.Colors.color_WHITE,
-        borderRadius:10,
-        shadowRadius: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity:  0.4,
-        elevation: 1    
-    },
+    }
 })
 
 const mapStateToProps = state => ({

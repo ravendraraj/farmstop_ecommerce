@@ -29,7 +29,7 @@ var deviceData = "";
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function (deviceTokenData) {
-    console.log("TOKEN:", deviceTokenData);
+    //console.log("TOKEN:", deviceTokenData);
     AsyncStorage.setItem('DEVICE_TOKEN', JSON.stringify(deviceTokenData));
     deviceData=deviceTokenData
   },
@@ -39,10 +39,10 @@ PushNotification.configure({
     console.log("NOTIFICATION:", notification);
  
       PushNotification.localNotification({
-        //showWhen:true,
         autoCancel: true,
         largeIcon: "ic_launcher",
         largeIconUrl:notification.data.largeIcon,
+        smallIcon: "ic_notification",
         bigText:notification.data.message,
         title: notification.data.title,
         message: notification.data.message,
@@ -52,22 +52,25 @@ PushNotification.configure({
         playSound: true,
         soundName: 'default',
         priority: "high",
-        })
+      })
 
     // (required) Called when a remote is received or opened, or local notification is opened
-    // if(notification.userInteraction === true)
-    // {
-    //   console.log("open screen on touch notification");
-    //   check_notification();
-    // }
+    if(notification.userInteraction === true)
+    {
+       console.log("open screen on touch notification");
+       check_notification();
+    }
 
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
  
   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-  onAction: function (notification) {
-    console.log("ACTION:", notification.action);
-    console.log("NOTIFICATION:", notification);
+  onAction: function(notification){
+    console.log("notifcation action ",notification.action);
+    // if(notification.action === 'Yes'){
+    //   console.log("i am pressed");
+    //   check_notification();
+    // }
     // process the action
   },
  

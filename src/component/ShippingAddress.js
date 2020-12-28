@@ -39,12 +39,12 @@ class shippingAddress extends Component{
         };
     }
 
-    componentDidUpdate(nextProps){
-        console.log(nextProps);
-    }
+    // componentDidUpdate(nextProps){
+    //     console.log(nextProps);
+    // }
 
     static getDerivedStateFromProps(nextProps, prevState){
-        console.log("getDrived",nextProps, prevState);
+        //console.log("getDrived",nextProps, prevState);
         let {selectAddress,shippingPincode} = nextProps;
         let {searchAddress} = prevState;
         if(selectAddress !=null && selectAddress != searchAddress){
@@ -299,7 +299,7 @@ class shippingAddress extends Component{
 
     selectedDefaultAddress(){
         let {is_default} = this.state;
-        console.log("check_box",is_default);
+        //console.log("check_box",is_default);
         if(is_default == false){
 
             this.setState({
@@ -431,12 +431,12 @@ class shippingAddress extends Component{
             addressObject["deliverOn"] = this.state.deliverType;
             addressObject["isUpdateAddress"] = this.state.editAddress;
             addressObject["is_default"] = this.state.is_default;
-            console.log(addressObject,"address testing");
+            //console.log(addressObject,"address testing");
         
         if(this.state.name !='' && this.state.pincode !=''  && this.state.query !='' && this.state.deliverType !='' && this.state.houseOrFlat !=""){
 
             this.props.addNewAddress(addressObject);
-            this.setState({ name:'' , pincode :'', query:'' ,deliverType:'',houseOrFlat:'',editAddress:0});
+            this.setState({ name:'' , pincode :'', query:'' ,deliverType:'',houseOrFlat:'',editAddress:0,displayForm:false});
             
         }else if(this.state.pincode ==''){ 
             ToastAndroid.showWithGravity("Delivery not available given pincode ", ToastAndroid.SHORT, ToastAndroid.TOP);

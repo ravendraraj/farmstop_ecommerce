@@ -13,6 +13,9 @@ import {
 import constants from "../constants";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import * as Animatable from 'react-native-animatable';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 
 const width = Dimensions.get('window').width;
 
@@ -76,8 +79,8 @@ export const SearchBox =(props)=>{
 
 export const TextHeading = (props) => {
     return (
-        <View>
-            <Text style={{color:constants.Colors.color_heading,fontFamily:italic,fontSize:20,paddingLeft:10}}>{props.title}</Text>
+        <View style={{backgroundColor:constants.Colors.color_heading,padding:constants.vw(10)}}>
+            <Text style={{color:constants.Colors.color_WHITE,fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(20)}}>{props.title}</Text>
         </View>
     );
 }
@@ -85,7 +88,7 @@ export const TextHeading = (props) => {
 export const ScreenTitleComp = (props) => {
     return (
         <View>
-            <Text style={{color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vw(22),paddingLeft:constants.vw(10),paddingTop:constants.vw(2)}}>{props.title}</Text>
+            <Text style={{color:constants.Colors.color_heading,fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vh(22),paddingLeft:constants.vw(10),paddingTop:constants.vw(2)}}>{props.title}</Text>
         </View>
     );
 }
@@ -167,6 +170,44 @@ export const PasscodeTextInput = (props) => {
                 ref={(r) => { props.inputRef && props.inputRef(r) }} />
         </View>
     );
+}
+
+export const Username=()=>{
+    return(
+        <View>
+        <Text 
+            style={[styles.text_footer, {
+                color:constants.Colors.color_grey
+            }]}
+        >
+            Username
+        </Text>
+
+        <View style={styles.action}>
+            <FontAwesome 
+                name="user-o"
+                color={constants.Colors.color_grey}
+                size={20}
+            />
+            <TextInput 
+                placeholder="Your Username"
+                placeholderTextColor="#666666"
+                style={[styles.textInput, {
+                    color:constants.Colors.color_grey
+                }]}
+                autoCapitalize="none"
+            />
+
+            <Animatable.View animation="bounceIn">
+                <Feather 
+                    name="check-circle"
+                    color="green"
+                    size={20}
+                />
+            </Animatable.View>
+        </View>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

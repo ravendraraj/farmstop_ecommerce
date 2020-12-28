@@ -1,5 +1,6 @@
 import { navigate } from '../appnavigation/RootNavigation'
 import { Alert } from 'react-native'
+import Share from 'react-native-share';
 
 export const fristLetterCapital=(str)=>{
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
@@ -7,7 +8,7 @@ export const fristLetterCapital=(str)=>{
 
 export const generateOtp =()=>{
     // return (Math.floor(Math.random() * 1000000));
-    return(100000+Math.floor(Math.random()*900000));
+    return(1000+Math.floor(Math.random()*9000))
 }
 
 export const removeTags=(str)=> {

@@ -5,7 +5,7 @@ import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 //helper function
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
 import {Loader} from '../customElement/Loader'
 //api call
 import { getProductType,setWishListItemInLocal ,setWishListItemOnServer,addItemToCart,setCartItemLocal} from '../lib/api'
@@ -181,7 +181,7 @@ class PorductVariation extends Component {
     renderItemTitle(){
         var catName = this.props.productData;
         var currentProdcat = this.props.activeProdCat;
-        console.log("main upper tab",catName);
+        //console.log("main upper tab",catName)
         if(catName != "undefined" && catName.length > 0 && currentProdcat  !=""){
             var categoryList = [];
             categoryList[0]=catName.find(item=>item.id == currentProdcat);
@@ -193,7 +193,7 @@ class PorductVariation extends Component {
             }
 
             return (
-                    <View style={{width:'95%',alignSelf:'center',paddingTop:10}}>
+                    <View style={{width:'95%',alignSelf:'center',paddingTop:constants.vh(10),paddingBottom:constants.vh(10)}}>
                         <FlatList
                             data={categoryList}
                             horizontal={true}
@@ -266,7 +266,7 @@ class PorductVariation extends Component {
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View>
                             <TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
-                                <Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url+(item.fimage).replace(' ','_')) }} />
+                                <Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage))}} />
                             </TouchableOpacity>
                             {(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(                            <TouchableOpacity style={styles.wishBox}
                             onPress={()=>this._addinWishList(item)}>
@@ -341,14 +341,12 @@ class PorductVariation extends Component {
             //Setting the number of column
             numColumns={1}
             ListHeaderComponent={()=>(
-                <View style={{width:'100%',height:20,marginBottom:10}}>
+                <View style={{width:'100%',height:constants.vh(10)}}>
                 </View>
             )}
             
             ListFooterComponent={()=>(
-
-                <View style={{width:'100%',height:60}}>
-                </View>
+                <View style={{width:'100%',height:constants.vh(100)}}/>
             )}
             
             // keyExtractor={(item) => item.id}
@@ -382,7 +380,9 @@ class PorductVariation extends Component {
                     /> */}
                     { this._loadLoader() }
                     <View style={styles.MainContainer}>
-                        {this.renderItemTitle()}
+                        <View style={{backgroundColor:constants.Colors.screen_title}}>
+                            {this.renderItemTitle()}
+                        </View>
                         {this.renederItemType()}
                     </View>
                 {/* </ScrollView> */}
@@ -405,12 +405,13 @@ const styles = StyleSheet.create({
       //flex: 1,
       //padding: 10,
     },
-    imageThumbnail: {
+    imageThumbnail:{
       justifyContent: 'center',
       alignItems: 'center',
       width:constants.vw(110),
-      height:constants.vw(100),
-      backgroundColor:constants.Colors.color_imgbg,
+      height:constants.vh(100),
+      resizeMode:'contain',
+      //backgroundColor:constants.Colors.color_imgbg,
     },
     row:{
         flexDirection: 'row', 

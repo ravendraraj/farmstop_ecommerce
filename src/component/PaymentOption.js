@@ -47,11 +47,20 @@ _radioHandler(){
         let listOfAddress = this.props.addressList;
         if(listOfAddress.length >0){
             let address = listOfAddress.find(item => item.id === id);
-            return(
-                <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
-                    <Text style={styles.text}>{address.address}, {address.district}, {address.zipcode}, {address.country}</Text>
-                </View>
-            )
+            //console.log("address",address);
+            if(address != undefined){
+                return(
+                    <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
+                        <Text style={styles.text}>{address.address}, {address.district}, {address.zipcode}, {address.country}</Text>
+                    </View>
+                )
+            }else{
+                return(
+                    <View style={{marginTop:constants.vh(10),marginBottom:constants.vh(10)}}>
+                        <Text style={styles.text}>{constants.constStrings.select_delivery_address}</Text>
+                    </View>
+                )
+            }
         }
     }
 
@@ -92,6 +101,7 @@ _radioHandler(){
             let discount = this.props.coupon_value !=""?parseFloat(this.props.coupon_value):0;
 
             let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
+            console.log(subtotal+parseFloat(deliveryCharges)+tax-discount,subtotal,"delivery=>"+deliveryCharges,parseFloat(deliveryCharges),tax,discount);
             return(
                     <View style={{flex:1,alignSelf:'center',width:"90%"}}>
                         <View style={{}}>
@@ -344,7 +354,7 @@ const styles = StyleSheet.create({
     },
     heading:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:16
+        fontSize:constants.vw(16)
     },
     prodBlock:{
         alignSelf:'center',
@@ -352,8 +362,8 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         borderRadius:3,
         elevation:10,
-        padding:10,
-        marginBottom:10,
+        padding:constants.vw(10),
+        marginBottom:constants.vw(10),
     },
     returnButton:{
         borderWidth:2,
@@ -370,13 +380,13 @@ const styles = StyleSheet.create({
         padding:5,
         width:'98%',
         alignSelf:'center',
-        marginBottom:10
+        marginBottom:constants.vw(10)
     },
     buttonText:{
         textAlign:'center',
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:18,
-        padding:10,
+        fontSize:constants.vw(18),
+        padding:constants.vw(10),
         color:constants.Colors.color_WHITE
     },
     paymentValue:{
@@ -385,11 +395,11 @@ const styles = StyleSheet.create({
     },
     text:{
         fontFamily:constants.fonts.Cardo_Regular,
-        fontSize:16
+        fontSize:constants.vw(16)
     },
     textInt:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:16  
+        fontSize:constants.vw(16)
     }
 })
 

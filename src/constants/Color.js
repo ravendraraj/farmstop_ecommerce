@@ -13,11 +13,11 @@ const Colors = {
   color_cartText:"#80b435",
   color_green:'#267219',
   color_btn:'#41A317',
-
+  screen_color:"#fff",//'rgba(65, 163, 23,0.05 )',
+  screen_title:'rgba(65, 163, 23,0.05 )',
   color_imgbg:'#DCDBD9',
   // color_statusbar:"#438D80",
   // color_heading:"#438D80",
-
   color_heading:"#41A317",
   color_statusbar:"#41A317",
   color_profileBg:"#6E7273",

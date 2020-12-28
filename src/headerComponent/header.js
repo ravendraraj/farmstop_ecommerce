@@ -6,8 +6,9 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import constants from '../constants'
 import {navigate} from '../appnavigation/RootNavigation'
+import {showErrorMsg} from '../lib/helper'
 
-function header({navigation,cartItem}){
+function header({navigation,cartItem,authUserID}){
     // onPress={() => {navigation.openDrawer()}}
     const openMenue =()=>{
         navigation.openDrawer()
@@ -32,7 +33,7 @@ function header({navigation,cartItem}){
                     <Image source={constants.image.cartIcon} style={{width:30,height:30}}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={()=>nav("MyProfile")}>
+                <TouchableOpacity onPress={()=>{(authUserID !="" && authUserID !=null )?nav("MyProfile"):showErrorMsg(constants.constStrings.not_login,"SocialLogin")}}>
                     {/* <Icon name="user" size={25}/> */}
                     <Image source={constants.image.userIcon} style={{width:30,height:30}}/>
                 </TouchableOpacity>
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
     cartItem :state.data.addedItems,
+    authUserID :state.data.authUserID
 });
 
 const mapDispatchToProps = dispatch => ({

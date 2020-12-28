@@ -1,13 +1,8 @@
 const constStrings = {
-  LETS_BEGIN: `Let's Begin!`,
-  LOGIN: `LOGIN`,
-  LOGIN_BUTTON_TITLE: `Email Address`,
-  OTP_CODE_SEND_TEXT: `Enter the secure code sent to your email `,
-  ADDRESS:`Address`,
-  OTP_CONFIRM_HEADER: `Awesome!`,
-  OTP_CONFIRM_TEXT: `Your account has been verified successfully.`,
-  PAYMENT_SUCCESS_MESSAGE: `Your transaction has been confirmed.`,
-  PAYMENT_FAILE_MESSAGE: `Your transaction has been failed.`,
-  ADDRESS_UPDATE_FAILED:'Address is not saved ,Please try again',
+  	select_delivery_address:"Select your delivery address",
+  	shareAppIconProfile:"Let your dear ones know about us" ,//"Tell us your friends about Farmstop",
+  	shareAppIconDrawer:"Share it with your dear ones",//"Tell us your friends"
+  	not_login:'Your not login ,Please login for more feature.'
+
 }
 export default constStrings;

@@ -48,15 +48,15 @@ class OrderDetails extends Component{
 	renderProdOfDelivery(){
 		let orderDetails = this.props.OrderDetails;
 		return(
-            orderDetails.map((item)=>{
+            orderDetails.map((item,id)=>{
                 return (
-                    <View style={[styles.prodBlock,{flexDirection:'row'}]}>
-                    	<Image style={{width:100,height:100}} source={{ uri: (prod_variation_url+(item.image).replace(' ','_')) }} />
+                    <View style={[styles.prodBlock,{flexDirection:'row'}]} key={id}>
+                    	<Image style={{width:constants.vw(110),height:constants.vh(110),resizeMode:'contain'}} source={{ uri: (prod_variation_url+(item.image).replace(' ','_')) }} />
 
                     	<View style={{alignSelf:'center',paddingLeft:20,width:"60%"}}>
-	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:18}}>{fristLetterCapital(item.attribute_name)}</Text>
-	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>Qty: {item.total_item} X {item.variation_value}</Text>
-	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:16}}>Rs {item.variation_price}</Text>
+	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vh(18)}}>{fristLetterCapital(item.attribute_name)}</Text>
+	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vh(16)}}>Qty: {item.total_item} X {item.variation_value}</Text>
+	                        <Text style={{fontFamily:constants.fonts.Cardo_Regular,fontSize:constants.vh(16)}}>Rs {item.variation_price}</Text>
                         </View>
                     </View>
                 )
@@ -87,7 +87,7 @@ class OrderDetails extends Component{
 					</View>
 					<Text style={styles.boldHeading}>Product Delivery details</Text>
 
-					<View style={{width:'90%',alignSelf:'center',marginTop:20}}>
+					<View style={{width:'100%',alignSelf:'center',marginTop:20}}>
 						<View style={{flexDirection:'row'}}>
 							<Text style={styles.boldHeading}>Order Status:</Text><Text style={{paddingLeft:3,fontSize:18,fontFamily:constants.fonts.Cardo_Regular}}>{findOrderStatus(orderDetails[0].order_status)}</Text>
 						</View>
