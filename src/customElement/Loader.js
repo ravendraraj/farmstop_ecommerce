@@ -33,11 +33,11 @@ const Styles = StyleSheet.create({
         left: 0,
         flex:1,
         width: windowWidth,
-        height: windowHeight,
+        height: windowHeight+100,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
-        //backgroundColor: 'rgba(52, 52, 52, 0.8)'
-        backgroundColor:'transparent'
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
+        //backgroundColor:'transparent'
     }
 });

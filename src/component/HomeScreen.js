@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image, Text, ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert,StatusBar} from 'react-native'
+import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image,Linking,Text,ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert,StatusBar} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
 import { prod_image ,weburl,prod_variation_url } from '../constants/url'
 import constants from '../constants'
-import storeImg from '../constants/Image'
+//import storeImg from '../constants/Image'
 import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -13,15 +13,18 @@ import AboutFarm from './AboutFarm'
 import Swiper from 'react-native-swiper'
 import HTML from 'react-native-render-html'
 
-import {fristLetterCapital} from '../lib/helper'
+import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
 //api call
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery,getUserAddressList} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
-import SocialLinks from '../component/SocialLinks'
+import { checkVersion } from "react-native-check-version";
+import FastImage from 'react-native-fast-image'
+
 const regular = constants.fonts.Cardo_Regular;
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const headerHeight = height;
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
@@ -86,7 +89,28 @@ class HomeScreen extends Component {
     if(deviceTokenData != null){
       this.props.setDeviceData(JSON.parse(deviceTokenData));
     }
-
+    
+    const version = await checkVersion({currentVersion:"1.7"});
+    //console.log("Got version info:", version);
+    if(version !='' && parseFloat(version.version)>1.7){ // 1.7 is latest version
+      //if()
+      Alert.alert(
+          'Farsmtop Application Update',
+          'New version of the app is available. Do you want to update?',
+          [
+            {
+              text: 'Update',
+              onPress: () =>{Linking.openURL(version.url)}
+            },
+            {
+              text: 'Not Now',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel'
+            },
+          ],
+          { cancelable: false }
+        );
+    }
   }
 
 
@@ -231,7 +255,18 @@ class HomeScreen extends Component {
           renderItem={({ item }) => (
             <View style={{...styles.homeProdCat,justifyContent:'center',alignItems:'center'}}>
               <TouchableOpacity onPress={() => this._getItemType(item.id)}>
-                <Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />
+                {/*<Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />*/}
+                
+                <FastImage
+                  style={styles.imageThumbnail}
+                  source={{
+                    uri:replaceAllSpace(prod_image + item.img),
+                    priority: FastImage.priority.normal,
+                    cache: FastImage.cacheControl.immutable,
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+
                 <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold,textAlign:'center' }}>{fristLetterCapital(item.title)}</Text>
               </TouchableOpacity>
             </View>
@@ -253,7 +288,16 @@ class HomeScreen extends Component {
                           let shortDesc = " <p> "+item.short_description+" </p>";
                             return (    
                                 <View style={{flexDirection:'row',justifyContent:'space-evenly'}} key={id}>
-                                    <Image source={{uri:prod_variation_url+item.fimage}} style={{width:constants.width*0.5,height:constants.width*0.4, resizeMode:'contain'}}/>
+                                    {/*<Image source={{uri:prod_variation_url+item.fimage}} style={{width:constants.width*0.5,height:constants.width*0.4, resizeMode:'contain'}}/>*/}
+                                    <FastImage
+                                      style={{width:constants.width*0.4,height:constants.width*0.35}}
+                                      source={{
+                                        uri:replaceAllSpace(prod_variation_url+item.fimage),
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                      }}
+                                      resizeMode={FastImage.resizeMode.contain}
+                                    />
                                     <View style={{width:constants.width*0.5}}>
                                         <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold, color:constants.Colors.color_btn}}>{item.attribute_name}</Text>
                                         <View style={{marginTop:constants.vh(10)}}>
@@ -466,17 +510,17 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1
   },
-    wrapper:{
+  wrapper:{
         marginTop:constants.vh(20),
         alignSelf:'center',
-        width:constants.width*0.9,
+        width:constants.width*0.95,
         height:constants.width*0.5,
         borderRadius:8,
         backgroundColor:"white",
         marginBottom:constants.vh(10),
         borderColor:constants.Colors.color_lineGrey,
         borderWidth:1,
-        elevation:10,
+        elevation:4,
         padding:5
 
     },

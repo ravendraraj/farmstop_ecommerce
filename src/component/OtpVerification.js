@@ -20,14 +20,14 @@ import constants from "../constants";
 import { vh, vw } from "../constants/Dimension";
 import {ProgressView} from '../customElement/Loader';
 import {ButtonWithOutIcon} from '../customElement/button'
-import { resetPassword } from "../lib/api";
+import { resetPassword,signUpManual } from "../lib/api";
 
 const OtpVerification = (props) => {
 
-    const box1Ref: any = React.createRef();
-    const box2Ref: any = React.createRef();
-    const box3Ref: any = React.createRef();
-    const box4Ref: any = React.createRef();
+    const box1Ref = React.createRef();
+    const box2Ref = React.createRef();
+    const box3Ref = React.createRef();
+    const box4Ref = React.createRef();
 
     const [state, setState] = React.useState({
         box1: '',
@@ -52,8 +52,15 @@ const OtpVerification = (props) => {
                     box3: '',
                     box4: '',
                 });
+
                 setError("");
-                props.navigation.navigate("ResetPassword");
+                //console.log(props.route.params.screen_name);
+                props.dispatch({type:"SIGNUP_SUCCESS"});
+                if(props.route.params.screen_name == "sign_up_screen"){
+                    props.dispatch(signUpManual());
+                }else if(props.route.params.screen_name == "forget_screen"){
+                    props.navigation.navigate("ResetPassword");
+                }
         }else{
             setError("error");
             //showAlertDialog(constants.AppConstant.WrongOtp)

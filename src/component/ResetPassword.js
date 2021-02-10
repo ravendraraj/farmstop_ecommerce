@@ -6,7 +6,7 @@ import {ButtonWithOutIcon} from '../customElement/button'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 //import { navigate } from '../appnavigation/RootNavigation';
-import {generateOtp} from '../lib/helper'
+import {generateOtp,passwordValidations,showErrorMsg} from '../lib/helper'
 import {sendSignUpOtp ,resetPassword} from '../lib/api'
 import { Loader } from '../customElement/Loader'
 import {Username,Password,EmailTextInput}  from '../customElement/TextInputFields'
@@ -37,15 +37,34 @@ class ResetPassword extends Component{
       }
 
     changePassword(){
-        if(this.state.newPassword !='' && this.state.retypePassword !=''){
-            if(this.state.newPassword == this.state.retypePassword ){
-                this.props.changePassword({email:this.props.email , password:this.state.newPassword});
+        let isCorrectPass = false;
+        let reEnterCorrectPass = false;
+        const {newPassword ,retypePassword} = this.state;
+        
+        console.log(newPassword ,retypePassword);
+
+        if(passwordValidations(newPassword)){
+            isCorrectPass = true;
+        }
+
+        if(passwordValidations(retypePassword)){
+            reEnterCorrectPass = true;
+        }
+
+        if(isCorrectPass && reEnterCorrectPass){
+            if(this.state.newPassword !='' && this.state.retypePassword !=''){
+                if(this.state.newPassword == this.state.retypePassword ){
+                    this.props.changePassword({email:this.props.email , password:this.state.newPassword});
+                }else{
+                    ToastAndroid.showWithGravity("Password Dismatch ", ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+
             }else{
-                ToastAndroid.showWithGravity("Password Dismatch ", ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity("Please fill all filed ", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
 
         }else{
-            ToastAndroid.showWithGravity("Please fill all filed ", ToastAndroid.SHORT, ToastAndroid.TOP);
+            showErrorMsg(constants.constStrings.password_err,'');
         }
     }
 

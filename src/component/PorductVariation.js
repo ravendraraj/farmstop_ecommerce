@@ -12,7 +12,7 @@ import { getProductType,setWishListItemInLocal ,setWishListItemOnServer,addItemT
 import {Picker} from '@react-native-community/picker';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation' 
-
+import FastImage from 'react-native-fast-image'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -32,17 +32,17 @@ class PorductVariation extends Component {
         }
     }
 
-   async componentDidMount(){
-        console.log("active id componentDidMount=>",this.props.activeProd);
+    async componentDidMount(){
+        //console.log("active id componentDidMount=>",this.props.activeProd);
         this.setState({previousActiveProdId:this.props.activeProd});
         if(this.props.activeProd != ''){
-            console.log("prod  id if component ");
+            //console.log("prod  id if component ");
             await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
         }else{
-            console.log("active id else componentDidMount=>",this.props.activeProd);
+            //console.log("active id else componentDidMount=>",this.props.activeProd);
            let prodCat = this.props.productData;
             if(prodCat.length >0){
-            console.log("prod  id else component ",prodCat, prodCat[0].id);
+            //console.log("prod  id else component ",prodCat, prodCat[0].id);
                 await this.props.selectCat(prodCat[0].id);
                 await this.props.getProductType({prodID:this.props.activeProd ,start:0,end:totalprod})
             }
@@ -51,10 +51,10 @@ class PorductVariation extends Component {
 
     static async getDerivedStateFromProps(props, state) {
         let {previousActiveProdId,page} = state;
-        console.log("force update",previousActiveProdId +"!='' &&"+ props.activeProd +"!="+ previousActiveProdId);
+        //console.log("force update",previousActiveProdId +"!='' &&"+ props.activeProd +"!="+ previousActiveProdId);
         if( previousActiveProdId !="" && props.activeProd != previousActiveProdId)
         {
-            console.log("getDerivedStateFromProps");
+            //console.log("getDerivedStateFromProps");
             state.previousActiveProdId = props.activeProd;
             state.page = 1;
             if(props.activeProd != ''){
@@ -221,7 +221,7 @@ class PorductVariation extends Component {
             )
         }else{
             return(
-                <View><Text>Hi</Text></View>
+                <View><Text></Text></View>
             )
         }
     }
@@ -266,7 +266,16 @@ class PorductVariation extends Component {
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View>
                             <TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
-                                <Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage))}} />
+                                {/*<Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage))}} />*/}
+                                <FastImage
+                                    style={styles.imageThumbnail}
+                                    source={{
+                                        uri:replaceAllSpace(prod_variation_url+(item.fimage)),
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
                             </TouchableOpacity>
                             {(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(                            <TouchableOpacity style={styles.wishBox}
                             onPress={()=>this._addinWishList(item)}>

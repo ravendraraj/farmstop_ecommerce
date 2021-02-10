@@ -8,18 +8,46 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     token:'',
     defaultFullAddress:'',
     userAddressSync:false,
+    orderFilters:[
+        {id:"0",filter:'Last Week',value:'last_week',selected:true},
+        {id:"1",filter:'Last Month',value:'last_month',selected:false},
+        {id:"2",filter:'Last 6 Month',value:'last_6_month',selected:false},
+        {id:"3",filter:'All',value:'all',selected:false}
+    ]
 };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
 
-    case 'AUTH_SWITCH_ROOT':
-    return{
-        ...state,
-        token:action.accessToken,
-        isLoading: false,
-        isAppIntro:action.switchApp.isAppIntro,
-    }
+        case "FILTER_ORDER_LIST":
+        
+        let newOrderFilters = state.orderFilters.map((item,id)=>{
+            if(item.filter == action.filter){
+                item.selected= true;
+            }else{
+                item.selected= false;
+            }
+            return item;
+        });
+
+        return{
+            ...state,
+            orderFilters:newOrderFilters
+        }
+
+        case 'AUTH_SWITCH_ROOT':
+        return{
+            ...state,
+            token:action.accessToken,
+            isLoading: false,
+            isAppIntro:action.switchApp.isAppIntro,
+        }
+
+        case 'RESET_PODUCT_VARIATION_LIST':
+        return{
+            ...state,
+            productVatiation:[]
+        }
 
         case 'APP_INTRO_DONE':
         return {

@@ -11,6 +11,7 @@ import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import FastImage from 'react-native-fast-image'
 
 class DrawerContent extends Component{ 
     constructor(props){
@@ -37,10 +38,10 @@ class DrawerContent extends Component{
             if(authData != null){
                 let objAuthData = JSON.parse(authData);
                  this.setState({userID:objAuthData.userId,name:objAuthData.name ,profile:objAuthData.profile});
-                console.log(objAuthData.name+"-"+objAuthData.profile+"-"+objAuthData.email+"-"+objAuthData.userId+"-"+objAuthData.mobile);
+                //console.log(objAuthData.name+"-"+objAuthData.profile+"-"+objAuthData.email+"-"+objAuthData.userId+"-"+objAuthData.mobile);
             }
         } catch(e) {
-        console.log(e);
+        //console.log(e);
         }
     }
 
@@ -48,10 +49,15 @@ _profileRender(){
     
     if(this.props.profile != "null" && this.props.profile != null && this.props.profile !=''){
             return(
-                <Image 
-                source={{ uri: this.props.profile}} 
-                style={{width:constants.vw(100),height:constants.vw(100), borderRadius:constants.vw(50)}} 
-            />
+                <FastImage
+                    style={{width:constants.vw(100),height:constants.vw(100), borderRadius:constants.vw(50)}}
+                    source={{
+                        uri:this.props.profile,
+                        priority: FastImage.priority.normal,
+                        cache: FastImage.cacheControl.immutable,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />          
                 
             )
     }else{

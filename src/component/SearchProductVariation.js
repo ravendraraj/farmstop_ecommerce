@@ -9,11 +9,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { prod_variation_url } from '../constants/url'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 //helper function
-import { fristLetterCapital } from '../lib/helper'
+import { fristLetterCapital,replaceAllSpace } from '../lib/helper'
 
 //api call
 import { getProduct, getProductType, setWishListItemOnServer, getProductTypeByKeyword,addItemToCart,setCartItemLocal } from '../lib/api'
 import { Picker } from '@react-native-community/picker';
+import FastImage from 'react-native-fast-image'
 
 const bold = constants.fonts.Cardo_Bold;
 const regular = constants.fonts.Cardo_Regular;
@@ -180,7 +181,16 @@ class SearchProductVariation extends Component {
 								
 								<View>
 									<TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
-										<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />
+										{/*<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />*/}
+										    <FastImage
+			                                    style={styles.imageThumbnail}
+			                                    source={{
+			                                        uri:replaceAllSpace(prod_variation_url + (item.fimage)),
+			                                        priority: FastImage.priority.normal,
+			                                        cache: FastImage.cacheControl.immutable,
+			                                    }}
+			                                    resizeMode={FastImage.resizeMode.contain}
+			                                />
 									</TouchableOpacity>
 
 									{(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(<TouchableOpacity style={styles.wishBox}
@@ -393,11 +403,11 @@ const styles = StyleSheet.create({
 	},
 	prodBlock:{
         alignSelf:'center',
-        width:'98%',
-        backgroundColor:"white",
+        width:'99%',
+        backgroundColor:constants.Colors.color_WHITE,
         borderRadius:2,
         elevation:4,
-        padding:10,
+        padding:constants.vw(10),
         marginBottom:10,
     },
     prodLabel:{

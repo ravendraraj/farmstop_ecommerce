@@ -18,7 +18,6 @@ import {
 import {loginValidation ,socialLogin,getCartItem,getUserAddressList} from '../lib/api'
 import { Loader } from '../customElement/Loader'
 import {Username,Password}  from '../customElement/TextInputFields'
-
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 class SocialLoginScreen extends Component{
@@ -112,7 +111,7 @@ class SocialLoginScreen extends Component{
     }
 
     _signIn = async () => {
-        console.log("sigin in call");
+        //console.log("sigin in call");
         try {
 
             await GoogleSignin.signOut();
@@ -143,11 +142,11 @@ class SocialLoginScreen extends Component{
             this._LoginError();
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
-           console.log(error)
+           //console.log(error)
            this._LoginError();
           } else {
             // some other error happened
-            console.log(error)
+            //console.log(error)
             this._LoginError();
           }
         }
@@ -203,7 +202,7 @@ class SocialLoginScreen extends Component{
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{alignSelf:'flex-end',marginTop:constants.vw(10)}} onPress={()=>this.props.navigation.navigate('ForgetPassword')}>
-                        <Text style={{fontSize:constants.vh(20),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Forget Password?</Text>
+                        <Text style={{fontSize:constants.vh(20),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>Forgot password!</Text>
                     </TouchableOpacity>
                 </View>
                         
@@ -266,7 +265,7 @@ class SocialLoginScreen extends Component{
                 user_data["last_name"] = userInfo.last_name;
                 user_data["social_type"] = "FACEBOOK";
                 user_data["image"] = userInfo.picture.data.url;
-                console.log(user_data);            
+                //console.log(user_data);            
                 this.saveFbLoginData(user_data);
               //https://graph.facebook.com/1650578358457019/picture?type=normal
 
@@ -352,11 +351,11 @@ class SocialLoginScreen extends Component{
     render(){
         return(
             <View style={styles.container}>
-                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+                <StatusBar backgroundColor={constants.Colors.color_WHITE} barStyle="dark-content"/>
                 <ScrollView>
                     {this._ShowError()}
                     {this._renderView()}
-                    {this.cartItemsSync()}
+                    {/*this.cartItemsSync()*/}
                 </ScrollView>
                 {this._loadLoader()}
             </View>

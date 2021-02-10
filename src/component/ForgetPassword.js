@@ -44,7 +44,7 @@ class ForgetPassword extends Component{
         }else{
             Alert.alert(
                 "Error Message",
-                "Please Fill All Details",
+                constants.constStrings.formError,
                 [
                   { text: "OK", onPress: () => console.log("OK Pressed") }
                 ],
@@ -77,7 +77,7 @@ class ForgetPassword extends Component{
                 ToastAndroid.showWithGravity("Enter Correct OTP ", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
         }else{
-            ToastAndroid.showWithGravity("Please fill all field ", ToastAndroid.SHORT, ToastAndroid.TOP);
+            ToastAndroid.showWithGravity(constants.constStrings.formError, ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
     
@@ -87,7 +87,7 @@ class ForgetPassword extends Component{
         return(
                 <View style={styles.form}>
                 <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,alignSelf:'center',marginTop:constants.vh(30),marginBottom:constants.vh(10)}}>Forgot Password?</Text>
-                <Text style={{textAlign:'center',color:constants.Colors.color_grey,fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Regular,alignSelf:'center',marginBottom:constants.vh(10)}}>Enter email address/mobile number which is associated with your account.</Text>
+                <Text style={{textAlign:'center',color:constants.Colors.color_grey,fontSize:constants.vw(18),fontFamily:constants.fonts.Cardo_Regular,alignSelf:'center',marginBottom:constants.vh(10)}}>{constants.constStrings.forgetHeading}</Text>
                 <View style={{width:'90%',alignSelf:"center",marginTop:constants.vh(10)}}>
                         {/*<View style={styles.inputBox}>
                                                     <PrimaryTextInput placeholder="Enter Email Id Or Register Mobile" onChangeText={(text) => this.setState({emailId:text})}/>

@@ -11,6 +11,7 @@ import {TextHeading,EmptyComp} from '../customElement/Input'
 import Icons from 'react-native-vector-icons/FontAwesome'
 import {showErrorMsg,replaceAllSpace} from '../lib/helper'
 import AsyncStorage from '@react-native-community/async-storage'
+import FastImage from 'react-native-fast-image'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -78,7 +79,16 @@ renderImageMsg(item){
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Image style={{width:width*0.4,height:width*0.4,marginTop:10}} resizeMode={"contain"} source={{uri:replaceAllSpace(item.image_url)}} />
+                    <FastImage
+                        style={{width:width*0.4,height:width*0.4,marginTop:10}}
+                        source={{
+                            uri:replaceAllSpace(item.image_url),
+                            priority: FastImage.priority.normal,
+                            cache: FastImage.cacheControl.immutable,
+                        }}
+                        resizeMode={FastImage.resizeMode.contain}
+                    />
+                    {/*<Image style={{width:width*0.4,height:width*0.4,marginTop:10}} resizeMode={"contain"} source={{uri:replaceAllSpace(item.image_url)}} />*/}
                 </View>
             </View>
         )

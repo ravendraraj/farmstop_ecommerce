@@ -16,7 +16,6 @@ import {connect} from 'react-redux'
 const Tab = createBottomTabNavigator();
 function TabNavProdvariation(props,navigation){
 //const TabNavProdvariation = ({navigation},props) =>{
-    {console.log("bottom tab navigation",props)}
     return(
     <Tab.Navigator initialRouteName="Home"
     screenOptions={({ route }) => ({

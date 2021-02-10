@@ -7,6 +7,7 @@ import {razor_api_key,razor_api_keyTest} from '../constants/key';
 import constants from '../constants'
 import {showErrorMsg} from './helper'
 import {getUserDataFromStorage} from '../services/async-storage'
+import store from '../store'
 
 export const switchRootScreen = (data) => async(dispatch,getState) => {
     const appIntroStatus = await AsyncStorage.getItem('introHadDone');
@@ -131,10 +132,20 @@ export const loginValidation = (data) => (dispatch,getState) =>{
                     authName:response.user.name,
                     token:response.token
                  });
-                
-            setTimeout(function(){
-                navigate('MainHome');
-            }, 500);
+            
+                store.dispatch(getCartItem());
+                store.dispatch(getUserAddressList());
+                let activeProd = getState().data.activeProduct;
+                if(activeProd !="" && activeProd != null){
+                    dispatch({type:'RESET_PODUCT_VARIATION_LIST'});//reset product variation list
+                    const totalprod = Math.ceil(constants.height/(constants.width/4));
+                    store.dispatch(getProductType({prodID:activeProd ,start:0,end:totalprod}));
+                }
+
+                setTimeout(function(){
+                    navigate('MainHome');
+                }, 500);
+
             dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -207,9 +218,17 @@ export const socialLogin = (userData) => (dispatch,getState) => {
                     authName:userData["name"],
                     token:response.token
                 });
-                
+
+                store.dispatch(getCartItem());
+                store.dispatch(getUserAddressList());
+                let activeProd = getState().data.activeProduct;
+                if(activeProd !="" && activeProd != null){
+                    dispatch({type:'RESET_PODUCT_VARIATION_LIST'});//reset product variation list
+                    const totalprod = Math.ceil(constants.height/(constants.width/4));
+                    store.dispatch(getProductType({prodID:activeProd ,start:0,end:totalprod}));
+                }
+
                 navigate('MainHome');
-                
                 dispatch({ type : 'LOGIN_SUCCESS', payload : "SignUpSuccessfully"});
             }else{
                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
@@ -294,7 +313,8 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                 if(response.status == "1"){
                     dispatch({ type : 'OTP_SEND', payload : response.message});
                     dispatch({type : 'SAVE_REGISTERTION_DETAIL',otp:data.otp, username:data.username ,password:data.password,email:data.email});
-                    navigate("OTPScreen");
+                    //navigate("OTPScreen");
+                    navigateWithParams("OTPScreen",{screen_name:"forget_screen"});
                 }else{
                     dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
                     showErrorMsg(response.message,"");
@@ -303,7 +323,9 @@ export const sendSignUpOtp = (data) => (dispatch,getState) => {
                 if(response.status == "1"){
                     dispatch({ type : 'OTP_SEND', payload : response.message});
                     dispatch({type : 'SAVE_REGISTERTION_DETAIL',otp:data.otp, username:data.username ,password:data.password,email:data.email});
-                    navigate("otpVerification");
+                    //navigate("otpVerification");
+                    //navigate("OTPScreen");
+                    navigateWithParams("OTPScreen",{screen_name:"sign_up_screen"});
                 }else if(response.status == "2"){
                     dispatch({ type : 'REGISTER_USER', payload : response.message});
                     showErrorMsg(data.email+" is already register. Do you want login by this "+ data.email + ".","SocialLoginScreen");
@@ -1573,8 +1595,9 @@ export const checkOutOnCOD= (checkOutData) => (dispatch,getState) => {
 export const getOrderList= (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     let url = weburl + 'api-getOrderList?user_id='+getState().data.authUserID+"&token="+getState().data.token;
+    let selectedFilter = getState().data.orderFilters.find((item=>item.selected == true));
+    url +="&filter="+selectedFilter.value;    
     console.log(url);
-
     fetch(url)
     .then(res =>{
         res.json()
@@ -1595,7 +1618,6 @@ export const getOrderList= (data) => (dispatch,getState) => {
         dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
         navigate("internetError");
     });
-
 }
 
 

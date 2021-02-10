@@ -15,7 +15,7 @@ class SignUp extends Component{
     constructor(props){
         super(props);
         this.state={
-            email:'',
+            email:'', 
             username:'',
             password:'',
             secureTextEntry:true
@@ -49,7 +49,9 @@ class SignUp extends Component{
             console.log("email",false);
         }
 
-        if(isCorrectEmail && name && password !=''){
+        console.log("email "+isCorrectEmail+" name "+name+" pass "+isCorrectPass);
+
+        if(isCorrectEmail && name && isCorrectPass && password !=''){
             let otp = generateOtp();
             this.props.otpForsignup({username:username, email:email ,password:password,otp:otp});
         }else{
@@ -57,7 +59,7 @@ class SignUp extends Component{
             var msg = "Please fill ";
                 msg = (name == false) ?((isCorrectEmail == false || isCorrectPass == false)?(msg+"Username,"):(msg+"Username")):(msg+"");
                 msg = (isCorrectEmail == false) ?((isCorrectPass == false)?(msg+"Email/Mobile Number"):(msg+"Email/Mobile Number ")):(msg+"");
-                msg = (isCorrectPass == false) ?((name == false || isCorrectEmail == false)?(msg+" and Password [Should be contain alphanumeric and special character, minmum length is 6 ]"):(msg+" Password")):(msg+"");
+                msg = (isCorrectPass == false) ?((name == false || isCorrectEmail == false)?(msg+" and Password [Should be contain alphanumeric and special character, minmum length is 6 ]"):(msg+" Password [Should be contain alphanumeric and special character, minmum length is 6")):(msg+"");
                 msg = msg+' correctly.';
 
             showErrorMsg(msg,'');
@@ -146,7 +148,7 @@ class SignUp extends Component{
                                         fontFamily:constants.fonts.Cardo_Bold,
                                     }}
                                 >   
-                                    Are you already register?
+                                    Have you already registered?
                                     <Text
                                         onPress={()=>{this.props.navigation.navigate("SocialLoginScreen")}}
                                         style={{
@@ -154,7 +156,7 @@ class SignUp extends Component{
                                             color:constants.Colors.color_heading
                                         }}
                                     >
-                                        Login Here
+                                          Login here
                                     </Text>
                                 </Text>
                             </View>

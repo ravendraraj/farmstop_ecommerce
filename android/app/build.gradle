@@ -228,7 +228,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     // implementation project(':react-native-razorpay')
     // implementation project(':react-native-image-picker')
-    implementation 'com.android.support:multidex:1.0.3'  //with support libraries
+    implementation 'com.android.support:multidex:2.0.1'  //with support libraries
 
 
 }

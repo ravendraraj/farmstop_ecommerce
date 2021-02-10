@@ -1,9 +1,10 @@
 
 import React from 'react';
 import {Text} from 'react-native';
+import {connect} from 'react-redux'
+
 import constants from '../constants'
 import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
-
 //screens
 import HomeScreen from '../component/HomeScreen'
 import Header from '../headerComponent/header'
@@ -48,10 +49,13 @@ import OrganicCertificate from '../component/OrganicCertificate'
 import ImageViewerScreen from '../component/ImageViewerScreen'
 
 import BasketScreen from '../component/BasketScreen'
+import NotLoginScreen from '../component/NotLoginScreen'
 
 const RootStack = createStackNavigator();
 
-const HomeStack = ({navigation}) => (
+function HomeStack(props,navigation){
+//function HomeStack = ({navigation}) =>(
+return(
     <RootStack.Navigator initialRouteName="MainHome" screenOptions={{
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
     }}
@@ -82,7 +86,8 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
-            name="Notification" component={Notification}/>
+
+            name="Notification" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?Notification:NotLoginScreen}/>
             
         <RootStack.Screen 
             options={({ navigation }) => ({
@@ -124,7 +129,7 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:1,elevation:2},
                 headerTransparent:false,
             })}
-            name="OrderDetails" component={OrderDetails}/>
+            name="OrderDetails" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?OrderDetails:NotLoginScreen}/>
 
             <RootStack.Screen 
             options={({ navigation }) => ({
@@ -194,7 +199,7 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:1,elevation: 2},
                 headerTransparent:false,
             })}
-            name="ShippingAddress" component={ShippingAddress}/>
+            name="ShippingAddress" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?ShippingAddress:NotLoginScreen}/>
 
         <RootStack.Screen 
             options={({ navigation }) => ({
@@ -285,7 +290,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:0,elevation: 0},
                         headerTransparent:false,
                     })}
-                    name="Wish-List" component={TabNavProdvariation}/>
+                    name="Wish-List" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?TabNavProdvariation:NotLoginScreen}/>
 
         <RootStack.Screen 
                     options={({ navigation }) => ({
@@ -294,7 +299,7 @@ const HomeStack = ({navigation}) => (
                         headerStyle:{shadowOpacity:1,elevation: 2},
                         headerTransparent:false,
                     })}
-                    name="MyOrderTab" component={MyOrderList}/>
+                    name="MyOrderTab" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?MyOrderList:NotLoginScreen} />
                     
         <RootStack.Screen
             options={({ navigation }) => ({
@@ -313,7 +318,8 @@ const HomeStack = ({navigation}) => (
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
             })}
-            name="PaymentOption" component={PaymentOption}/>
+
+        name="PaymentOption" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?PaymentOption:NotLoginScreen}/>
 
         <RootStack.Screen
             options={({ navigation }) => ({
@@ -337,12 +343,24 @@ const HomeStack = ({navigation}) => (
 
             
     </RootStack.Navigator>
-);
+)
+}
 
-export default HomeStack;
+//export default HomeStack;
+function mapDispatchToProps(dispatch) {
+        return({
+            dispatch
+        })
+    }
 
-// const mapStateToProps = (state) => ({
-//   // state: state.nav,
-// });
+    function mapStateToProps(state) {
+        let auth = state.auth;
+        let indicator = state.indicator;
+        let data = state.data;
+        let error = state.error;
+        return {
+            auth,indicator,data,error
+    };
+}
 
-// export default connect(mapStateToProps)(RootStackScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeStack);

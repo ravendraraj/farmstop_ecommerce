@@ -6,6 +6,7 @@ import constants from '../constants'
 import SocialLinks from '../component/SocialLinks'
 import {TextHeading} from '../customElement/Input'
 import {navigate} from '../appnavigation/RootNavigation'
+import FastImage from 'react-native-fast-image'
 
 const width = Dimensions.get('window').width;
 export default function OrganicCertificate(props){
@@ -24,10 +25,39 @@ export default function OrganicCertificate(props){
                                 We have been practicing organic farming for the last 5 years and are in 2nd year for conversion from Aditi certifications We use age-old techniques and organic methods in our farms. Pesticides are made in house using plants that are effective in controlling pests and are also beneficial to the plants. Fertilizers are prepared out of animal husbandry bi-products, dry compost, waste decomposers, etc..
                             </Text>
                             <TouchableOpacity onPress={()=>{navigate("ImageViewerScreen")}}>
-                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c1.jpeg"}} style={styles.certificateBlock}/>
-                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c2.jpeg"}} style={styles.certificateBlock}/>
-                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c3.jpeg"}} style={styles.certificateBlock}/>
-                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c4.jpeg"}} style={styles.certificateBlock}/>
+                                <FastImage
+                                    style={styles.certificateBlock}
+                                    source={{
+                                        uri:"https://www.farmstop.in/uploads/certificate/c1.jpeg",
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+
+                                <FastImage
+                                    style={styles.certificateBlock}
+                                    source={{
+                                        uri:"https://www.farmstop.in/uploads/certificate/c2.jpeg",
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+
+                                <FastImage
+                                    style={styles.certificateBlock}
+                                    source={{
+                                        uri:"https://www.farmstop.in/uploads/certificate/c3.jpeg",
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                {/*<Image source={{uri:"https://www.farmstop.in/uploads/certificate/c1.jpeg"}} style={styles.certificateBlock}/>
+                                                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c2.jpeg"}} style={styles.certificateBlock}/>
+                                                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c3.jpeg"}} style={styles.certificateBlock}/>
+                                                                <Image source={{uri:"https://www.farmstop.in/uploads/certificate/c4.jpeg"}} style={styles.certificateBlock}/>*/}
                             </TouchableOpacity>
 
                             <View style={{width:constants.width,height:40}}/>
