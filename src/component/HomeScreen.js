@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component,createRef } from 'react'
 import {Platform ,BackHandler,ImageBackground, Dimensions,View, Image,Linking,Text,ToastAndroid,PermissionsAndroid, FlatList, StyleSheet, TouchableOpacity ,ScrollView,Alert,StatusBar} from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
@@ -18,12 +18,17 @@ import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
 import { getProduct, getProductType, searchProductType, getProductTypeByKeyword ,getCartItem,checkDelivery,getUserAddressList} from '../lib/api'
 import Geolocation from 'react-native-geolocation-service';
 import { checkVersion } from "react-native-check-version";
-import FastImage from 'react-native-fast-image'
+import FastImageComponent from '../customElement/FastImageComponent';
+import ActionSheet from "react-native-actions-sheet";
+import {MainHeading} from '../customElement/Input';
+import {BorderButton} from '../customElement/button';
 
 const regular = constants.fonts.Cardo_Regular;
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const headerHeight = height;
+
+const actionSheetRef = createRef();
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -52,7 +57,7 @@ class HomeScreen extends Component {
   async componentDidMount() {
     this.props.getItem({ start: 1, end: 6 });
     this.setState({ productList: this.props.productName });
-    
+    this.displayEnquireForm();
     if(this.props.productName.length <= 0){
       await this.props.searchProductType();
     }
@@ -111,6 +116,10 @@ class HomeScreen extends Component {
           { cancelable: false }
         );
     }
+  }
+
+  async displayEnquireForm(){
+    await actionSheetRef.current?.setModalVisible();
   }
 
 
@@ -255,17 +264,20 @@ class HomeScreen extends Component {
           renderItem={({ item }) => (
             <View style={{...styles.homeProdCat,justifyContent:'center',alignItems:'center'}}>
               <TouchableOpacity onPress={() => this._getItemType(item.id)}>
-                {/*<Image style={styles.imageThumbnail} source={{ uri: (prod_image + item.img) }} />*/}
-                
-                <FastImage
-                  style={styles.imageThumbnail}
-                  source={{
-                    uri:replaceAllSpace(prod_image + item.img),
-                    priority: FastImage.priority.normal,
-                    cache: FastImage.cacheControl.immutable,
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
+                <FastImageComponent
+                  layout={styles.imageThumbnail}
+                  image_url={replaceAllSpace(prod_image + item.img)}
+                  resizeImage={"contain"}
                 />
+                  {/*<FastImage
+                                      style={styles.imageThumbnail}
+                                      source={{
+                                        uri:replaceAllSpace(prod_image + item.img),
+                                        priority: FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.immutable,
+                                      }}
+                                      resizeMode={FastImage.resizeMode.contain}
+                                    />*/}
 
                 <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold,textAlign:'center' }}>{fristLetterCapital(item.title)}</Text>
               </TouchableOpacity>
@@ -288,15 +300,10 @@ class HomeScreen extends Component {
                           let shortDesc = " <p> "+item.short_description+" </p>";
                             return (    
                                 <View style={{flexDirection:'row',justifyContent:'space-evenly'}} key={id}>
-                                    {/*<Image source={{uri:prod_variation_url+item.fimage}} style={{width:constants.width*0.5,height:constants.width*0.4, resizeMode:'contain'}}/>*/}
-                                    <FastImage
-                                      style={{width:constants.width*0.4,height:constants.width*0.35}}
-                                      source={{
-                                        uri:replaceAllSpace(prod_variation_url+item.fimage),
-                                        priority: FastImage.priority.normal,
-                                        cache: FastImage.cacheControl.immutable,
-                                      }}
-                                      resizeMode={FastImage.resizeMode.contain}
+                                    <FastImageComponent
+                                      layout={{width:constants.width*0.4,height:constants.width*0.35,justifyContent:'center',alignItems:'center'}}
+                                      image_url={replaceAllSpace(prod_variation_url+item.fimage)}
+                                      resizeImage={"contain"}
                                     />
                                     <View style={{width:constants.width*0.5}}>
                                         <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold, color:constants.Colors.color_btn}}>{item.attribute_name}</Text>
@@ -418,6 +425,15 @@ class HomeScreen extends Component {
     }        
   }
 
+  selectPopOption(action){
+    
+    actionSheetRef.current?.hide();
+    if(action == "yes"){
+      this.props.navigation.navigate("AppartmentEnquiry");
+    }
+
+  }
+
   render() {
     const { query } = this.state;
     const productList = this.findProduct(query);
@@ -434,6 +450,34 @@ class HomeScreen extends Component {
             {/*this.renderSourceSection()*/}
           </View>
           {this._loadLoader()}
+
+            <ActionSheet
+              ref={actionSheetRef} 
+                //gestureEnabled={true}
+                bounceOnOpen={true}
+              style={{backgroundColor:'red'}}
+            >
+              
+              <View style={{width:'90%',alignSelf:'center'}}>
+                <Image source={constants.image.bottom_enquery_form} style={{width:'100%',height:constants.vw(200),alignSelf:'center',resizeMode:'contain'}}/>
+                <MainHeading
+                  title={"Would you want us to serve your Apartment/Society?"}
+                  subTitle={'We are just a "form" away!'}
+                />
+                <View style={{flexDirection:'row',justifyContent:'space-between',width:'80%',alignSelf:'center',marginTop:constants.vh(25),marginBottom:constants.vh(25)}}>
+                    
+                    <BorderButton 
+                      buttonName="YES!"
+                      onPress={()=>this.selectPopOption("yes")}
+                    />
+                    <BorderButton 
+                      buttonName="NO!" 
+                      onPress={()=>this.selectPopOption("no")}
+                    />
+
+                </View>
+              </View>
+            </ActionSheet>
         </View>
       //</ImageBackground>
     )
@@ -468,6 +512,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: constants.vw(70),
     height: constants.vw(70),
+    alignItems:'center',
+    justifyContent:'center'
   },
   autocompleteContainer: {
     position: 'absolute',
@@ -506,9 +552,9 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
   },
   imgBackground: {
-    width: '100%',
-    height: '100%',
-    flex: 1
+    width:constants.width,
+    height: '50%',
+    //flex: 1
   },
   wrapper:{
         marginTop:constants.vh(20),

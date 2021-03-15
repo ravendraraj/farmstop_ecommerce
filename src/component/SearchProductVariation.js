@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert,StatusBar } from 'react-native'
+import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert,StatusBar,Keyboard } from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
+import {PreLoadScreenMsg,EmptyComp} from '../customElement/Input'
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
@@ -24,6 +25,7 @@ class SearchProductVariation extends Component {
 		this.state = {
 			productList: [],
 			query: '',
+			searched_result:''
 		};
 	}
 
@@ -70,21 +72,25 @@ class SearchProductVariation extends Component {
 		}
 	}
 
-	seacrhProduct(key) {
-		// Alert.alert(key);
+	async seacrhProduct(key){
+		Keyboard.dismiss();
 		this.setState({query:''});
-		this.props.getProductListForSearch({ prodKey: key, screen: this.props.route.name })
-		//this.props.navigation.navigate('ProductType',{keyword:key});
+		let result = await this.props.getProductListForSearch({ prodKey: key, screen: this.props.route.name});
+		console.log("api call ",result);
+		if(result == "not found any product"){
+			this.setState({searched_result:'The product is not available, please try another product.'});
+		}else{
+			this.setState({searched_result:''});
+		}
 	}
 
 	_addinWishList = prodData => {
-		// data.isMyWish =! "heart" ? "heart-outline": "heart";
 		if (this.props.authEmail != "" || this.props.authMobile != '') {
 			var data = [];
                 data["id"] = prodData.id;
                 data["screen"] = this.props.route.name;
             this.props.setWishListItemOnServer(data);
-		} else {
+		}else{
 			ToastAndroid.showWithGravity("Please Login", ToastAndroid.SHORT, ToastAndroid.TOP);
 		}
 	};
@@ -162,19 +168,30 @@ class SearchProductVariation extends Component {
 	renderSearchList() {
 
 		let ItemList = this.props.searchProductList;
-		if (ItemList != "undefined" && ItemList.length > 0) {
+		if (this.state.searched_result == '' && ItemList != "undefined"){
+			let updateItemList = ItemList;
 
-			let updateItemList = ItemList.map(item => {
-				if (item.isMyWish == '') {
-					item.isMyWish = 'heart-outline';
-				}
-				return item;
-			});
+			if(ItemList.length > 0){
+				updateItemList = ItemList.map(item => {
+					if (item.isMyWish == '') {
+						item.isMyWish = 'heart-outline';
+					}
+					return item;
+				});
+			}
 
 			return (
 				// <View style={{marginTop:-100}}>
 				<FlatList
 					data={updateItemList}
+					ListEmptyComponent={
+						<View style={{flex:1,justifyContent:'center',alignItems:'center',alignSelf:'center'}}>
+							<PreLoadScreenMsg
+								image_url={constants.image.organic_veggies}
+								content={"Search your organic vegetable."}
+							/>
+						</View>
+					}
 					renderItem={({ item }) => (
 						<View style={styles.prodBlock}>
 							<View style={{ flexDirection: 'row', justifyContent: 'space-around' }} >
@@ -280,14 +297,17 @@ class SearchProductVariation extends Component {
 				/>
 				// </View>
 			)
+		}else{
+		     return(
+		        <View style={{alignSelf:'center'}}>
+			       	<EmptyComp imageName={constants.image.emptyCart}
+	                    welcomText={this.state.searched_result}
+	                    redirectText={""}
+	                    onPress={()=>this.props.navigation.navigate("MainHome")}
+	                />
+				</View>
+		     )
 		}
-		// else{
-		//     return(
-		//         <View style={{alignSelf:'center'}}>
-		//             <Text> Loading....</Text>
-		//         </View>
-		//     )
-		// }
 	}
 
 	render() {
@@ -308,7 +328,7 @@ class SearchProductVariation extends Component {
 					inputContainerStyle={{ borderWidth: 0 }}
 					style={{ color: constants.Colors.color_grey, fontSize: 18 }}
 
-					listStyle={{ borderWidth: 0 }}
+					listStyle={{ borderWidth:0}}
 					//data to show in suggestion
 					data={productList.length === 1 && comp(query, productList[0].attribute_name) ? [] : productList}
 					//default value if you want to set something in input
@@ -318,7 +338,7 @@ class SearchProductVariation extends Component {
 					onChangeText={text => this.setState({ query: text })}
 					onSubmitEditing={() => this.seacrhProduct(this.state.query)}
 					placeholder="Search for good health"
-					renderItem={({ item }) => (
+					renderItem={({ item }) =>(
 						//you can change the view you want to show in suggestion from here
 						<TouchableOpacity onPress={() => { this.setState({ query: item.attribute_name }), this.seacrhProduct(item.attribute_name) }}>
 							<Text style={styles.itemText}>
@@ -329,11 +349,10 @@ class SearchProductVariation extends Component {
 				/>
 				{/* </View> */}
 				<View style={styles.MainContainer}>
-
-					{this._ShowError()}
-					{this._loadLoader()}
 					{this.renderSearchList()}
 				</View>
+					{/*this._ShowError()*/}
+					{this._loadLoader()}
 			</View>
 		)
 	}
@@ -350,9 +369,9 @@ const styles = StyleSheet.create({
 		opacity: .9
 	},
 	MainContainer: {
-		justifyContent: 'center',
+		//justifyContent: 'center',
 		flex: 1,
-		// marginTop:60,
+		marginTop:constants.vh(10),
 		padding: 10,
 	},
 	imageThumbnail: {
@@ -393,6 +412,8 @@ const styles = StyleSheet.create({
 		// padding: 10,
 		marginTop: 13,
 		marginLeft: 10,
+		zIndex:10,
+		position:'absolute'
 		// resizeMode: 'stretch',
 		//alignItems: 'center',
 	},
@@ -404,7 +425,7 @@ const styles = StyleSheet.create({
 	prodBlock:{
         alignSelf:'center',
         width:'99%',
-        backgroundColor:constants.Colors.color_WHITE,
+        backgroundColor:'white',
         borderRadius:2,
         elevation:4,
         padding:constants.vw(10),

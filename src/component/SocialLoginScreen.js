@@ -332,19 +332,10 @@ class SocialLoginScreen extends Component{
             if(!this.props.cartItemSync){
                 this.props.getCartItems();
             }
-            // Alert.alert(
-            //         "Farmstop",
-            //             'Invaild Login Details, Please enter valid details.',
-            //         [
-            //           { text: "OK", onPress: () => console.log("OK Pressed") }
-            //     ],
-            //     { cancelable: false }
-            // );
-            // if(this.props.accessToken !="" && this.props.accessToken != null){
+            
             if(!this.props.userAddressSync){
                 this.props.getAddressList();
             }
-            // }
         }
     }
 
@@ -366,6 +357,7 @@ class SocialLoginScreen extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
+        paddingTop:constants.vh(40),
         backgroundColor:constants.Colors.color_WHITE
     },
     inputBox:{

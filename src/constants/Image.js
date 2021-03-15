@@ -66,5 +66,10 @@ export default {
   emptyNotification:require('../images/farmstop/notificationUi.png'),
   refunded:require('../images/farmstop/refunded.jpg'),
   commonBg:require('../images/farmstop/commonBg.jpg'),
+  noImageIcon:require('../images/no-image-icon.jpg'),
+  bottom_enquery_form:require('../images/bottom_enquery_form.png'),
+  bottom_enquery_form_old:require('../images/bottom_enquery_form_old.png'),
+  enquriy_background:require('../images/enquriy_background.png'),
+  organic_veggies:require('../images/organic_veggies.jpg')
 };
  

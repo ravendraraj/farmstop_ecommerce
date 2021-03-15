@@ -106,7 +106,7 @@ class PorductVariation extends Component {
                 await this.props.getProductType({prodID:this.props.activeProd ,start:((this.state.page * totalprod)+1), end:totalprod});
                 this.setState({page:pageNo});
             }else{
-                ToastAndroid.showWithGravity("No more product find", ToastAndroid.SHORT, ToastAndroid.TOP);
+                //ToastAndroid.showWithGravity("No more product find", ToastAndroid.SHORT, ToastAndroid.TOP);
             }
         }
     }

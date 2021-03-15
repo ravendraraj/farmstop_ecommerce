@@ -51,6 +51,8 @@ import ImageViewerScreen from '../component/ImageViewerScreen'
 import BasketScreen from '../component/BasketScreen'
 import NotLoginScreen from '../component/NotLoginScreen'
 
+import AppartmentEnquiry from '../component/AppartmentEnquiry'
+
 const RootStack = createStackNavigator();
 
 function HomeStack(props,navigation){
@@ -280,7 +282,7 @@ return(
                         headerTitle: null,
                         headerLeft:false,
                         headerStyle:{shadowOpacity:0,elevation: 0},
-                        headerTransparent:false,
+                        headerTransparent:true,
                     })}
                     name="SocialLogin" component={SocialLoginScreen}/> 
         <RootStack.Screen 
@@ -340,6 +342,14 @@ return(
                 headerTransparent:false,
             })}
             name="ImageViewerScreen" component={ImageViewerScreen}/>
+
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerTitle: null,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:true,
+            })}
+            name="AppartmentEnquiry" component={AppartmentEnquiry}/>
 
             
     </RootStack.Navigator>

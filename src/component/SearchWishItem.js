@@ -311,7 +311,7 @@ renederItemType () {
           {/* </View> */}
           <View style={styles.MainContainer}>
           
-            {this._ShowError()}
+            {/* {this._ShowError()} */}
             {this._loadLoader()}
             {this.renederItemType()}
             

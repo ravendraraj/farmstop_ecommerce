@@ -49,6 +49,17 @@ export const ButtonWithOutIcon = (props) => {
     );
 }
 
+export const BorderButton = (props) => {
+    return (
+        <TouchableOpacity 
+                style={{borderWidth:1,borderColor:constants.Colors.color_heading,paddingTop:5,paddingBottom:5,paddingLeft:20,paddingRight:20,borderRadius:constants.vw(5),alignItems:'center'}} 
+                {...props} >
+            <View>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_heading,fontSize:constants.vw(16)}}>{props.buttonName}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
 export const NormalButton = (props) => {
     return (
         <TouchableOpacity 

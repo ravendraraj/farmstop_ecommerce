@@ -38,6 +38,20 @@ export const PrimaryTextInput = (props) => {
     );
 }
 
+export const PrimaryInputWithLabel = (props) => {
+    return (
+        <View>
+            <Text style={{color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(20)}}>{props.title}</Text>
+            
+            <TextInput
+                {...props}
+                selectionColor={constants.Colors.screen_title}
+                style={{ height: 40, borderColor: 'gray', borderBottomWidth:2,fontFamily: constants.fonts.Cardo_Regular }}    
+            />
+        </View>
+    );
+}
+
 export const CouponTextInput = (props) => {
     return (
             <View style={styles.noBorderBox}>
@@ -81,6 +95,23 @@ export const TextHeading = (props) => {
     return (
         <View style={{backgroundColor:constants.Colors.color_heading,padding:constants.vw(10)}}>
             <Text style={{color:constants.Colors.color_WHITE,fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(20)}}>{props.title}</Text>
+        </View>
+    );
+}
+
+export const MainHeading = (props) => {
+    return (
+        <View style={{paddingLeft:constants.vw(10),paddingRight:constants.vw(10)}}>
+            <Text style={{color:constants.Colors.color_intro,fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(22),textAlign:'center'}}>{props.title}</Text>
+            <Text style={{color:constants.Colors.color_water,fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(22),marginTop:constants.vh(20),textAlign:'center'}}>{props.subTitle}</Text>
+        </View>
+    );
+}
+
+export const FormLabel = (props) => {
+    return (
+        <View style={{paddingLeft:constants.vw(10),paddingRight:constants.vw(10)}}>
+            <Text style={{color:props.color,fontFamily:constants.fonts.Cardo_Bold,fontSize:props.fontsize,textAlign:'center'}}>{props.title}</Text>
         </View>
     );
 }
@@ -129,6 +160,23 @@ export const EmptyComp = (props) => {
                 </TouchableOpacity>
             </View>):(<View/>)
         }
+        </View>
+    );
+}
+
+export const PreLoadScreenMsg=(props)=>{
+    return(
+        <View style={{alignSelf:'center',marginTop:constants.vw(100),justifyContent:'center',alignItems:'center'}}>
+            <Image 
+                source={props.image_url}
+                style={{width:constants.vw(150),height:constants.vw(150),alignSelf:"center"}}
+            />
+                  
+            <View style={{flexDirection:'row'}}>
+                <Text style={{...styles.welcomText,color:constants.Colors.color_grey}}>
+                    {props.content}
+                </Text>
+            </View>
         </View>
     );
 }

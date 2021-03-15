@@ -264,28 +264,21 @@ class WishList extends Component {
         }
     }
 
-    render() {
-        if(this.props.authUserId !=''){
-            return (
-                <View style={styles.container}>
-                    <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+    render(){
+        return (
+            <View style={styles.container}>
+                <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                     
-                    <TextHeading title="My Wish List"/>
+                <TextHeading title="My Wish List"/>
                     
-                        <View style={styles.MainContainer}>
-                            {/* {this.searchComonent()} */}
-                            {this._loadLoader()}
-                            {this.renederItemType()}
-                            {/* {this.renederCartDetails()} */}
-                        </View>
+                <View style={styles.MainContainer}>
+                    {this.renederItemType()}
                 </View>
-            )
-        }else{
-            this.props.navigation.navigate("SocialLogin");
-            return null;
-        }
-        }
+                {this._loadLoader()}
+            </View>
+        )
     }
+}
 
 const styles = StyleSheet.create({
     container: {

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import {
     View,
     ActivityIndicator,
@@ -32,11 +31,9 @@ const Styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         flex:1,
+        zIndex:100,
         width: windowWidth,
-        height: windowHeight+100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 5,
+        //elevation: 5,
         backgroundColor: 'rgba(52, 52, 52, 0.8)'
         //backgroundColor:'transparent'
     }

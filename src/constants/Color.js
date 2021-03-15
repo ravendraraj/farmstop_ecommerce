@@ -21,5 +21,6 @@ const Colors = {
   color_heading:"#41A317",
   color_statusbar:"#41A317",
   color_profileBg:"#6E7273",
+  color_water:'#859CBA',
 };
 export default Colors;

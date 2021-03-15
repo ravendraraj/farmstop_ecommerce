@@ -163,7 +163,6 @@ async _logOutEvent(){
 }
 
  render(){
-
      return(
          <View style={{flex:1,backgroundColor:constants.Colors.color_WHITE}}>
              <ScrollView>
@@ -268,6 +267,11 @@ async _logOutEvent(){
                     </TouchableOpacity>
 
                     <ShareApp title={constants.constStrings.shareAppIconDrawer}/>
+                    
+                    <TouchableOpacity style={{...styles.menuTab,marginLeft:-10}} onPress={() => {this.props.navigation.navigate('AppartmentEnquiry')}}>
+                        <Text style={{...styles.MenueLable,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_grey,fontSize:constants.vh(20)}}>Would you want us to serve your Apartment/Society?</Text>
+                    </TouchableOpacity>
+
                     <View style={{height:constants.vh(20)}}/>
 
                     <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:constants.vw(-8),marginBottom:constants.vw(10)}}/>

@@ -7,6 +7,7 @@ import {razor_api_key,razor_api_keyTest} from '../constants/key';
 import constants from '../constants'
 import {showErrorMsg} from './helper'
 import {getUserDataFromStorage} from '../services/async-storage'
+import fetchApi from './fetchApi'
 import store from '../store'
 
 export const switchRootScreen = (data) => async(dispatch,getState) => {
@@ -496,7 +497,48 @@ export const searchProductType = (data) => (dispatch,getState) => {
     });
 }
 
-export const getProductTypeByKeyword = (data) => (dispatch,getState) => {
+export const getProductTypeByKeyword=(data)=>{
+    return async (dispatch,getState)=>{
+        dispatch({type : 'LOADING'});
+        
+        let url = weburl + 'api-productByKeyword?term='+data.prodKey;
+        if(getState().data.authUserID != ''){
+            url = url + "&userId="+getState().data.authUserID;
+        }
+
+        console.log(url,data);
+
+        const api_response = await fetch(url);
+        const res = api_response;
+        if(res.status === 200){
+            let response;
+            const responseText = await res.text();
+            try{
+                response = JSON.parse(responseText);
+            }catch (e) {
+                response = responseText;
+            }
+            console.log("====",response);
+            if(response.status == 1){
+                if(data.screen == "Search"){
+                    dispatch({ type : 'SEARCH_PRODUCT_LIST', payload : response.searchProduct});
+                }else{
+                    dispatch({ type : 'PRODUCT_VARIATION', payload : response.searchProduct});
+                }
+
+                return "success";
+            }else{
+                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                return "not found any product";
+            }
+        }else{
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            return "failed";
+        }
+    }
+}
+
+export const getProductTypeByKeyword_OLd = (data) =>(dispatch,getState) => {
 
     dispatch({type : 'LOADING'});
     //https://demo1.farmstop.in/api-searchByKeyword?term=a  Ravendra
@@ -1848,4 +1890,33 @@ export const getDeliveryDate= (data) => (dispatch,getState) => {
         navigate("internetError");
     });
 
+}
+
+export const saveAppartEnquiry=(userData)=>{
+    return async (dispatch,getState)=>{
+        dispatch({type:'SAVING_APARTMENT_VIEST_REQ'});
+        let url = weburl + 'api-apart_req';    
+        
+        var data = new FormData();
+        data.append("conatct_name",userData.data.contact_name);
+        data.append("phone_no",userData.data.phone_no);
+        data.append("apartment_or_society",userData.data.name_of_appart);
+        //console.log(userData);
+        console.log(url,data);
+
+        let result = await fetchApi(url,'POST',data,200);
+        try{
+            if(result.response.status == 1){
+                dispatch({type:'SUCCESS_APARTMENT_VIEST_REQ'});
+                return "success";
+
+            }else{
+                dispatch({type:'FAILED_APARTMENT_VIEST_REQ'});
+                return "failed";
+            }
+        }catch(e){
+            dispatch({type:'FAILED_APARTMENT_VIEST_REQ'});
+            return "failed";
+        }
+    }
 }

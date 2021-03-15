@@ -18,7 +18,7 @@ const AuthScreenStack = ({navigation}) => (
                 headerTitle: null,
                 headerLeft:false,
                 headerStyle:{shadowOpacity:0,elevation: 0},
-                headerTransparent:false,
+                headerTransparent:true,
             })}
         	name={"SocialLoginScreen"} component={SocialLoginScreen}
         />

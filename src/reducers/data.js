@@ -13,11 +13,34 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
         {id:"1",filter:'Last Month',value:'last_month',selected:false},
         {id:"2",filter:'Last 6 Month',value:'last_6_month',selected:false},
         {id:"3",filter:'All',value:'all',selected:false}
-    ]
+    ],
+    saving_apart_req:false,
+    saving_apart_req_status:"loading",
 };
 
 const data = (state = initialDataState, action) => {
     switch (action.type) {
+
+        case "SAVING_APARTMENT_VIEST_REQ":
+        return{
+            ...state,
+            saving_apart_req:true,
+            saving_apart_req_status:"loading",
+        }
+
+        case "SUCCESS_APARTMENT_VIEST_REQ":
+        return{
+            ...state,
+            saving_apart_req:false,
+            saving_apart_req_status:"success",
+        }
+
+        case "FAILED_APARTMENT_VIEST_REQ":
+        return{
+            ...state,
+            saving_apart_req:false,
+            saving_apart_req_status:"failed",
+        }
 
         case "FILTER_ORDER_LIST":
         
