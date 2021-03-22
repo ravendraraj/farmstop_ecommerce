@@ -7,7 +7,7 @@ import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation'
 import image from "../constants/Image"
 import RadioButton from '../customElement/RadioButton'
-import RazorpayCheckout from 'react-native-razorpay'
+//import RazorpayCheckout from 'react-native-razorpay'
 import {razor_api_key} from '../constants/key'
 import {checkOut,checkOutOnCOD,checkCouponCode} from '../lib/api'
 import {Loader} from '../customElement/Loader'
