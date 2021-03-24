@@ -16,6 +16,19 @@ const bold = constants.fonts.Cardo_Bold;
 const italic = constants.fonts.Cardo_Italic;
 const regular = constants.fonts.Cardo_Regular;
 
+export const Widget =(props)=>{
+    return(
+        <View style={{backgroundColor:constants.Colors.color_statusbar,borderRadius:constants.vw(10),width:constants.vw(14),justifyContent:'center',alignItems:'center'
+            ,position:'absolute',
+            top:0,
+            right:-20,
+            zIndex:10
+        }}>
+            <Text style={{fontFamily:constants.fonts.Cardo_BOLD,fontSize:constants.vw(14),color:constants.Colors.color_WHITE}}>{props.content}</Text>
+        </View>
+    )
+}
+
 export const ButtonWithIcon = (props) => {
     let leftIcon = props.leftIcon;
     let rightIcon = props.rightIcon;

@@ -6,6 +6,11 @@ const constStrings = {
 	password_err:"Password should be contain alphanumeric,special character and minmum length is 6",
 	forgetHeading:"Enter email address / mobile number associated with your account",
 	formError:'Please fill in the details',
+	error_msg:'Something went wrong, Please try again later.',
+	//api call status
+	loading:'Laoding',
+	success:'Success',
+	failed:'Failed',
 
 }
 export default constStrings;

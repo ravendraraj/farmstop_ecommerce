@@ -1,5 +1,14 @@
 import React,{Component} from 'react'
-import {ToastAndroid,View ,Text,StyleSheet, Alert ,Image,TouchableOpacity,ImageBackground} from 'react-native'
+import {ToastAndroid,
+    View,
+    Text,
+    StyleSheet,
+    Alert ,
+    Image,
+    TouchableOpacity,
+    ImageBackground,
+    Animated
+} from 'react-native'
 import {connect} from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -12,6 +21,7 @@ import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import FastImage from 'react-native-fast-image'
+import {Widget} from '../customElement/button';
 
 class DrawerContent extends Component{ 
     constructor(props){
@@ -165,25 +175,25 @@ async _logOutEvent(){
  render(){
      return(
          <View style={{flex:1,backgroundColor:constants.Colors.color_WHITE}}>
-             <ScrollView>
-            <ImageBackground
-                style={{flex: 1}}
-                source={constants.image.commonBg}
-                resizeMode={'repeat'}
-            > 
-                <View style={{}}>
-                    <TouchableOpacity onPress={()=>{this.props.navigation.closeDrawer()}} style={{alignSelf:'flex-end',padding:10}}>
-                        <Icons name={"close"} size={14} style={{marginTop:5}}/>
-                    </TouchableOpacity>
-                </View>
-                 <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),paddingLeft:10}}>
-                    {this._profileRender()}
-                    <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
-                        <Text style={styles.userName}>Hello !</Text>
-                        <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
+            <Animated.ScrollView>
+                <ImageBackground
+                    style={{flex: 1}}
+                    source={constants.image.commonBg}
+                    resizeMode={'repeat'}
+                > 
+                    <View style={{}}>
+                        <TouchableOpacity onPress={()=>{this.props.navigation.closeDrawer()}} style={{alignSelf:'flex-end',padding:10}}>
+                            <Icons name={"close"} size={14} style={{marginTop:5}}/>
+                        </TouchableOpacity>
                     </View>
-                </View>
-            </ImageBackground>
+                    <View style={{flexDirection:"row",marginTop:-8,paddingBottom:constants.vw(20),paddingLeft:10}}>
+                        {this._profileRender()}
+                        <View style={{flex:1,marginTop:constants.vw(10),marginLeft:constants.vw(20),marginRight:3}}>
+                            <Text style={styles.userName}>Hello !</Text>
+                            <Text style={styles.userName}>{(this.props.userName != "" && this.props.userName != null)? this.props.userName: 'User'}</Text>
+                        </View>
+                    </View>
+                </ImageBackground>
                 <View style={{paddingLeft:0}}>
                     <View style={{paddingLeft:10}}>
                     {this._renderSignUpAndLogin()}
@@ -240,6 +250,7 @@ async _logOutEvent(){
                         <View style={{flexDirection:'row'}}>
                             <Image source={constants.image.notificationIcon} style={styles.icon}/>
                             <Text style={styles.MenueLable}>Notifications</Text>
+                            {(this.props.totalNewNotification > 0 && this.props.totalNewNotification !="") ?<Widget content={this.props.totalNewNotification}/>:<View/>}
                         </View>
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
                     </TouchableOpacity>
@@ -287,7 +298,7 @@ async _logOutEvent(){
                     <View style={{height:constants.vh(20)}}/>
                     </View>
                 </View>
-             </ScrollView>
+             </Animated.ScrollView>
         </View>
      )
  }
@@ -357,7 +368,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
 });
-const mapStateToProps = state => ({
+const mapStateToProps = state =>({
     fetchNotification:state.data.fetchNotification,
     animate: state.indicator,
     error:state.error.err,
@@ -366,7 +377,8 @@ const mapStateToProps = state => ({
     authUserID:state.data.authUserID,
     login_type:state.data.login_type,
     profile:state.data.profile,
-    userName:state.data.authName
+    userName:state.data.authName,
+    totalNewNotification:state.notification.totalNewNotification
 });
 
 const mapDispatchToProps = dispatch => ({

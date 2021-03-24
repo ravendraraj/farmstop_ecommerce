@@ -14,6 +14,8 @@ import {Picker} from '@react-native-community/picker';
 import { navigate } from '../appnavigation/RootNavigation' 
 import FastImage from 'react-native-fast-image'
 
+import FastImageComponent from '../customElement/FastImageComponent'
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const totalprod = Math.ceil(height/(width/4));
@@ -266,16 +268,14 @@ class PorductVariation extends Component {
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View>
                             <TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
-                                {/*<Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage))}} />*/}
-                                <FastImage
-                                    style={styles.imageThumbnail}
-                                    source={{
-                                        uri:replaceAllSpace(prod_variation_url+(item.fimage)),
-                                        priority: FastImage.priority.normal,
-                                        cache: FastImage.cacheControl.immutable,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.contain}
+                                
+
+                                <FastImageComponent
+                                  layout={styles.imageThumbnail}
+                                  image_url={replaceAllSpace(prod_variation_url+item.fimage)}
+                                  resizeImage={"contain"}
                                 />
+
                             </TouchableOpacity>
                             {(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(                            <TouchableOpacity style={styles.wishBox}
                             onPress={()=>this._addinWishList(item)}>

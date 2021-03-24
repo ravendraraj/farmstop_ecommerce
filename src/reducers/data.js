@@ -18,7 +18,7 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     saving_apart_req_status:"loading",
 };
 
-const data = (state = initialDataState, action) => {
+const data = (state = initialDataState, action) =>{
     switch (action.type) {
 
         case "SAVING_APARTMENT_VIEST_REQ":
@@ -108,13 +108,6 @@ const data = (state = initialDataState, action) => {
             ...state,
             deviceToken:action.token,
             os:action.os
-        }
-
-        case 'FETCH_NOTIFICATION_LIST':
-        return{
-            ...state,
-            userNotifications:action.notification,
-            fetchNotification:true,
         }
 
         case 'EDIT_PROFILE':

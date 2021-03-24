@@ -1,4 +1,25 @@
 import { writeStorage, readStorage, removeAllStorage, removeStorage } from './Model';
+
+/* set notification count widgets*/
+export const setNewNotifiCounterToStorage = async (value) =>{
+  return new Promise(function(resolve) {
+    resolve(writeStorage('TOTAL_NEW_NOTIFI', value));
+  });
+}
+
+export const getNewNotifiCounterToStorage = async () =>{
+  return new Promise(function(resolve) {
+    resolve(readStorage('TOTAL_NEW_NOTIFI'));
+  });
+}
+
+export const unsetNewNotifiCounterToStorage = async () =>{
+  return new Promise(function(resolve) {
+    resolve(removeStorage('TOTAL_NEW_NOTIFI'));
+  });
+}
+
+
 /*
  * [setDeviceToken functions set value of Token]
  * @param {value  string}   

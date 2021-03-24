@@ -22,6 +22,7 @@ import FastImageComponent from '../customElement/FastImageComponent';
 import ActionSheet from "react-native-actions-sheet";
 import {MainHeading} from '../customElement/Input';
 import {BorderButton} from '../customElement/button';
+import ErrorBox from '../customElement/ErrorBox'
 
 const regular = constants.fonts.Cardo_Regular;
 const width = Dimensions.get('window').width;
@@ -55,9 +56,12 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    this.props.getItem({ start: 1, end: 6 });
+    let app_menu = await this.props.getItem({ start: 1, end: 6 });
+    //console.log(app_menu);
     this.setState({ productList: this.props.productName });
-    this.displayEnquireForm();
+    if(app_menu == "success"){
+      this.displayEnquireForm();
+    }
     if(this.props.productName.length <= 0){
       await this.props.searchProductType();
     }
@@ -96,7 +100,7 @@ class HomeScreen extends Component {
     }
     
     const version = await checkVersion({currentVersion:"1.7"});
-    //console.log("Got version info:", version);
+    console.log("Got version info:", version);
     if(version !='' && parseFloat(version.version)>1.7){ // 1.7 is latest version
       //if()
       Alert.alert(
@@ -245,8 +249,8 @@ class HomeScreen extends Component {
 
   renederItemType(){
     let ItemList = this.props.itemData;
-    if (ItemList != "undefined" && ItemList != null && ItemList.length>0) {
-      return (
+    if (ItemList != "undefined" && ItemList != null && ItemList.length>0){
+      return(
         <View>
         <FlatList
           ref={
@@ -334,6 +338,16 @@ class HomeScreen extends Component {
           }
         />
         </View>
+      )
+    }else if(!this.props.animate){
+      return(
+        <View>
+          <ErrorBox btn_title={"Retry"} content={constants.constStrings.error_msg} onPress={()=>{this.props.getItem()}}/>
+        </View>
+      )
+    }else{
+      return(
+        <View/>
       )
     }
   }

@@ -1,6 +1,7 @@
 import{ Alert } from 'react-native';
 import store from '../store';
 //import { byPassLogOut } from '../actions/auth';
+import NetInfo from "@react-native-community/netinfo";
 
 const api = async (url, method, body = null, headers = {}) => {
     try {
@@ -18,6 +19,9 @@ const api = async (url, method, body = null, headers = {}) => {
 }
 
 const fetchApi = async (endPoint, method, body, statusCode, token = null) => {
+    const state = await NetInfo.fetch()
+    //console.log("state",state);
+    if(state.isConnected == true){
       try {
           const headers = {};
           const result = {
@@ -53,7 +57,7 @@ const fetchApi = async (endPoint, method, body, statusCode, token = null) => {
           const fetchPromise = await fetch(endPoint, fetchParams);
           const response = fetchPromise;
           
-          console.log("response=>fetch_api ",response);
+          //console.log("response=>fetch_api ",response);
 
           if(response.status === statusCode){
               if(response.headers.get("Authorization")) {
@@ -87,7 +91,7 @@ const fetchApi = async (endPoint, method, body, statusCode, token = null) => {
               result.status   = response.status
               result.response     = responseBody;
               result.headers  = headers;
-              console.log("responseBody2",responseBody);
+              //console.log("responseBody2",responseBody);
               if(responseBody.responseCode === 402){
                 // Alert.alert(
                 //     `Error`,
@@ -120,6 +124,21 @@ const fetchApi = async (endPoint, method, body, statusCode, token = null) => {
           }
           return result;
       }
+    }else{
+      let result={
+        success :   false,
+        status  :   false,
+        body    :   body,
+        response    :   {
+          message: "Network Error",
+          result: {code: 0, message:"Network Error"},
+          status: false
+        },
+        headers :   {},
+        url     :   endPoint,
+      }
+        return result;
+    }
 }
 
 export default fetchApi;

@@ -14,8 +14,7 @@ import AuthScreenStack from './src/appnavigation/AuthScreenStack';
 import SplashScreenStack from './src/appnavigation/SplashScreenStack';
 import IntroStackScreen from './src/appnavigation/IntroStackScreen';
 import DrawerScreen from './src/appnavigation/DrawerScreen';
-import { navigate,check_notification } from './src/appnavigation/RootNavigation';
-
+import { navigate,check_notification,loadNewNotification,setNewNotification} from './src/appnavigation/RootNavigation';
 import {switchRootScreen} from './src/lib/api';
 import PushNotificationIOS from "@react-native-community/push-notification-ios"
 var PushNotification = require("react-native-push-notification");
@@ -31,13 +30,14 @@ PushNotification.configure({
   onRegister: function (deviceTokenData) {
     //console.log("TOKEN:", deviceTokenData);
     AsyncStorage.setItem('DEVICE_TOKEN', JSON.stringify(deviceTokenData));
-    deviceData=deviceTokenData
+    deviceData=deviceTokenData;
+    loadNewNotification();
   },
  
   // (required) Called when a remote is received or opened, or local notification is opened
   onNotification: function (notification) {
     console.log("NOTIFICATION:", notification);
- 
+      setNewNotification();
       PushNotification.localNotification({
         autoCancel: true,
         largeIcon: "ic_launcher",

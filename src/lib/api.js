@@ -9,6 +9,7 @@ import {showErrorMsg} from './helper'
 import {getUserDataFromStorage} from '../services/async-storage'
 import fetchApi from './fetchApi'
 import store from '../store'
+import NetInfo from "@react-native-community/netinfo";
 
 export const switchRootScreen = (data) => async(dispatch,getState) => {
     const appIntroStatus = await AsyncStorage.getItem('introHadDone');
@@ -19,13 +20,13 @@ export const switchRootScreen = (data) => async(dispatch,getState) => {
             if(value != null){
                 //console.log("userId=>>>>> ",value.userId);
                 dispatch({type:'AUTHORIZED-USER',
-                        email:value.email,
-                        mobile:value.mobile,
-                        userID:value.userId,
-                        profile:value.profile,
-                        login_type:value.Login_Type,
-                        authName:value.name,
-                        token:value.token
+                    email:value.email,
+                    mobile:value.mobile,
+                    userID:value.userId,
+                    profile:value.profile,
+                    login_type:value.Login_Type,
+                    authName:value.name,
+                    token:value.token
                 });
                 
                 dispatch({type : 'AUTH_SWITCH_ROOT',
@@ -378,33 +379,43 @@ export const resetPassword = (data) => (dispatch,getState) => {
 }
 
 /**############################################################ Product Section ################################ */
-export const getProduct = (data) => (dispatch,getState) => {
 
-    dispatch({type : 'LOADING'});
+export const getProduct=(data)=>{
+    return async(dispatch,getState)=>{
+        dispatch({type : 'LOADING'});
+        let url = weburl + 'api-product?start=0&end=10';//geting all product
+        //console.log(url,"RAvendra");
+        const state = await NetInfo.fetch()
+        //console.log("state",state);
+        if(state.isConnected === true){
+            const res = await fetch(url);
+            if(res.status === 200){
+                let response;
+                const responseText = await res.text();
+                try{
+                    response = JSON.parse(responseText);
+                }catch (e) {
+                    response = responseText;
+                }
 
-    let url = weburl + 'api-product?start=0&end=10';//geting all product
-    console.log(url);
-
-    fetch(url)
-    .then(res =>{
-        res.json()
-        .then(response => {
-            if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_FETCH', payload : response.product,freeDilveryAt:response.freeDileveryAt ,minPurchase:response.minimumPurChaseAmt, basketList:response.basket});
+                if(response.status == 1){
+                    dispatch({ type : 'PRODUCT_FETCH', payload : response.product,freeDilveryAt:response.freeDileveryAt ,minPurchase:response.minimumPurChaseAmt, basketList:response.basket});
+                    return "success";
+                }else{
+                    dispatch({type:"ERROR_SUBMIT"});
+                    return "failed";
+                }
             }else{
-                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                dispatch({type:"ERROR_SUBMIT"});
+                return "failed";
             }
-        })
-        .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-        })
-    })
-    .catch( err => {
-        //dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        navigate("internetError");
-    });
+        }else{
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+            navigate("internetError");
+            return "failed";
+        }
+    }
 }
-
 export const getProductType = (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     // prodID:this.props.activeProd ,start:this.state,end:totalprod
@@ -1724,89 +1735,6 @@ export const updateProfile= (formdata) => (dispatch,getState) => {
                 if(formdata['screen_name'] != "MyProfile"){
                     navigate("PaymentOption");
                 }
-            }else{
-                dispatch({type : 'NETWORK_ERROR', payload : response.message});
-            }
-        })
-        .catch( err => {
-            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
-        })
-    })
-    .catch( err => {
-        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
-        navigate("internetError");
-    });
-
-}
-
-export const getNotification= (data) => (dispatch,getState) => {
-    let userID = getState().data.authUserID;
-    dispatch({type : 'LOADING'});
-    let url = weburl + 'api-get-notification';
-    var formData = new FormData();
-        formData.append("user_id", getState().data.authUserID);
-        formData.append("token",getState().data.token);
-
-    let post_req = {
-        method: 'POST',
-        body: formData,
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-            }
-    }
-    
-    console.log(url,post_req);
-
-    fetch(url,post_req)
-    .then(res =>{
-        res.json()
-        .then(response => {
-            if(response.status == "1"){
-                dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification });
-            }else{
-                dispatch({type : 'NETWORK_ERROR', payload : response.message});
-            }
-        })
-        .catch( err => {
-            dispatch({ type : 'EXCEPTION_ERROR_SUBMIT'});
-        })
-    })
-    .catch( err => {
-        dispatch({ type : 'NETWORK_ERROR', payload : 'Network Error'})
-        navigate("internetError");
-    });
-
-}
-
-export const removeNotification= (data) => (dispatch,getState) => {
-    console.log(data);
-
-    dispatch({type : 'LOADING'});
-    let url = weburl + 'api-delete-notification';
-
-    var formData = new FormData();
-        formData.append("user_id", getState().data.authUserID);
-        formData.append("token",getState().data.token);
-        formData.append("notify_id",data);
-
-    let post_req = {
-        method: 'POST',
-        body: formData,
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-            }
-        }
-    console.log(url,post_req);
-
-    fetch(url,post_req)
-    .then(res =>{
-        res.json()
-        .then(response => {
-            console.log(response);
-            if(response.status == "1"){
-                dispatch({ type : 'FETCH_NOTIFICATION_LIST', notification:response.user_notification });
             }else{
                 dispatch({type : 'NETWORK_ERROR', payload : response.message});
             }

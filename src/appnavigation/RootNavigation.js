@@ -1,6 +1,9 @@
 // RootNavigation.js
 import * as React from 'react';
-import {getUserDataFromStorage} from '../services/async-storage'
+import {getUserDataFromStorage,getNewNotifiCounterToStorage,setNewNotifiCounterToStorage} from '../services/async-storage'
+import constants from "../constants"
+import store from '../store'
+import {getNotification} from '../lib/notification'
 
 export const navigationRef = React.createRef();
 
@@ -31,6 +34,40 @@ export function check_notification(){
 
         }else{
             //nothing happen here
+        }
+    });
+}
+
+export const loadNewNotification=()=>{
+    getNewNotifiCounterToStorage().then(value=>{
+        if(value != null){
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:value});
+        }else{
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:0});
+        }
+    });
+}
+
+export const setNewNotification=()=>{
+    getNewNotifiCounterToStorage().then(value=>{ 
+        if(value != null){
+            let totalNewNotification = parseInt(value)+1;
+            setNewNotifiCounterToStorage(totalNewNotification);
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:totalNewNotification});
+        }else{
+            setNewNotifiCounterToStorage(1);
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:1});
+        }
+    });
+}
+
+export const resetNewNotification=()=>{
+    getNewNotifiCounterToStorage().then(value=>{ 
+        if(value != null){
+            let totalNewNotification = parseInt(value);
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:totalNewNotification});
+        }else{
+            store.dispatch({type:'SET_NEW_NOTIFICATION_COUNTER',totalNotification:0});
         }
     });
 }
