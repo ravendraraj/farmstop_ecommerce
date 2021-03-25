@@ -2,14 +2,8 @@ import React from 'react';
 import {
   NavigationContainer, 
 } from '@react-navigation/native';
-
 import {connect} from "react-redux";
-
-
 import { navigationRef } from './src/appnavigation/RootNavigation'
-// import MainTabScreen from './src/navigations/MainTabScreen';
-//import {setDeviceTokenToStorage} from './src/services/async-storage'
-
 import AuthScreenStack from './src/appnavigation/AuthScreenStack';
 import SplashScreenStack from './src/appnavigation/SplashScreenStack';
 import IntroStackScreen from './src/appnavigation/IntroStackScreen';

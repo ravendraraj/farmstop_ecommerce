@@ -23,6 +23,7 @@ import ActionSheet from "react-native-actions-sheet";
 import {MainHeading} from '../customElement/Input';
 import {BorderButton} from '../customElement/button';
 import ErrorBox from '../customElement/ErrorBox'
+import VersionInfo from 'react-native-version-info';
 
 const regular = constants.fonts.Cardo_Regular;
 const width = Dimensions.get('window').width;
@@ -99,26 +100,32 @@ class HomeScreen extends Component {
       this.props.setDeviceData(JSON.parse(deviceTokenData));
     }
     
-    const version = await checkVersion({currentVersion:"1.7"});
-    console.log("Got version info:", version);
-    if(version !='' && parseFloat(version.version)>1.7){ // 1.7 is latest version
-      //if()
-      Alert.alert(
-          'Farsmtop Application Update',
-          'New version of the app is available. Do you want to update?',
-          [
-            {
-              text: 'Update',
-              onPress: () =>{Linking.openURL(version.url)}
-            },
-            {
-              text: 'Not Now',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel'
-            },
-          ],
-          { cancelable: false }
+    const current_version = await VersionInfo.appVersion;
+    if(current_version !=undefined && current_version !=null && !isNaN(current_version)){
+      let current_ver = parseFloat(current_version);
+      const version = await checkVersion({currentVersion:current_ver});
+
+      //console.log(current_ver,"Got version info:", version,"current_version ",current_version);
+      
+      let requireUpdate = version.needsUpdate;
+      if(requireUpdate !='' && requireUpdate === true){
+        Alert.alert(
+            'Farsmtop Application Update',
+            'New version of the app is available. Do you want to update?',
+              [
+                {
+                  text: 'Update',
+                  onPress: () =>{Linking.openURL(version.url)}
+                },
+                {
+                  text: 'Not Now',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel'
+                },
+              ],
+            { cancelable: false }
         );
+      }
     }
   }
 
