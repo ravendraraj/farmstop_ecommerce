@@ -34,7 +34,7 @@ function FastImageComponent(props){
 		default:
 		return(
 			<FastImage
-				style={props.layout}
+				style={{...props.layout,alignSelf:'center',justifyContent:'center'}}
 				source={{
 					uri: props.image_url,
 					priority: FastImage.priority.high,

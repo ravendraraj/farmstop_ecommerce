@@ -91,6 +91,18 @@ export const SearchBox =(props)=>{
         )
 }
 
+export const ProductTitle = (props) => {
+    return (
+            <Text 
+                style={{color:constants.Colors.color_heading,
+                    fontFamily:constants.fonts.Cardo_Bold,
+                    fontSize:constants.vh(16)
+                }}>
+                    {props.title}
+            </Text>
+    );
+}
+
 export const TextHeading = (props) => {
     return (
         <View style={{backgroundColor:constants.Colors.color_heading,padding:constants.vw(10)}}>

@@ -12,6 +12,7 @@ import HomeScreen from '../component/HomeScreen'
 import Icons from 'react-native-vector-icons/FontAwesome5'
 import Material from 'react-native-vector-icons/AntDesign'
 import {connect} from 'react-redux'
+import SubProduct from '../screens/Product/SubProduct'
 
 const Tab = createBottomTabNavigator();
 function TabNavProdvariation(props,navigation){
@@ -45,7 +46,8 @@ function TabNavProdvariation(props,navigation){
       }}  
     >
         <Tab.Screen options={{tabBarVisible:false}} name="Home" component={HomeScreen} />
-        <Tab.Screen name="Product" component={productVariation} />
+        {/*<Tab.Screen name="Product" component={productVariation} />*/}
+        <Tab.Screen name="Product" component={SubProduct} />
         <Tab.Screen name="Search" component={SearchProductVariation} />
         <Tab.Screen name="Wish List" component={(props.data.authUserID !="" && props.data.authUserID != null)? MyWish :NotLoginScreen} />
         <Tab.Screen name="My Profile" component={(props.data.authUserID !="" && props.data.authUserID != null)? MyProfile :NotLoginScreen} />

@@ -305,7 +305,7 @@ class HomeScreen extends Component {
           ListFooterComponent={
             <View>
             {this.props.baskets.length >0?(<View style={{...styles.wrapper}}>
-                <Swiper  loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
+                <Swiper  activeDotColor={constants.Colors.color_statusbar} loop={true} autoplay={true} autoplayDirection={true} autoplayTimeout={6} scrollEnabled={true}>
                     {this.props.baskets.map((item,id)=>{
                         if(this.props.prodId != item.id){
                           let shortDesc = " <p> "+item.short_description+" </p>";
