@@ -14,6 +14,7 @@ import { navigate } from '../appnavigation/RootNavigation'
 import {Picker} from '@react-native-community/picker';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import FastImage from 'react-native-fast-image'
+import FastImageComponent from '../customElement/FastImageComponent'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -151,15 +152,10 @@ class WishList extends Component {
                 <View style={styles.prodBlock}>
                     <View style={{flexDirection:'row',justifyContent:'space-around'}} >
                         <View style={{marginTop:constants.vw(20)}}>
-                            {/*<Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage)) }} />*/}
-                            <FastImage
-                                style={styles.imageThumbnail}
-                                source={{
-                                    uri:replaceAllSpace(prod_variation_url+(item.fimage)),
-                                    priority: FastImage.priority.normal,
-                                    cache: FastImage.cacheControl.immutable,
-                                }}
-                                resizeMode={FastImage.resizeMode.contain}
+                            <FastImageComponent
+                                layout={styles.imageThumbnail}
+                                image_url={replaceAllSpace(prod_variation_url+(item.fimage))}
+                                resizeImage={"contain"}
                             />
                         </View>
                         <View style={{width:'50%'}}>

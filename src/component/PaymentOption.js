@@ -320,6 +320,7 @@ _radioHandler(){
                     if(this.state.option1 == "select"){
 
                         orderDetails['paymentOption'] = "4";
+                        //console.log(orderDetails);
                         this.props.checkOut(orderDetails);
                     }else{
                         orderDetails['paymentOption'] = "2";

@@ -416,36 +416,78 @@ export const getProduct=(data)=>{
         }
     }
 }
-export const getProductType = (data) => (dispatch,getState) => {
-    dispatch({type : 'LOADING'});
-    // prodID:this.props.activeProd ,start:this.state,end:totalprod
-    let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
-    if(getState().data.authUserID != ''){
-        url = url + "&userId="+getState().data.authUserID;
-    }
-    
-    console.log("get product",url);
 
-    fetch(url)
-    .then(res =>{
-        res.json()
-        .then(response => {
+// export const getProductType = (data) =>(dispatch,getState)=>{
+//     dispatch({type : 'LOADING'});
+//     // prodID:this.props.activeProd ,start:this.state,end:totalprod
+//     let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
+//     if(getState().data.authUserID != ''){
+//         url = url + "&userId="+getState().data.authUserID;
+//     }
+    
+//     console.log("get product",url);
+
+//     fetch(url)
+//     .then(res =>{
+//         res.json()
+//         .then(response => {
             
-            if(response.status == "1"){
-                dispatch({ type : 'PRODUCT_VARIATION', payload : response.product});
+//             if(response.status == "1"){
+//                 dispatch({ type : 'PRODUCT_VARIATION', payload : response.product});
+//             }else{
+//                 dispatch({ type : 'NO_MORE_DATA', payload : true});
+//                 dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+//             }
+//         })
+//         .catch( err => {
+//             dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+//         })
+//     })
+//     .catch( err => {
+//         dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
+//         navigate("internetError");
+//     });
+// }
+
+export const getProductType=(data)=>{
+    return async(dispatch,getState)=>{
+        let url = weburl + 'api-prodtype?prod_id='+data.prodID+"&start="+data.start+"&end="+data.end;
+        if(getState().data.authUserID != ''){
+            url = url + "&userId="+getState().data.authUserID;
+        }
+        
+        console.log("url =>>>>>",url);
+        const state = await NetInfo.fetch();
+        if(state.isConnected === true){
+            const res = await fetch(url);
+            if(res.status === 200){
+                let response;
+                const responseText = await res.text();
+                try{
+                    response = JSON.parse(responseText);
+                }catch (e) {
+                    response = responseText;
+                }
+
+                if(response.status == 1){
+                    dispatch({ type : 'PRODUCT_VARIATION', payload : response.product});
+                    return "success";
+                }else{
+                    dispatch({ type : 'NO_MORE_DATA', payload : true});
+                    dispatch({ type : 'PRODUCT_VARIATION_FAILED', payload : response.message});
+                    return "failed";
+                }
             }else{
                 dispatch({ type : 'NO_MORE_DATA', payload : true});
-                dispatch({ type : 'ERROR_SUBMIT', payload : response.message});
+                dispatch({ type : 'PRODUCT_VARIATION_FAILED', payload : response.message});
+                return "failed";
             }
-        })
-        .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-        })
-    })
-    .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        navigate("internetError");
-    });
+        }else{
+            dispatch({ type : 'PRODUCT_VARIATION_FAILED', payload : 'Network Error'})
+            navigate("internetError");
+            return "failed";
+        }
+    }
 }
 
 export const clickOnProductCatTab = (data) => (dispatch,getState) => {
@@ -1478,7 +1520,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
              }
         }
     
-    //console.log(orderCreateUrl,post_req,checkOutData);
+    console.log(orderCreateUrl,post_req,checkOutData);
 
     fetch(orderCreateUrl,post_req)
     .then(res =>{
@@ -1533,7 +1575,7 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                                  'Content-Type': 'multipart/form-data',
                              }
                         }
-                            console.log(verify_post_req);
+                            console.log("verify_post_req",verify_post_req);
                             fetch(orderVerifyUrl ,verify_post_req).then(res =>{
                                 res.json()
                                 .then(response => {

@@ -17,6 +17,26 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import HTML from 'react-native-render-html'
+
+
+export const AbstractHtml=(props)=>{
+    return(
+        <HTML
+            html={`<section>${props.description}</section>`}
+            tagsStyles={{section:styles.tagLayout}}
+            renderers={{section: (_, children) => <Text numberOfLines={4}>{children}</Text>,}}
+        />
+    )
+}
+
+export const HtmlContainer=(props)=>{
+    return(
+        <HTML html={props.description}
+            tagsStyles={{p:styles.tagLayout}}
+        />
+    )
+}
 
 export const Username=(props)=>{
     return(
@@ -127,5 +147,9 @@ const styles = StyleSheet.create({
     errorMsg: {
         color: '#FF0000',
         fontSize:constants.vw(14),
+    },
+    tagLayout:{
+        fontSize:constants.vw(16),
+        fontFamily:constants.fonts.Cardo_Regular,
     },
 });

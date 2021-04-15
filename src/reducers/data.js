@@ -1,5 +1,5 @@
 const initialDataState = {apartmentList:[],coupon_value:'', coupon_msg:'' ,my_wish_list:[],Otp:'',no_more_data: false,authUserID:'',authEmail:'' ,authMobile:'' ,login_type:'',profile:'',authName:'',searchProdName:[],addedItems:[],total: 0,otpVerification:null ,
-    knowMoreProdId:null, productData: [], remeasureProd : null,productVatiation:[],selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
+    knowMoreProdId:null, productData: [], remeasureProd : null,selectAddress:null, shippingCharges:null,shippingPincode:null,searchProductList:[],cartItemSync:false ,addressList:[],
 deliveryDate:'',defaultShipingAddress:"",coupon_id:null,orderList:[],orderDetail:[],popup:'',userNotifications:[],deviceToken:'',os:'',
 freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     isAppIntro:true,
@@ -16,10 +16,31 @@ freeDilveryAt:'',minPurchase:'',fetchNotification:false,baskets:[],
     ],
     saving_apart_req:false,
     saving_apart_req_status:"loading",
+
+    productVatiation:[],
+    product_vari_loading:false,
+    product_vari_loading_status:'loading',
+
+    single_product_detail:[],
+    activeProduct:''
 };
 
 const data = (state = initialDataState, action) =>{
     switch (action.type) {
+        case 'SORT_SINGLE_PROD_DETAIL':
+        let my_product_list = (action.screen == "search_screen")?state.searchProductList:state.productVatiation;
+        if(my_product_list.length>0){
+            let single_data = my_product_list.find(item=>((item.id ==action.product_var_id)));
+            return{
+                ...state,
+                single_product_detail:single_data
+            }
+        }else{
+            return{
+                ...state,
+            }
+        }
+        
 
         case "SAVING_APARTMENT_VIEST_REQ":
         return{
@@ -280,6 +301,20 @@ const data = (state = initialDataState, action) =>{
             no_more_data: action.payload,
         };
 
+        case 'PRODUCT_VARIATION_LOADING':
+        return{
+            ...state,
+            product_vari_loading:true,
+            product_vari_loading_status:'loading'
+        }
+
+        case 'PRODUCT_VARIATION_FAILED':
+        return{
+            ...state,
+            product_vari_loading:false,
+            product_vari_loading_status:"failed"
+        }
+
         case 'PRODUCT_VARIATION':
             //console.log(state.activeProduct +" != " + action.payload[0].product_id);
             //console.log(state.productVatiation.length);
@@ -289,12 +324,16 @@ const data = (state = initialDataState, action) =>{
             return {
                 ...state,
                 productVatiation : searchProdctList,
+                product_vari_loading:false,
+                product_vari_loading_status:"failed"
             };
         }else{
             //console.log("initial");
             return {
                 ...state,
                 productVatiation : action.payload,
+                product_vari_loading:false,
+                product_vari_loading_status:"failed"
             }; 
         }
 
@@ -470,6 +509,22 @@ const data = (state = initialDataState, action) =>{
                 productVatiation :updateItemList,
                 my_wish_list:updateUserWishList,
             };
+
+        }else if(wishScreen == "SingleProduct"){
+
+            let updateSingleProduct = state.single_product_detail;
+            if(updateSingleProduct.id == wishProd){
+                if(updateSingleProduct.isMyWish === 'heart-outline'){
+                    updateSingleProduct.isMyWish = "heart";
+                }else{
+                    updateSingleProduct.isMyWish = "heart-outline";
+                }
+            }
+
+            return {
+                ...state,
+                single_product_detail:updateSingleProduct
+            }
 
         }
 

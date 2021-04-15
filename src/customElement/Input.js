@@ -103,6 +103,61 @@ export const ProductTitle = (props) => {
     );
 }
 
+export const ShortProductTitle = (props) => {
+    return (
+            <Text 
+                numberOfLines={2}
+                style={{color:constants.Colors.color_heading,
+                    fontFamily:constants.fonts.Cardo_Bold,
+                    fontSize:constants.vh(16),
+                    height:constants.vh(30),
+                }}>
+                    {props.title}
+            </Text>
+    );
+}
+
+export const MainContentHeading = (props) => {
+    return (
+            <Text 
+                style={{color:constants.Colors.color_heading,
+                    fontFamily:constants.fonts.Cardo_Bold,
+                    fontSize:constants.vh(18)
+                }}>
+                    {props.title}
+            </Text>
+    );
+}
+
+export const OutOfStockTitle = (props) => {
+    return (
+            <Text 
+                style={{
+                    color:constants.Colors.color_heading,
+                    fontFamily:constants.fonts.Roboto_Bold_italic,
+                    fontSize:constants.vh(16)
+                }}>
+                    {props.title}
+            </Text>
+    );
+}
+
+export const ContentComp=(props)=>{
+    return(
+        <View style={{marginTop:8,marginBottom:8}}>
+            <Text style={{fontSize:constants.vh(20),fontFamily:constants.fonts.RobotoSlab_light,color:constants.Colors.color_BLACK}}>{props.children}</Text>
+        </View>
+    )
+}
+
+export const SubHeading=(props)=>{
+    return(
+        <View style={{marginTop:8,marginBottom:8}}>
+            <Text style={{fontSize:constants.vh(16),fontFamily:constants.fonts.RobotoSlab_light,color:constants.Colors.color_BLACK}}>{props.children}</Text>
+        </View>
+    )
+}
+
 export const TextHeading = (props) => {
     return (
         <View style={{backgroundColor:constants.Colors.color_heading,padding:constants.vw(10)}}>

@@ -20,6 +20,7 @@ import {weburl} from '../constants/url'
 import { navigate } from '../appnavigation/RootNavigation'
 import Icons from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 import FastImage from 'react-native-fast-image'
 import {Widget} from '../customElement/button';
 
@@ -157,13 +158,15 @@ renderLogout(){
     }
 }
 
-_renderSignUpAndLogin(){
-    
+_renderSignUpAndLogin(){    
     if(this.props.authUserID == null || this.props.authUserID == "null" || this.props.authUserID ==''){
         return(
-            <TouchableOpacity style={{marginBottom:constants.vh(10),marginTop:constants.vh(10)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
-                <Text style={{...styles.withOutIcon,color:constants.Colors.color_grey}}>Singup | Login</Text>
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity style={{marginBottom:constants.vh(10),marginTop:constants.vh(10)}} onPress={() => {this.props.navigation.navigate('SocialLogin')}}>
+                    <Text style={{...styles.withOutIcon,color:constants.Colors.color_grey}}>Singup | Login</Text>
+                </TouchableOpacity>
+                <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginBottom:constants.vw(8)}}/>
+            </View>
         )
     }
 }
@@ -199,13 +202,10 @@ async _logOutEvent(){
                     {this._renderSignUpAndLogin()}
                     </View>
                     <View style={{paddingLeft:10}}>
-
-    
-                    <View style={{width:'102%',borderColor:constants.Colors.color_platnium,borderBottomWidth:1,marginLeft:-8,marginBottom:constants.vw(8)}}/>
-
                     <TouchableOpacity style={styles.menuTab} onPress={()=>navigate("MainHome")}>
                         <View style={{flexDirection:'row'}}>
-                            <Image source={constants.image.homeIcon} style={styles.icon}/>
+                            {/*<Image source={constants.image.homeIcon} style={styles.icon}/>*/}
+                            <Fontisto name="shopping-store" color={constants.Colors.color_BLACK} size={constants.vw(18)}/>
                             <Text style={styles.MenueLable}>Home</Text>
                         </View>
                         <Icons name={"angle-right"} size={14} style={{marginTop:5}}/>
@@ -310,7 +310,8 @@ const styles = StyleSheet.create({
         fontFamily:constants.fonts.Cardo_Regular,
         fontSize:constants.vw(16),
         paddingLeft:constants.vw(10),
-        },
+
+    },
     TopMarginMenuLable:{
         fontFamily:constants.fonts.Cardo_Bold,
         fontSize:constants.vw(18),
@@ -353,7 +354,7 @@ const styles = StyleSheet.create({
 
     },
     userName:{
-        fontFamily:constants.fonts.CardoBOLD,
+        fontFamily:constants.fonts.Cardo_Bold,
         fontSize:constants.vh(22),
         color:constants.Colors.color_BLACK
     },

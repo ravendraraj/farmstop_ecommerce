@@ -6,11 +6,13 @@ import MyCart from '../component/MyCart'
 import SearchProductVariation from '../component/SearchProductVariation'
 import constants from '../constants'
 import MyProfile from '../component/MyProfile'
-import MyWish from '../component/WishList' 
+//import MyWish from '../component/WishList' 
+import MyWish from '../screens/Product/WishList' 
 import NotLoginScreen from '../component/NotLoginScreen'
 import HomeScreen from '../component/HomeScreen'
 import Icons from 'react-native-vector-icons/FontAwesome5'
 import Material from 'react-native-vector-icons/AntDesign'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 import {connect} from 'react-redux'
 import SubProduct from '../screens/Product/SubProduct'
 
@@ -24,15 +26,15 @@ function TabNavProdvariation(props,navigation){
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = focused ? <Icons name="home" color={constants.Colors.color_btn} size={25}/> :<Icons name="home" color={constants.Colors.color_BLACK} size={25}/>
+            iconName = focused ? <Fontisto name="shopping-store" color={constants.Colors.color_btn} size={20}/> :<Fontisto name="shopping-store" color={constants.Colors.color_grey} size={25}/>
           } else if (route.name === 'Search') {
-            iconName = focused ? <Material name="search1" color={constants.Colors.color_btn} size={25}/> :<Material name="search1" color={constants.Colors.color_BLACK} size={25}/>
+            iconName = focused ? <Material name="search1" color={constants.Colors.color_btn} size={20}/> :<Material name="search1" color={constants.Colors.color_grey} size={25}/>
           }else if (route.name === 'My Profile') {
-            iconName = focused ? <Icons name="user-alt" color={constants.Colors.color_btn} size={25}/> :<Icons name="user-alt" color={constants.Colors.color_BLACK} size={25}/>
+            iconName = focused ? <Icons name="user-alt" color={constants.Colors.color_btn} size={20}/> :<Icons name="user-alt" color={constants.Colors.color_grey} size={25}/>
           }else if (route.name === 'Wish List') {
-            iconName = focused ? <Material name="heart" color={constants.Colors.color_btn} size={25}/> :<Material name="heart" color={constants.Colors.color_BLACK} size={25}/>
+            iconName = focused ? <Material name="hearto" color={constants.Colors.color_btn} size={20}/> :<Material name="heart" color={constants.Colors.color_grey} size={25}/>
           }if (route.name === 'Product') {
-            iconName = focused ? <Material name="appstore1" color={constants.Colors.color_btn} size={25}/> :<Material name="appstore1" color={constants.Colors.color_BLACK} size={25}/>
+            iconName = focused ? <Material name="appstore1" color={constants.Colors.color_btn} size={20}/> :<Material name="appstore1" color={constants.Colors.color_grey} size={25}/>
           }
 
           return iconName;
@@ -45,7 +47,8 @@ function TabNavProdvariation(props,navigation){
         keyboardHidesTabBar:true,
       }}  
     >
-        <Tab.Screen options={{tabBarVisible:false}} name="Home" component={HomeScreen} />
+        {/*<Tab.Screen options={{tabBarVisible:false}} name="Home" component={HomeScreen} />*/}
+        <Tab.Screen name="Home" component={HomeScreen} />
         {/*<Tab.Screen name="Product" component={productVariation} />*/}
         <Tab.Screen name="Product" component={SubProduct} />
         <Tab.Screen name="Search" component={SearchProductVariation} />

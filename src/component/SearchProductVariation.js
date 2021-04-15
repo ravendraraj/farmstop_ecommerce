@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ImageBackground, View, Image, Text, ToastAndroid, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert,StatusBar,Keyboard } from 'react-native'
 import { connect } from 'react-redux';
 import { Loader } from '../customElement/Loader'
-import {PreLoadScreenMsg,EmptyComp} from '../customElement/Input'
+import {PreLoadScreenMsg,EmptyComp,OutOfStockTitle} from '../customElement/Input'
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation'
 import Autocomplete from 'react-native-autocomplete-input'
@@ -15,7 +15,8 @@ import { fristLetterCapital,replaceAllSpace } from '../lib/helper'
 //api call
 import { getProduct, getProductType, setWishListItemOnServer, getProductTypeByKeyword,addItemToCart,setCartItemLocal } from '../lib/api'
 import { Picker } from '@react-native-community/picker';
-import FastImage from 'react-native-fast-image'
+import FastImageComponent from '../customElement/FastImageComponent'
+import {CartBtn,VariationSelector} from '../customElement/button'
 
 const bold = constants.fonts.Cardo_Bold;
 const regular = constants.fonts.Cardo_Regular;
@@ -145,24 +146,14 @@ class SearchProductVariation extends Component {
 		this.props.selectProdVariation({ prod_id: prod_id, value: variationValue ,screen: this.props.route.name});
 	}
 
-	variationOpt = (variation) => {
 
-		return (variation.map((item, index) => {
-			return (<Picker.Item label={item.varition} key={index} value={item.varition} />)
-		}));
-	}
-
-	selectQtyDetail(item) {
-		if (item.selectedVariationID != '') {
-			return (
-				<Text style={{ fontSize: 16, fontFamily: regular, marginLeft: 10 }}>{(item.selectedQtyVariation + " | QTY:" + item.selectedQty)} </Text>
-			)
-		}
-	}
 
 	_knowMore(prod_id) {
-		this.props.knowMore({ prodId: prod_id, screen: this.props.route.name });
-		navigate("knowMoreProd");
+		this.props.knowMore({ prodId: prod_id, screen:'search_screen'});
+		navigate("SingleProductDesc");
+       // props.dispatch({type:'SORT_SINGLE_PROD_DETAIL',product_var_id:prod_id,screen:'search_screen'});
+       //props.navigation.navigate("SingleProductDesc");
+    
 	}
 
 	renderSearchList() {
@@ -181,7 +172,6 @@ class SearchProductVariation extends Component {
 			}
 
 			return (
-				// <View style={{marginTop:-100}}>
 				<FlatList
 					data={updateItemList}
 					ListEmptyComponent={
@@ -198,16 +188,12 @@ class SearchProductVariation extends Component {
 								
 								<View>
 									<TouchableOpacity style={{alignSelf:'center',marginTop:10}} onPress={()=>this._knowMore(item.id)}>
-										{/*<Image style={styles.imageThumbnail} source={{ uri: (prod_variation_url + (item.fimage).replace(' ', '_')) }} />*/}
-										    <FastImage
-			                                    style={styles.imageThumbnail}
-			                                    source={{
-			                                        uri:replaceAllSpace(prod_variation_url + (item.fimage)),
-			                                        priority: FastImage.priority.normal,
-			                                        cache: FastImage.cacheControl.immutable,
-			                                    }}
-			                                    resizeMode={FastImage.resizeMode.contain}
-			                                />
+					
+				                        <FastImageComponent
+	                                        layout={styles.imageThumbnail}
+	                                        image_url={replaceAllSpace(prod_variation_url+(item.fimage))}
+	                                        resizeImage={"contain"}
+	                                    />
 									</TouchableOpacity>
 
 									{(this.props.authUserID =="" || this.props.authUserID ==null)?(<View/>):(<TouchableOpacity style={styles.wishBox}
@@ -228,49 +214,60 @@ class SearchProductVariation extends Component {
 									<Text style={{fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
                                 			{fristLetterCapital(item.attribute_name)}
                             		</Text>
-                            		
-                            		<View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5}}>
-	                            		<Picker
-											selectedValue={item.selectedVariationID == "" ? "" : item.selectedQtyVariation}
-											// mode="dropdown"
-											style={{ height: 50, marginTop: -12, marginBottom: -12, fontFamily: constants.fonts.Cardo_Bold }}
-											onValueChange={(value) => (this.setVariationType(value, item.id))}
-											>
-												{this.variationOpt(item.variation_details)}
-										</Picker>
-									</View>
+                            		<View style={{marginTop:constants.vh(10)}}>
+                                        <VariationSelector
+                                            selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                            onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                            options={item}
+                                            compWidth={constants.width*0.4}
+                                        />
+                                    </View>
+                            	
 									<View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:10,marginTop:10}}>
-										<Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontWeight:'bold',paddingLeft:10}}>
-											Rs. {(item.selectedVariationID != '') ? item.selectedQtyPrice : item.price}
-										</Text>
+										<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+item.selectedQtyPrice}</Text>
 										<View style={{flexDirection:'row'}}>
-										<TouchableOpacity style={{ marginRight: 8, marginLeft: 0 }}
-											onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'remove',item.selectedQty)}>
-											<Material
-												name="minus-circle-outline"
-												color={constants.Colors.color_grey}
-												size={25}
-											/>
-										</TouchableOpacity>
-										<Text style={{fontSize:constants.vw(16),fontWeight:'bold',marginTop:4}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
-										<TouchableOpacity style={{ marginLeft: 8 }}
-											onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'add',item.selectedQty)}>
-											<Material
-												name="plus-circle-outline"
-												color={constants.Colors.color_grey}
-												size={25}
-											/>
-										</TouchableOpacity>
+											<TouchableOpacity style={{ marginRight: 8, marginLeft: 0 }}
+												onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'remove',item.selectedQty)}>
+												<Material
+													name="minus-circle-outline"
+													color={constants.Colors.color_grey}
+													size={25}
+												/>
+											</TouchableOpacity>
+												<Text style={{fontSize:constants.vw(16),fontWeight:'bold',marginTop:4}}>{item.selectedQty >0 ?item.selectedQty:"Select"}</Text>
+											<TouchableOpacity style={{ marginLeft: 8 }}
+												onPress={() => this._manageProdQty(item.id, item.selectedVariationID, 'add',item.selectedQty)}>
+												<Material
+													name="plus-circle-outline"
+													color={constants.Colors.color_grey}
+													size={25}
+												/>
+											</TouchableOpacity>
 										</View>
 									</View>
 									{/**Price section */}
+									{/*<View>
+																			{item.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
+																				onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, item.selectedQty,item.selectedVariationPrice)}>
+																				<Material name="cart" size={18} color={constants.Colors.color_WHITE} />
+																				<Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
+																			</TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16,marginTop:10}}>Out Of Stock</Text>)}
+																		</View>*/}
+
 									<View>
-										{item.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height: 30,paddingTop:5}}
-											onPress={() => this._addInCart(item.product_id, item.selectedVariationID, item.id, item.selectedQty,item.selectedVariationPrice)}>
-											<Material name="cart" size={18} color={constants.Colors.color_WHITE} />
-											<Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
-										</TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16,marginTop:10}}>Out Of Stock</Text>)}
-									</View>
+					                    {
+					                    item.inventory_status == 0?(
+					                        <CartBtn 
+												onPress={() => this._addInCart(
+													item.product_id,
+													item.selectedVariationID,
+													item.id,
+													item.selectedQty,
+													item.selectedVariationPrice
+												)}
+					                        />):(<View style={{height:30}}><OutOfStockTitle title={"Out Of Stock"}/></View>)
+					                    }
+					               </View>
 								</View>
 							</View>
 						</View>
@@ -295,7 +292,6 @@ class SearchProductVariation extends Component {
 				//onEndReached={this.LoadMoreRandomData}
 
 				/>
-				// </View>
 			)
 		}else{
 		     return(
@@ -370,9 +366,9 @@ const styles = StyleSheet.create({
 	},
 	MainContainer: {
 		//justifyContent: 'center',
-		flex: 1,
-		marginTop:constants.vh(10),
-		padding: 10,
+		//flex: 1,
+		marginTop:constants.vh(20),
+		//padding: 10,
 	},
 	imageThumbnail: {
 		alignSelf: 'center',
@@ -422,14 +418,14 @@ const styles = StyleSheet.create({
 		height: '100%',
 		flex: 1
 	},
-	prodBlock:{
+    prodBlock:{
         alignSelf:'center',
-        width:'99%',
-        backgroundColor:'white',
+        width:'98%',
+        backgroundColor:"white",
         borderRadius:2,
-        elevation:4,
-        padding:constants.vw(10),
-        marginBottom:10,
+        elevation:1,
+        padding:10,
+        marginBottom:constants.vh(4),
     },
     prodLabel:{
         fontSize:constants.vw(14),
@@ -469,7 +465,7 @@ const mapDispatchToProps = dispatch => ({
 	setProdId: (data) => dispatch({ type: 'ACTIVE-PROD', id: data }),
 	selectProdVariation: (data) => dispatch({ type: "SET_PRODUCT_VARIATION", prod_id: data.prod_id, variation: data.value, screen: data.screen }),
 
-	knowMore: (data) => dispatch({ type: 'KNOW_MORE_ABOUT_PROD', prodTypeId: data.prodId, screen: data.screen }),
+	knowMore: (data) => dispatch({ type: 'SORT_SINGLE_PROD_DETAIL', product_var_id: data.prodId, screen: data.screen }),
 	addItemToCart :(data)=> dispatch(addItemToCart(data)),
     setCartItemLocal:()=>dispatch(setCartItemLocal()),
 	manageQty:(data) =>dispatch({type:'ADD-PROD-QTY' ,activeProdId:data.prodId,actionType:data.typeOfAct ,screen:data.screen}),

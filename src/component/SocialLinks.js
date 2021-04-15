@@ -7,7 +7,7 @@ import {youtubeUrl,facebookUrl,instagramUrl,linkedInUrl} from '../constants/url'
 const SocialLinks =(props) =>{
     let iconSize = props.size;
     return(
-        <View style={{flex:1,flexDirection:'row',justifyContent:'center',width:'90%',alignSelf:"center",paddingTop:20,paddingBottom:30}}>
+        <View style={{flex:1,flexDirection:'row',justifyContent:'center',width:'100%',alignSelf:"center",paddingTop:2,paddingBottom:3}}>
             <TouchableOpacity onPress={()=>Linking.openURL(instagramUrl)} style={{margin:5}}>
                 {/* <Icon name="instagram" size={40} color={constants.Colors.color_facebook}/> */}
                 <Image source={constants.image.instagram_logo} style={{width:45,height:45}}/>

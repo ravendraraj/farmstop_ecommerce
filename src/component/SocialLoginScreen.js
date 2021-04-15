@@ -191,7 +191,7 @@ class SocialLoginScreen extends Component{
                         }
 
                 <View style={{marginTop:constants.vh(20)}}>
-                    <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_heading,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:constants.vh(10)}} onPress={()=>this.submitManualReg()}>
+                    <TouchableOpacity style={{borderWidth:1,backgroundColor:constants.Colors.color_btn,borderColor:constants.Colors.color_heading,borderRadius:4,borderRadius:4,padding:constants.vh(10)}} onPress={()=>this.submitManualReg()}>
                         <Text style={{fontSize:18,fontFamily:constants.fonts.Cardo_Bold,textAlign:'center',color:constants.Colors.color_WHITE}}>Login</Text>
                     </TouchableOpacity>
                 </View>
@@ -225,7 +225,7 @@ class SocialLoginScreen extends Component{
                         Having issue signing up, please write to us at info@farmstop.in
                     </Text>
                         
-                    <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:-4}} onPress={()=>this.skipLoginPage()}>
+                    <TouchableOpacity style={{alignSelf:'flex-end',paddingRight:10,paddingLeft:10,paddingTop:5,paddingBottom:5,borderWidth:1,borderColor:constants.Colors.color_BLACK,borderRadius: 5,marginBottom:constants.vw(2),marginTop:constants.vw(2)}} onPress={()=>this.skipLoginPage()}>
                         <Text style={{fontSize:constants.vw(16),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK}}>SKIP</Text>
                     </TouchableOpacity>
                 </View>

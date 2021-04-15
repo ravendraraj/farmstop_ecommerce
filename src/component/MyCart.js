@@ -7,15 +7,15 @@ import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {Loader} from '../customElement/Loader'
-import {CouponTextInput ,PrimaryTextInput,EmptyComp} from '../customElement/Input'
+import {CouponTextInput ,PrimaryTextInput,EmptyComp,TextHeading,ProductTitle} from '../customElement/Input'
 //helper function
 import {fristLetterCapital,replaceAllSpace} from '../lib/helper'
-import {Picker} from '@react-native-community/picker';
 //navigation function
 import { navigate } from '../appnavigation/RootNavigation'
 import RazorpayCheckout from 'react-native-razorpay';
 import {razor_api_key} from '../constants/key';
-import {TextHeading} from '../customElement/Input'
+import FastImageComponent from '../customElement/FastImageComponent'
+import {VariationSelector} from '../customElement/button'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -224,13 +224,6 @@ class MyCart extends Component {
         }
     }
 
-    variationOpt = (variation) =>{
-        
-        return( variation.map( (item,index) => { 
-              return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
-        }));
-    }   
-
     async deleteItem(prod_id , selectedVariationID, cart_item_id,cart_id){
         
         var data = [];
@@ -249,7 +242,7 @@ class MyCart extends Component {
 
     } 
 
-    renederItemType () {
+    renederItemType(){
         let ItemList = this.props.cartData;
         
         const config = {
@@ -259,92 +252,95 @@ class MyCart extends Component {
 
         if(ItemList.length > 0){
             return(
-                <View>
+                <View style={{backgroundColor:constants.Colors.color_light_grey}}>
                 <FlatList
-                data={ItemList}
-                keyboardShouldPersistTaps="handled"
-                renderItem={({ item }) => (
-                    <View style={styles.prodBlock}>
-                        <View style={{flexDirection:'row',justifyContent:'space-around'}} >
-                        
-                            <View style={{alignSelf:'center',marginTop:10}}>
-                                <Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage)) }} />
-                            </View>
-                            <View style={{width:'50%'}}>
-                                <View style={{flexDirection:'row'}}>
-                                <Text style={{width:'80%',fontSize:constants.vw(14),fontFamily:constants.fonts.Cardo_Bold,marginLeft:5,marginBottom:4}}>
-                                    {fristLetterCapital(item.attribute_name)}
-                                </Text>
-                                <View style={{flex:1,width:'20%'}}>
-                                    <TouchableOpacity style={{position:'absolute',top:0,right:0,zIndex:1}} onPress={()=>this.deleteItem(item.prod_id ,item.selectedVariationID,item.cart_item_id,item.id)}>
-                                        <Icon 
-                                            name="trash-o"
-                                            color={constants.Colors.color_BLACK}
-                                            size={20}
-                                        />
-                                    </TouchableOpacity>
+                    data={ItemList}
+                    keyboardShouldPersistTaps="handled"
+                    ListEmptyComponent={()=>(
+                        <View style={{width:'100%',height:1,marginBottom:10}}>
+                        </View>
+                    )}
+                    ListHeaderComponent={()=>(
+                        <View style={{width:'100%',height:1,marginBottom:constants.vh(2)}}>
+                        </View>
+                    )}
+                    renderItem={({ item }) => (
+                        <View style={styles.prodBlock}>
+                            <View style={{flexDirection:'row',justifyContent:'space-around'}} >
+                            
+                                <View style={{alignSelf:'center',marginTop:10}}>
+                                    <FastImageComponent
+                                        layout={styles.imageThumbnail}
+                                        image_url={replaceAllSpace(prod_variation_url+(item.fimage))}
+                                        resizeImage={"contain"}
+                                    />
+                                    {/*<Image style={styles.imageThumbnail} source={{ uri: replaceAllSpace(prod_variation_url+(item.fimage)) }} />*/}
                                 </View>
-                                </View>
-                                <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginLeft:5,marginBottom:5,marginTop:15}}>
-                                    <Picker
-                                        selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
-                                        // mode="dropdown"
-                                        style={{height: 50,marginTop:-10,marginBottom:-10,fontFamily:constants.fonts.Cardo_Bold}}
-                                        onValueChange={ (value) => ( this.setVariationType(value,item.prod_id ,item.selectedVariationID,item.selectedQtyPrice))}
-                                        >
-                                        {/**<Picker.Item label="Select" value="Select"  />*/}
-                                        { this.variationOpt(item.variation_details) }
-                                    </Picker>
-                                </View>
-
-                                <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:20}}>
-                                    <Text style={{flex: 1, flexWrap: 'wrap',fontSize:constants.vw(16),fontFamily:bold,paddingLeft:10}}>
-                                        Rs. {item.selectedVariationPrice}
-                                    </Text>
+                                <View style={{width:'50%'}}>
                                     <View style={{flexDirection:'row'}}>
-                                        <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
-                                        onPress={()=>this._manageCartProdQty(item,'remove')}>
+                                
+                                        <View style={{marginTop:constants.vh(5),width:'80%'}}>
+                                            <ProductTitle title={item.attribute_name}/>
+                                        </View>
+                                    
+                                        <TouchableOpacity style={{position:'absolute',top:0,right:0,zIndex:12}} onPress={()=>this.deleteItem(item.prod_id ,item.selectedVariationID,item.cart_item_id,item.id)}>
                                             <Material 
-                                                name="minus-circle-outline"
-                                                color={constants.Colors.color_grey}
-                                                size={constants.vw(25)}
+                                                name="close"
+                                                color={constants.Colors.color_BLACK}
+                                                size={20}
                                             />
                                         </TouchableOpacity>
-                                        <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
-                                        <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
-                                            <Material 
-                                                name="plus-circle-outline"
-                                                color={constants.Colors.color_grey}
-                                                size={constants.vw(25)}
-                                            />
-                                        </TouchableOpacity>
+                
+                                    </View>
+                                    <View style={{marginTop:constants.vh(10)}}>
+                                        <VariationSelector
+                                            selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                                            onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                                            options={item}
+                                            compWidth={constants.width*0.4}
+                                        />
+                                    </View>
+
+                                    <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:20}}>
+                                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+item.selectedVariationPrice}</Text>
+                                        <View style={{flexDirection:'row'}}>
+                                            <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
+                                            onPress={()=>this._manageCartProdQty(item,'remove')}>
+                                                <Material 
+                                                    name="minus-circle-outline"
+                                                    color={constants.Colors.color_grey}
+                                                    size={constants.vw(25)}
+                                                />
+                                            </TouchableOpacity>
+                                            <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
+                                            <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
+                                                <Material 
+                                                    name="plus-circle-outline"
+                                                    color={constants.Colors.color_grey}
+                                                    size={constants.vw(25)}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </View>
+                                
                             </View>
-                            
                         </View>
-                    </View>
-                )}
+                    )}
 
-                //Setting the number of column
-                numColumns={1}
-                ListHeaderComponent={()=>(
-                    <View style={{width:'100%',height:1,marginBottom:10}}>
-                    </View>
-                )}
-                
-                keyExtractor={(item) => (item.id).toString()}
-
-                 ListFooterComponent={
-                    <View style={{height:100}}/>
-                 }
-                
+                    //Setting the number of column
+                    numColumns={1}
+                    keyExtractor={(item) => (item.id).toString()}
+                     ListFooterComponent={
+                        <View style={{height:100}}/>
+                     }
+                    
                 />
                 </View>
             )
         }else{
             return(
-                <View style={{width:'96%',alignSelf:'center'}}>
+                <View style={{flex:1,width:"100%",alignSelf:'center',backgroundColor:constants.Colors.color_WHITE}}>
                 <EmptyComp imageName={constants.image.emptyCart}
                     welcomText={"Oops! Your cart seems empty."}
                     redirectText={"Shop Now"}
@@ -359,12 +355,9 @@ class MyCart extends Component {
         return (
                 <View style={styles.container}>
                     <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                        <View style={styles.MainContainer}>
-                            
-                            {this._loadLoader()}
-                            {this.renederItemType()}
-                            {this.renederCartDetails()}
-                        </View>
+                    {this.renederItemType()}
+                    {this.renederCartDetails()}
+                    {this._loadLoader()}
                 </View>
             )
         }
@@ -373,7 +366,7 @@ class MyCart extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:constants.Colors.color_WHITE
+        //backgroundColor:constants.Colors.color_WHITE
       },
     MainContainer: {
      // justifyContent: 'center',
@@ -419,12 +412,12 @@ const styles = StyleSheet.create({
     },
     prodBlock:{
         alignSelf:'center',
-        width:'95%',
+        width:'98%',
         backgroundColor:"white",
         borderRadius:2,
-        elevation:4,
+        elevation:1,
         padding:10,
-        marginBottom:10,
+        marginBottom:constants.vh(4),
     },
     checkoutBtn:{
         width:'100%',

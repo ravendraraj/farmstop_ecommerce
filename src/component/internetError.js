@@ -40,16 +40,14 @@ export default function internetError(props){
             //props.navigation.goBack();
             props.navigation.navigate("MainHome");
         }else{
-            Alert.alert("Farmstop","Please check your internet connection"[
+            Alert.alert("Farmstop","Please check your internet connection.",[
               {
                 text:"Cancel",
                 onPress: () => null,
                 style: "cancel"
               },
-                {text:"Ok", onPress:()=>{
-                    //BackHandler.exitApp()
-                }}
-            ]); 
+                {text:"Ok", onPress:()=>{console.log("ok")}}
+            ]);
         }
     }
     

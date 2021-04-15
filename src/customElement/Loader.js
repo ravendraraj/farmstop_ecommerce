@@ -17,7 +17,7 @@ export const Loader = () => {
     return(
         <SafeAreaView style={[Styles.overlay,{ alignItems: 'center', justifyContent: 'center' }]}>
             <View>
-                <ActivityIndicator size="large" color={constants.Colors.color_heading}/>
+                <ActivityIndicator size="large" color={constants.Colors.color_statusbar}/>
             </View>
         </SafeAreaView>
     );

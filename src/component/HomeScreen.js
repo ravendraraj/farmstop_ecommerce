@@ -290,7 +290,17 @@ class HomeScreen extends Component {
                                       resizeMode={FastImage.resizeMode.contain}
                                     />*/}
 
-                <Text style={{ fontSize: constants.vw(13), marginTop:constants.vw(9), alignSelf: 'center', fontFamily: constants.fonts.Cardo_Bold,textAlign:'center' }}>{fristLetterCapital(item.title)}</Text>
+                <Text style={{
+                  fontSize:constants.vw(13),
+                  marginTop:constants.vw(9),
+                  alignSelf:'center',
+                  fontFamily:constants.fonts.Cardo_Bold,
+                  textAlign:'center',
+                  color:constants.Colors.color_heading
+                }}
+                >
+                  {fristLetterCapital(item.title)}
+                </Text>
               </TouchableOpacity>
             </View>
           )}

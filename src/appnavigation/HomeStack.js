@@ -53,6 +53,8 @@ import NotLoginScreen from '../component/NotLoginScreen'
 
 import AppartmentEnquiry from '../component/AppartmentEnquiry'
 
+import SingleProductDesc from '../screens/Product/SingleProductDesc'
+
 const RootStack = createStackNavigator();
 
 function HomeStack(props,navigation){
@@ -350,6 +352,16 @@ return(
                 headerTransparent:true,
             })}
             name="AppartmentEnquiry" component={AppartmentEnquiry}/>
+
+
+        <RootStack.Screen
+            options={({ navigation }) => ({
+                headerTitle: null,
+                headerStyle:{shadowOpacity:0,elevation: 0},
+                headerTransparent:true,
+                headerShown:false
+            })}
+            name="SingleProductDesc" component={SingleProductDesc}/>
 
             
     </RootStack.Navigator>

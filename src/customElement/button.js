@@ -11,6 +11,7 @@ import constants from "../constants"
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icons from 'react-native-vector-icons/SimpleLineIcons'
 import {Picker} from '@react-native-community/picker';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const bold = constants.fonts.Cardo_Bold;
 const italic = constants.fonts.Cardo_Italic;
@@ -26,6 +27,26 @@ export const Widget =(props)=>{
         }}>
             <Text style={{fontFamily:constants.fonts.Cardo_BOLD,fontSize:constants.vw(14),color:constants.Colors.color_WHITE}}>{props.content}</Text>
         </View>
+    )
+}
+
+export const CartBtn=(props)=>{
+    return(
+        <TouchableOpacity style={{
+            padding:2,
+            flexDirection:'row',
+            backgroundColor:constants.Colors.color_btn,
+            justifyContent:'center',
+            borderRadius:4,
+            height:30,
+            paddingTop:5,
+            paddingLeft:15,
+            paddingRight:15
+        }}
+            {...props}>
+            <Material name="cart" size={constants.vw(18)} color={constants.Colors.color_WHITE}/>
+            <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
+        </TouchableOpacity>
     )
 }
 
@@ -53,7 +74,7 @@ export const ButtonWithIcon = (props) => {
 export const ButtonWithOutIcon = (props) => {
     return (
         <TouchableOpacity 
-                style={{backgroundColor:constants.Colors.color_heading,padding:8,borderRadius:constants.vw(5),alignItems:'center',elevation:5}} 
+                style={{backgroundColor:constants.Colors.color_btn,padding:8,borderRadius:constants.vw(5),alignItems:'center',elevation:5}} 
                 {...props} >
             <View>
                 <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE,fontSize:constants.vw(22)}}>{props.buttonName}</Text>
@@ -65,10 +86,10 @@ export const ButtonWithOutIcon = (props) => {
 export const BorderButton = (props) => {
     return (
         <TouchableOpacity 
-                style={{borderWidth:1,borderColor:constants.Colors.color_heading,paddingTop:5,paddingBottom:5,paddingLeft:20,paddingRight:20,borderRadius:constants.vw(5),alignItems:'center'}} 
+                style={{borderWidth:1,borderColor:constants.Colors.color_btn,paddingTop:5,paddingBottom:5,paddingLeft:20,paddingRight:20,borderRadius:constants.vw(5),alignItems:'center'}} 
                 {...props} >
             <View>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_heading,fontSize:constants.vw(16)}}>{props.buttonName}</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_btn,fontSize:constants.vw(16)}}>{props.buttonName}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -101,6 +122,28 @@ export const DropDown = (props)=>{
                     })
                 }
 
+            </Picker>
+        </View>
+    )
+}
+
+export const VariationSelector = (props)=>{
+    // console.log(props.options);
+    const variationOpt=(variation)=>{
+        return( variation.variation_details.map( (item,index) => { 
+              return( <Picker.Item label={item.varition} key={index} value={item.varition}  />)
+        }));
+    }
+
+    return(
+        <View style={{borderWidth:1,borderColor:constants.Colors.color_lineGrey,marginBottom:5,marginRight:15}}>
+            <Picker
+                {...props}
+                // selectedValue = {item.selectedVariationID == ""? "": item.selectedQtyVariation}
+                style={{height: 50, width:props.compWidth,marginTop:0,fontFamily:constants.fonts.Cardo_Bold,marginTop:-10,marginBottom:-10}}
+                // onValueChange={ (value) => ( this.setVariationType(value,item.id))}
+                >
+                    {variationOpt(props.options)}
             </Picker>
         </View>
     )
@@ -164,7 +207,7 @@ const styles = StyleSheet.create({
         fontSize:16
     },
     nrmlbutton:{
-        backgroundColor:constants.Colors.color_heading,
+        backgroundColor:constants.Colors.color_btn,
         padding:10,
     },
     nrmlbuttonText:{
