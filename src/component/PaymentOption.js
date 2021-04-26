@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {View ,Text,StyleSheet, Alert,SafeAreaView,Image,ToastAndroid,StatusBar} from 'react-native'
 import {connect} from 'react-redux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { CouponTextInput,PrimaryTextInput ,TextHeading} from '../customElement/Input'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import constants from '../constants'
@@ -11,6 +12,7 @@ import RadioButton from '../customElement/RadioButton'
 import {razor_api_key} from '../constants/key'
 import {checkOut,checkOutOnCOD,checkCouponCode} from '../lib/api'
 import {Loader} from '../customElement/Loader'
+import BackBtnHeader from '../headerComponent/BackBtnHeader'
 
 class PaymentOption extends Component{
     constructor(props){
@@ -18,7 +20,7 @@ class PaymentOption extends Component{
         this.state={
             forget : false,
             emailId :'',
-            option1:'select',
+            option1:'select', 
             option2:'notselect',
             couponCode:'',
         }
@@ -64,13 +66,14 @@ _radioHandler(){
         }
     }
 
-    getCouponCodeDetails(){
+    async getCouponCodeDetails(){
         
-        let coupon_Code =this.state.couponCode;
+        let {couponCode} = this.state;
         
-        if(coupon_Code != ''){
-            this.props.checkCouponCode({code:coupon_Code});
+        if(couponCode != ''){
+            let result = await this.props.checkCouponCode({code:couponCode});
             // this.couponCodeText.clear();
+            console.log("result",result);
         }else{
             // ToastAndroid.showWithGravity("Please enter vaild coupon code", ToastAndroid.SHORT, ToastAndroid.TOP);
             this._errorMsg("Please enter vaild coupon code",'');
@@ -101,7 +104,7 @@ _radioHandler(){
             let discount = this.props.coupon_value !=""?parseFloat(this.props.coupon_value):0;
 
             let total = subtotal+parseFloat(deliveryCharges)+tax-discount;
-            console.log(subtotal+parseFloat(deliveryCharges)+tax-discount,subtotal,"delivery=>"+deliveryCharges,parseFloat(deliveryCharges),tax,discount);
+            //console.log(subtotal+parseFloat(deliveryCharges)+tax-discount,subtotal,"delivery=>"+deliveryCharges,parseFloat(deliveryCharges),tax,discount);
             return(
                     <View style={{flex:1,alignSelf:'center',width:"90%"}}>
                         <View style={{}}>
@@ -167,8 +170,10 @@ _radioHandler(){
                                 <Text style={styles.heading}>You have a coupon</Text>
                                 {this.renderCouponMsg()}
                                 
-                                    <View style={{flexDirection:'row'}}>
-                                        <Image source={constants.image.couponImg} style={{width:50,height:30,marginTop:15}}/>
+                                    <View style={{flexDirection:'row',alignItems:'center'}}>
+                                        <View style={{width:50,height:30}}>
+                                            <Image source={constants.image.couponImg} style={{flex:1,width:null,height:null}}/>
+                                        </View>
                                         <CouponTextInput placeholder="Enter coupon code" 
                                             value={this.state.couponCode}
                                             onChangeText={(text)=>this.setState({couponCode:text})}
@@ -241,16 +246,28 @@ _radioHandler(){
             );
         }
     }
+    
+    goBackAction(){
+        this.props.removeCouponMsg();
+        this.props.navigation.goBack();
+    }
 
     render(){
         return(
             <View style={styles.container}>
             <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                <ScrollView>
-                    <View style={{flex:1,width:"98%",alignSelf:'center'}}>
-                        {this._renderView()}
-                    </View>
-                </ScrollView>
+            <BackBtnHeader onPress={()=>this.goBackAction()}/>
+                <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps={'handled'}
+                    extraScrollHeight={140}
+                    enableOnAndroid={true}
+                >
+                    <ScrollView>
+                        <View style={{flex:1,width:"98%",alignSelf:'center'}}>
+                            {this._renderView()}
+                        </View>
+                    </ScrollView>
+                </KeyboardAwareScrollView>
                 {this._loadLoader()}
             </View>
         )

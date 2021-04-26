@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     },
     userName:{
         fontFamily:constants.fonts.Cardo_Bold,
-        fontSize:constants.vh(22),
+        fontSize:constants.vh(20),
         color:constants.Colors.color_BLACK
     },
     childMenuTab:{

@@ -42,6 +42,7 @@ function TabNavProdvariation(props,navigation){
       })}
       tabBarOptions={{
         activeTintColor: constants.Colors.color_btn,
+        activeBackgroundColor:constants.Colors.color_light_grey,
         inactiveTintColor: 'gray',
         showLabel:true,
         keyboardHidesTabBar:true,

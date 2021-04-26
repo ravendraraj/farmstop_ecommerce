@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import SocialLinks from '../component/SocialLinks'
+import {ContentComp} from '../customElement/Input'
 
 const width = Dimensions.get('window').width;
 class AboutFarm extends Component{
@@ -20,19 +21,20 @@ class AboutFarm extends Component{
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <ScrollView>
                     <View style={{width:constants.width*0.9,alignSelf:"center"}}>
-                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20}}>
+                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:constants.vh(18)}}>
                             Farmstop Organic farms
                         </Text>
                         <View style={{marginTop:10}}>
+
                             <Text
-                            style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:18}}>
+                            style={{color:constants.Colors.color_BLACK,fontFamily:constants.fonts.Cardo_Italic,fontSize:constants.vh(18)}}>
                                 Organic farming for us at "farmstop"is practiced with devotion and passion to contribute for a better society. We are certified organic farmers with a vision to change the way food is produced and consumed.
                             </Text>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:20,marginTop:10,marginBottom:10}}>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_BLACK ,fontSize:constants.vh(18),marginTop:10,marginBottom:10}}>
                                 A glimpse of our farms
                             </Text>
                             <Image source={constants.image.aboutFarm} style={{width:width*0.95, height:width*0.56,resizeMode:'contain',alignSelf:'center'}}/>
-                            <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_BLACK ,fontSize:18,marginTop:30}}>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Italic,color:constants.Colors.color_BLACK ,fontSize:constants.vh(18),marginTop:30}}>
                                 Please click the links below to understand how
                                 we raise crops and what goes into the farms
                             </Text> 

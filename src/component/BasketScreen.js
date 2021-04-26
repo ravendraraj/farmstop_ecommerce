@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {prod_variation_url} from '../constants/url'
 import constants from '../constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
-import SocialLink from './SocialLinks'
+import SocialLinks from '../customElement/SocialLinks'
 import HTML from 'react-native-render-html'
 //helper function
 import {fristLetterCapital,removeTags} from '../lib/helper'
@@ -14,6 +14,8 @@ import {Picker} from '@react-native-community/picker';
 import Swiper from 'react-native-swiper'
 import {setWishListItemOnServer ,addItemToCart,setCartItemLocal} from '../lib/api'
 import {Loader} from '../customElement/Loader'
+import RelatedProduct from '../customElement/RelatedProduct'
+import {ProductTitle,OutOfStockTitle,MainContentHeading} from '../customElement/Input'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -143,7 +145,18 @@ class BasketScreen extends Component {
         )
     }
 
-    renederItemType () {
+    checkProductDetails(product_var_id){     
+        // props.dispatch({type:'LOADING'});
+        // props.dispatch({type:'SORT_SINGLE_PROD_DETAIL',product_var_id:product_var_id,screen:'ProductVariation'});
+        this.scrollview.scrollTo({ x: 0, y: 0, animated: true })
+        //console.log("scrollview",scrollview);
+        this.props.navigation.navigate("BasketScreen",{"basketId":product_var_id})
+        // setTimeout(() => {
+        //     props.dispatch({type:'CANCEL_LOADING'});
+        // },1000);
+    }
+
+    renederItemType(){
         let ItemList = this.props.baskets
         let prodId = this.props.route.params.basketId;
      
@@ -151,47 +164,54 @@ class BasketScreen extends Component {
             let prodDetails = ItemList.find((item) => item.id === prodId);
             let shortDesc = " <p> "+prodDetails.short_description+" </p>";
             return(
-                <View style={{width:'95%',alignSelf:'center',marginTop:constants.vh(30)}}>
+                <View style={{width:'100%',alignSelf:'center',marginTop:constants.vh(3)}}>
         
-                    <View style={{alignSelf:'center'}}>
+                    <View style={{alignSelf:'center',alignItems:'center'}}>
                         <Image source={{uri:(prod_variation_url+(prodDetails.fimage).replace(/ /gi, "_"))}} style={styles.singleImg}/>
+                        <View style={{alignItems:'center',width:'100%',marginBottom:10,marginTop:10,justifyContent:'center'}}><ProductTitle title={prodDetails.attribute_name}/></View>
                     </View>
                     
-                        <View style={{width:'85%',alignSelf:'center'}}>
-
-                        <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
-                            <Text style={{fontFamily:bold,fontSize:18,paddingLeft:3}}>Rs. {prodDetails.price}</Text>
+                    <View style={{width:'95%',alignSelf:'center'}}>
+                        <View style={{flexDirection:'row',width:'100%',justifyContent:'space-between',marginTop:15,alignSelf:'center'}}>
+                            <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+prodDetails.price}</Text>
                             <View>
-                            {prodDetails.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height:30,paddingTop:5,paddingLeft:15,paddingRight:15}}
+                                {prodDetails.inventory_status == 0?(<TouchableOpacity style={{padding:2,flexDirection:'row',backgroundColor:constants.Colors.color_btn,justifyContent:'center',borderRadius:4,height:30,paddingTop:5,paddingLeft:15,paddingRight:15}}
                                 onPress={()=>this._addInCart(prodId,prodDetails.selectedVariationID,prodDetails.selectedQty,prodDetails.selectedVariationPrice)}>
                                 <Material name="cart" size={18} color={constants.Colors.color_WHITE}/>
                                 <Text style={{fontSize:15,fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Order Now</Text>
-                            </TouchableOpacity>) :(<Text style={{...styles.prodLabel,fontSize:16}}>Out Of Stock</Text>)}
+                                </TouchableOpacity>) :(<OutOfStockTitle title={"Out Of Stock"}/>)}
                             </View>
                         </View>
-                        </View>
+                    
 
                     <View style={{marginTop:20}}>
-                    <Text style={{fontSize:constants.vw(20),fontFamily:bold,}}>{fristLetterCapital(prodDetails.attribute_name)}</Text>
-                    <Text style={{...styles.prodLabel,fontSize:18}}>Description</Text>
-                    {prodDetails.short_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',paddingLeft:20,marginTop:10,width:'100%'}}>
-                        <HTML html={shortDesc}
-                                tagsStyles={{p:styles.tagLayout}}
+                        <MainContentHeading title={"Description"}/>
+                        {prodDetails.short_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',paddingLeft:20,marginTop:10,width:'100%'}}>
+                            <HTML html={shortDesc}
+                                    tagsStyles={{p:styles.tagLayout}}
+                            />
+                        </View>):<View/>}
+                        {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:10,marginBottom:-30,width:'100%'}}>
+                            {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
+                            {/*<Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>*/}
+                            <HTML html={prodDetails.long_description}
+                                    tagsStyles={{p:styles.tagLayout,li:styles.tagLayout}}
+                            />
+                        </View>):<View/>}
+                    </View>
+                </View>
+
+                    <View style={{width:constants.width,marginTop:constants.vh(10)}}>
+                        <RelatedProduct
+                            itemtypeData={this.props.baskets}
+                            activeProdItem = {prodDetails.id}
+                            checkProductDetail={(item)=>this.checkProductDetails(item.id)}
                         />
-                    </View>):<View/>}
-                    {prodDetails.long_description != '' ?(<View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:10,marginBottom:-30,width:'100%'}}>
-                        {/*<Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:16}}>Description :</Text>*/}
-                        {/*<Text style={{fontFamily:constants.fonts.Cardo_Italic,fontSize:16}}>{removeTags(prodDetails.long_description)}</Text>*/}
-                        <HTML html={prodDetails.long_description}
-                                tagsStyles={{p:styles.tagLayout,li:styles.tagLayout}}
-                        />
-                    </View>):<View/>}
                     </View>
 
-                    <View style={{alignSelf:'center',justifyContent:'flex-start',marginTop:30}}>
-                        <Text style={{fontSize:constants.vw(25),fontFamily:bold}}>Know your source</Text>
-                        <Text style={{fontSize:20,fontFamily:regular}}>check out our farms and follow us on</Text>
-                        <SocialLink size='25'/>
+                    
+                    <View style={{alginSelf:'center',padding:10}}>
+                        <SocialLinks size='25'/>                
                     </View>
                 </View>
             )
@@ -221,7 +241,9 @@ class BasketScreen extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
-                <ScrollView>
+                <ScrollView
+                 ref={(ref) => { this.scrollview = ref; }}
+                >
                     {this.renederItemType()}
                 </ScrollView>
                 {this._loadLoader()}

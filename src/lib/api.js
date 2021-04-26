@@ -303,7 +303,6 @@ export const signUpManual = (data) => (dispatch,getState) => {
 export const sendSignUpOtp = (data) => (dispatch,getState) => {
     dispatch({type : 'LOADING'});
     // dispatch({type : 'SAVE_REGISTERTION_DETAIL',otp:data.otp, username:data.username ,password:data.password,email:data.email});
-
     let url = weburl + 'api-sendOtp?source='+data.email+"&otp="+data.otp+"&username="+data.username;//geting all product
     console.log(url);
  
@@ -807,49 +806,41 @@ export const checkDelivery= (data) => async(dispatch,getState) => {
     });
 }
 
-export const checkCouponCode= (data) => (dispatch,getState) => {
-    dispatch({type : 'LOADING'});
-    //let url = weburl + 'api-validate-coupnCode/'+data.code;
-    let url = weburl + 'api-validate-coupon';
-    console.log(url);
+export const checkCouponCode=(data)=>{
+    return async (dispatch,getState)=>{
+        dispatch({type : 'LOADING'});
+        let url = weburl + 'api-validate-coupon';
 
-    var formdata = new FormData();
-    formdata.append("userId", getState().data.authUserID);
-    formdata.append("coupon_code",data.code);
-    formdata.append("total", getState().data.total);
-    formdata.append("token", getState().data.token);
-    formdata.append("cart_items",JSON.stringify(getState().data.addedItems));
+        var formdata = new FormData();
+        formdata.append("userId", getState().data.authUserID);
+        formdata.append("coupon_code",data.code);
+        formdata.append("total", getState().data.total);
+        formdata.append("token", getState().data.token);
+        formdata.append("cart_items",JSON.stringify(getState().data.addedItems));
+        
+        console.log(url,data);
 
+        let result = await fetchApi(url,'POST',formdata,200);
+        try{
+            if(result.response.status == 1){
+                dispatch({ type : 'COUPON_CODE_VALIDATE',
+                    payload : result.response.message,
+                    coopunValue:result.response.value,
+                    coupon_id:result.response.coupon_id
+                });
 
-    let post_req = {
-        method: 'POST',
-        body: formdata,
-        headers: {
-         Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
+                return "success";
+
+            }else{
+                //dispatch({type:'FAILED_APARTMENT_VIEST_REQ'});
+                dispatch({ type : 'ERROR_CODE', payload : result.response.message});
+                return "failed";
+            }
+        }catch(e){
+            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
+            return "failed";
         }
     }
-    console.log("req on coupon validate",post_req);
-    fetch(url,post_req)
-    .then(res =>{
-        res.json()
-        .then(response => {
-            //console.log(response);
-            if(response.status == "1"){
-                dispatch({ type : 'COUPON_CODE_VALIDATE', payload : response.message, coopunValue:response.value,coupon_id:response.coupon_id});
-            }else{
-                dispatch({ type : 'ERROR_CODE', payload : response.message});
-            }
-        })
-        .catch( err => {
-            dispatch({ type : 'ERROR_SUBMIT', payload : 'Something went wrong'})
-        })
-    })
-    .catch( err => {
-        dispatch({ type : 'ERROR_SUBMIT', payload : 'Network Error'})
-        console.log("NetWork Error");
-    });
-
 }
 
 export const getAppartment= (data) => (dispatch,getState) => {

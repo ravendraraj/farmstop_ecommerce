@@ -321,6 +321,7 @@ return(
                 headerTitle: null,
                 headerStyle:{shadowOpacity:0,elevation: 0},
                 headerTransparent:false,
+                headerShown:false
             })}
 
         name="PaymentOption" component={(props.data.authUserID !="" && props.data.token != null && props.data.token != "")?PaymentOption:NotLoginScreen}/>
@@ -333,6 +334,7 @@ return(
                     fontFamily:constants.fonts.Cardo_Regular,
                 },
                 headerTransparent:false,
+
         })}
         name="Organic Certification" component={OrganicCertificate}
         />

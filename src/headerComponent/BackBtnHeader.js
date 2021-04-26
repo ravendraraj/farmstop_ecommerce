@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,StyleSheet,Text,TouchableOpacity,Image} from 'react-native'
 import {connect} from 'react-redux'
-import constants from '../../constants'
+import constants from '../constants'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Feather from 'react-native-vector-icons/Feather'
 
@@ -18,7 +18,8 @@ function BackBtnHeader(props){
     return(
         <View>
             <View style={props.screenTitle!==""?styles.linearHead:styles.noShadow}>
-                <TouchableOpacity onPress={()=> toggleDrawer()}>
+                {/*<TouchableOpacity onPress={()=> toggleDrawer()}>*/}
+                <TouchableOpacity {...props}>
                     <MaterialCommunityIcons name="arrow-left" color={constants.Colors.color_backBtn} size={constants.vw(24)} style={{marginLeft:10}}/>
                 </TouchableOpacity>
                 <View style={{marginLeft:15,marginTop:5,}}>
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
         //borderBottomWidth:0.5,//updated
         //borderColor:constants.Colors.color_grey,//updated,
         backgroundColor:constants.Colors.color_WHITE,
-        elevation:10
+        //elevation:10
     },
     noShadow:{
         flexDirection :'row',

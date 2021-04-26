@@ -45,7 +45,7 @@ export const Username=(props)=>{
                 name="user-o"
                 color={props.iconColor}
                 size={constants.vh(20)}
-                style={{marginTop:constants.vh(12),paddingLeft:constants.vh(10)}}
+                style={{paddingLeft:constants.vh(10)}}
             />
             <TextInput
                 placeholderTextColor="#666666"
@@ -87,7 +87,7 @@ export const Password=(props)=>{
                 name="lock"
                 color={props.iconColor}
                 size={constants.vh(20)}
-                style={{marginTop:constants.vh(12),paddingLeft:constants.vh(10)}}
+                style={{paddingLeft:constants.vh(10)}}
             />
             
             <TextInput 
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
         borderRadius:constants.vw(10),
         borderWidth:constants.vh(0.5),
         borderColor:constants.Colors.color_statusbar ,//'#f2f2f2',
+        alignItems:'center',
         //padding:constants.vh(5)
     },textInput: {
         flex: 1,

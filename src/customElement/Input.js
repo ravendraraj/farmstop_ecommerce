@@ -110,7 +110,7 @@ export const ShortProductTitle = (props) => {
                 style={{color:constants.Colors.color_heading,
                     fontFamily:constants.fonts.Cardo_Bold,
                     fontSize:constants.vh(16),
-                    height:constants.vh(30),
+                    height:30,
                 }}>
                     {props.title}
             </Text>

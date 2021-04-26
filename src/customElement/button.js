@@ -38,14 +38,14 @@ export const CartBtn=(props)=>{
             backgroundColor:constants.Colors.color_btn,
             justifyContent:'center',
             borderRadius:4,
-            height:30,
+            //height:constants.vh(30),
             paddingTop:5,
             paddingLeft:15,
             paddingRight:15
         }}
             {...props}>
-            <Material name="cart" size={constants.vw(18)} color={constants.Colors.color_WHITE}/>
-            <Text style={{fontSize:constants.vw(15),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
+            <Material name="cart" size={constants.vw(16)} color={constants.Colors.color_WHITE}/>
+            <Text style={{fontSize:constants.vw(12),fontFamily:constants.fonts.Cardo_Bold,color:constants.Colors.color_WHITE}}>Add to Cart</Text>
         </TouchableOpacity>
     )
 }

@@ -1,13 +1,24 @@
-import React,{Component} from 'react'
-import {View ,Text,StyleSheet,Image ,Dimensions,StatusBar} from 'react-native'
+import React,{useEffect} from 'react'
+import {View ,Text,StyleSheet,Image ,Dimensions,StatusBar,BackHandler} from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import constants from '../constants'
 import { navigate } from '../appnavigation/RootNavigation'
 
 const width = Dimensions.get('window').width;
-export default function OrderSuccuess(){
-        return(
+export default function OrderSuccuess(props){
+        
+        useEffect(() =>{
+            BackHandler.addEventListener("hardwareBackPress", backAction);
+            return () =>BackHandler.removeEventListener("hardwareBackPress", backAction);
+        }, []);
+
+        const backAction=()=>{
+            props.navigation.navigate("MainHome");
+            return true;
+        };
+
+        return( 
             <View style={styles.container}>
                 <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
                 <Image source={constants.image.successfullyPlaceOrder} style={{width:constants.vw(300),height:constants.vw(300),alignSelf:'center'}}/>

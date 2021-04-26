@@ -169,22 +169,22 @@ class WishList extends Component {
                             </View>
 
                             <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
-                                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+item.selectedQtyPrice}</Text>
+                                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(18)}}>{'\u20B9'+" "+item.selectedQtyPrice}</Text>
                                 <View style={{flexDirection:'row'}}>
                                         <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
                                         onPress={()=>this._manageCartProdQty(item,'remove')}>
                                             <Material 
                                                 name="minus-circle-outline"
                                                 color={constants.Colors.color_grey}
-                                                size={25}
+                                                size={constants.vh(25)}
                                             />
                                         </TouchableOpacity>
-                                            <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
+                                            <Text style={{fontSize:constants.vh(18),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:'Select'}</Text>
                                         <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                             <Material 
                                                 name="plus-circle-outline"
                                                 color={constants.Colors.color_grey}
-                                                size={25}
+                                                size={constants.vh(25)}
                                             />
                                         </TouchableOpacity>
                                 </View>

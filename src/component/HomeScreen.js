@@ -20,10 +20,10 @@ import Geolocation from 'react-native-geolocation-service';
 import { checkVersion } from "react-native-check-version";
 import FastImageComponent from '../customElement/FastImageComponent';
 import ActionSheet from "react-native-actions-sheet";
-import {MainHeading} from '../customElement/Input';
 import {BorderButton} from '../customElement/button';
 import ErrorBox from '../customElement/ErrorBox'
 import VersionInfo from 'react-native-version-info';
+import {MainContentHeading,ProductTitle,MainHeading} from '../customElement/Input'
 
 const regular = constants.fonts.Cardo_Regular;
 const width = Dimensions.get('window').width;
@@ -327,7 +327,7 @@ class HomeScreen extends Component {
                                       resizeImage={"contain"}
                                     />
                                     <View style={{width:constants.width*0.5}}>
-                                        <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Bold, color:constants.Colors.color_btn}}>{item.attribute_name}</Text>
+                                        <MainContentHeading title={item.attribute_name}/>
                                         <View style={{marginTop:constants.vh(10)}}>
                                             <HTML html={shortDesc}
                                                 tagsStyles={{p:styles.tagLayout}}
@@ -336,7 +336,7 @@ class HomeScreen extends Component {
                                         <TouchableOpacity style={{borderRadius:9,borderWidth:1,borderColor:constants.Colors.color_btn,padding:5,backgroundColor:constants.Colors.color_btn,marginTop:constants.vh(20),width:constants.vw(80)}}
                                             onPress={()=>{this.props.navigation.navigate("BasketScreen",{"basketId":item.id})}}
                                         >
-                                            <Text style={{textAlign:'center',fontSize:14,fontFamily:constants.fonts.Cardo_Regular, color:constants.Colors.color_WHITE}}>
+                                            <Text style={{textAlign:'center',fontSize:constants.vh(14),fontFamily:constants.fonts.Cardo_Regular, color:constants.Colors.color_WHITE}}>
                                                 View More
                                             </Text>
                                         </TouchableOpacity>
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
     },
     tagLayout:{
         fontFamily:constants.fonts.Cardo_Regular,
-        fontSize:16
+        fontSize:constants.vh(16)
     }
 });
 

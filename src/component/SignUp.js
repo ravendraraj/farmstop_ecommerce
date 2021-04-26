@@ -98,7 +98,7 @@ class SignUp extends Component{
                             <Text style={{color:constants.Colors.color_heading,fontSize:constants.vw(35),fontFamily:constants.fonts.Cardo_Bold,marginTop:constants.vh(30),marginBottom:constants.vh(5)}}>Create Account,</Text>
                             <Text style={{color:constants.Colors.color_grey,fontSize:constants.vw(22),fontFamily:constants.fonts.Cardo_Bold,marginBottom:constants.vh(30)}}>Sign up to get started!</Text>
                             <View style={{width:"86%",alignSelf:'center'}}>
-                                <Username 
+                                <Username
                                     placeholder="Enter Username"
                                     onChangeText={(text)=>this.setState({username:text})}
                                     iconColor={this.state.username !=''?constants.Colors.color_statusbar:constants.Colors.color_grey}

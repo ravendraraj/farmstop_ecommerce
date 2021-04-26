@@ -80,7 +80,7 @@ function ProdBoxWithMargin(props){
             </TouchableOpacity>
             <View style={{flexDirection:'row',marginTop:10}}>
                 <View style={{width:"80%"}}>
-                    <ShortProductTitle title={props.prodData.attribute_name}/>
+                    <ShortProductTitle title={props.prodData.attribute_name+"                       "}/>
                 </View>
                 {
                     ("isMyWish" in props.prodData) == true?
@@ -103,23 +103,23 @@ function ProdBoxWithMargin(props){
                 />
             </View>
             <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:constants.vh(10)}}>
-                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+props.prodData.selectedQtyPrice}</Text>
+                <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(18)}}>{'\u20B9'+" "+props.prodData.selectedQtyPrice}</Text>
                 <View style={{flexDirection:'row'}}>
                     <TouchableOpacity style={{marginRight:5}} 
                         onPress={()=>_manageProdQty(product_item_id,'remove',props.prodData.selectedVariationID)}>
                             <Material 
                                 name="minus-circle-outline"
                                 color={constants.Colors.color_grey}
-                                size={25}
+                                size={constants.vh(25)}
                             />
                     </TouchableOpacity>
-                        <Text style={{fontSize:20,fontFamily:constants.fonts.Cardo_Regular}}>{props.prodData.selectedQty > 0 ?props.prodData.selectedQty:"Select"}</Text>
+                        <Text style={{fontSize:constants.vh(20),fontFamily:constants.fonts.Cardo_Regular}}>{props.prodData.selectedQty > 0 ?props.prodData.selectedQty:"Select"}</Text>
                         <TouchableOpacity style={{marginLeft:5}} 
                             onPress={()=>_manageProdQty(product_item_id,'add',props.prodData.selectedVariationID)}>
                                 <Material 
                                     name="plus-circle-outline"
                                     color={constants.Colors.color_grey}
-                                    size={25}
+                                    size={constants.vh(25)}
                                 />
                         </TouchableOpacity>
                 </View>
@@ -138,7 +138,7 @@ function ProdBoxWithMargin(props){
                         />):(null)
                     }
                     </View>
-            {props.prodData.inventory_status >0?(<View style={{height:30}}><OutOfStockTitle title={"Out Of Stock"}/></View>):(<></>)}
+            {props.prodData.inventory_status >0?(<View style={{height:constants.vh(28)}}><OutOfStockTitle title={"Out Of Stock"}/></View>):(<></>)}
         </View>
     )
 }

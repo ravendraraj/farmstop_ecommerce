@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import constants from '../constants'
 import {navigate} from '../appnavigation/RootNavigation'
 import {showErrorMsg} from '../lib/helper'
+import Icons from 'react-native-vector-icons/FontAwesome5'
 
 function main_screen_header({navigation,cartItem,authUserID}){
     // onPress={() => {navigation.openDrawer()}}
@@ -32,12 +33,13 @@ function main_screen_header({navigation,cartItem,authUserID}){
                         <Text style={styles.cartText}>{totalProd}</Text>
                     </View>
                     {/* <Material name="cart" size={30} color={constants.Colors.color_BLACK}/> */}
-                    <Image source={constants.image.cartIcon} style={{width:30,height:30}}/>
+                    <Image source={constants.image.cartIcon} style={{width:25,height:25}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{(authUserID !="" && authUserID !=null )?nav("MyProfile"):showErrorMsg(constants.constStrings.not_login,"SocialLogin")}}>
                     {/* <Icon name="user" size={25}/> */}
-                    <Image source={constants.image.userIcon} style={{width:30,height:30}}/>
+                    {/*<Image source={constants.image.userIcon} style={{width:30,height:30}}/>*/}
+                    <Icons name="user-alt" color={constants.Colors.color_BLACK} size={25}/>
                 </TouchableOpacity>
             </View>
         </View>
