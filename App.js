@@ -3,15 +3,17 @@ import {
   NavigationContainer, 
 } from '@react-navigation/native';
 import {connect} from "react-redux";
-import { navigationRef } from './src/appnavigation/RootNavigation'
+import {Platform,Linking} from "react-native";
+import { navigationRef } from './src/appnavigation/RootNavigation';
 import AuthScreenStack from './src/appnavigation/AuthScreenStack';
 import SplashScreenStack from './src/appnavigation/SplashScreenStack';
 import IntroStackScreen from './src/appnavigation/IntroStackScreen';
 import DrawerScreen from './src/appnavigation/DrawerScreen';
 import { navigate,check_notification,loadNewNotification,setNewNotification} from './src/appnavigation/RootNavigation';
 import {switchRootScreen} from './src/lib/api';
-import PushNotificationIOS from "@react-native-community/push-notification-ios"
-var PushNotification = require("react-native-push-notification");
+//import PushNotificationIOS from "@react-native-community/push-notification-ios"
+//var PushNotification = require("react-native-push-notification");
+import PushNotification from "react-native-push-notification"
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface Props {
@@ -55,7 +57,7 @@ PushNotification.configure({
        check_notification();
     }
 
-    notification.finish(PushNotificationIOS.FetchResult.NoData);
+    //notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
  
   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
@@ -108,14 +110,40 @@ class App extends React.Component<Props>{
 
   componentDidMount(){
     this.props.dispatch(switchRootScreen());
+    if(Platform.OS === "android")
+    {
+      Linking.getInitialURL().then(url=>{
+        this.handleDepplinkUrl(url);
+      });
+    }else{
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
   }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+
+
+  handleOpenURL=(event)=>{
+   this.handleDepplinkUrl(event.url);
+  }
+
+  handleDepplinkUrl=(url)=>{
+    if(url == null){
+      console.log("log");
+    }else{
+      if(url.indexOf("www.farmstop.in")>0){
+        console.log("url",url);
+      }else{
+        console.log("not comming deeplink url");
+      }
+    }
+  }
+
 
   // Render any loading content that you like here
   render() {
-    // console.log("switch props Loading",this.props.data.isLoading);
-    // console.log("switch props AppIntro",this.props.data.isAppIntro);
-    // console.log("switch props token",this.props.data.token);
-
     return (
       <NavigationContainer ref={navigationRef}>
           { this.props.data.isLoading ?<SplashScreenStack /> : this.props.data.isAppIntro?<IntroStackScreen/>:

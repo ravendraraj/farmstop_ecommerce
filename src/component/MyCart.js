@@ -302,7 +302,7 @@ class MyCart extends Component {
                                     </View>
 
                                     <View style={{flexDirection:'row',justifyContent:'space-around',marginBottom:10,marginTop:20}}>
-                                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:18}}>{'\u20B9'+" "+item.selectedVariationPrice}</Text>
+                                        <Text style={{fontFamily:constants.fonts.Cardo_Bold,fontSize:constants.vh(18)}}>{'\u20B9'+" "+item.selectedVariationPrice}</Text>
                                         <View style={{flexDirection:'row'}}>
                                             <TouchableOpacity style={{marginRight:8,marginLeft:5,marginTop:-4}}
                                             onPress={()=>this._manageCartProdQty(item,'remove')}>
@@ -312,7 +312,7 @@ class MyCart extends Component {
                                                     size={constants.vw(25)}
                                                 />
                                             </TouchableOpacity>
-                                            <Text style={{fontSize:constants.vw(16),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
+                                            <Text style={{fontSize:constants.vw(18),fontFamily:bold}}>{item.selectedQty > 0 ?item.selectedQty:1}</Text>
                                             <TouchableOpacity style={{marginLeft:8,marginTop:-4}} onPress={()=>this._manageCartProdQty(item, "add")}>
                                                 <Material 
                                                     name="plus-circle-outline"

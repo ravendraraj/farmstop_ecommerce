@@ -85,7 +85,7 @@ _radioHandler(){
             let msg = this.props.coupon_msg;
             
             if(this.props.coupon_value ==""){
-                setTimeout(()=>{this.props.removeCouponMsg()},2000);
+                setTimeout(()=>{this.props.removeCouponMsg()},5000);
             }
 
             return(

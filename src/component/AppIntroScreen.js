@@ -42,7 +42,7 @@ function AppIntroScreen(props){
             if (item.key === 'one') {
                 return (
                     <View style={styles.container}>
-                            <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+                            <StatusBar backgroundColor={constants.Colors.color_WHITE} barStyle="dark-content"/>
                                 <Image source={item.image} style={{marginTop:constants.vh(100)}}/>
                                 <Text style={styles.text}>{item.text}</Text>
                                     <View style={styles.barndCss}>
@@ -59,7 +59,7 @@ function AppIntroScreen(props){
             } else {
                 return (
                     <View style={styles.container}>
-                        <StatusBar backgroundColor={constants.Colors.color_statusbar} barStyle="dark-content"/>
+                        <StatusBar backgroundColor={constants.Colors.color_WHITE} barStyle="dark-content"/>
                         <Image source={item.image} style={ item.key === 'two' ? styles.silder2 : styles.silder3}/>
                         <View style={{flex: 1,justifyContent:'flex-end',marginBottom:90}}>
                             <Text style={styles.paragraph}>

@@ -110,7 +110,7 @@ class HomeScreen extends Component {
       let requireUpdate = version.needsUpdate;
       if(requireUpdate !='' && requireUpdate === true){
         Alert.alert(
-            'Farsmtop Application Update',
+            'Farmstop Application Update',
             'New version of the app is available. Do you want to update?',
               [
                 {
@@ -280,16 +280,6 @@ class HomeScreen extends Component {
                   image_url={replaceAllSpace(prod_image + item.img)}
                   resizeImage={"contain"}
                 />
-                  {/*<FastImage
-                                      style={styles.imageThumbnail}
-                                      source={{
-                                        uri:replaceAllSpace(prod_image + item.img),
-                                        priority: FastImage.priority.normal,
-                                        cache: FastImage.cacheControl.immutable,
-                                      }}
-                                      resizeMode={FastImage.resizeMode.contain}
-                                    />*/}
-
                 <Text style={{
                   fontSize:constants.vw(13),
                   marginTop:constants.vw(9),

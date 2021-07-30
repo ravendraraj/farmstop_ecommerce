@@ -24,6 +24,23 @@ function FastImageComponent(props){
 			</FastImage>
 		);
 
+		case 'stretch':
+		return(
+			<FastImage
+				style={props.layout}
+				source={{
+					uri: props.image_url,
+					priority: FastImage.priority.high,
+					cache: FastImage.cacheControl.immutable,
+				}}
+				resizeMode={FastImage.resizeMode.stretch}
+				onLoadStart={() => {setProgress(true)}}
+				onLoadEnd={() => {setProgress(false)}}
+			>
+				<ActivityIndicator size="small" color={constants.Colors.secondary_color} animating={isProgress}/>
+			</FastImage>
+		);
+
 		case "NO_IMAGE":
 		return(
 			<View>

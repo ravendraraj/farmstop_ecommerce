@@ -1483,36 +1483,35 @@ export const setQtyInCart = (prodData) => (dispatch,getState) => {
 
 
 /***************************************Check out *********************************************/
-export const checkOut= (checkOutData) => (dispatch,getState) => {
-    dispatch({type : 'LOADING'});
+export const checkOut= (checkOutData) =>(dispatch,getState)=>{
+    dispatch({type:'LOADING'});
     let orderCreateUrl = weburl + 'api-create-order-id/';
     
     var checkOutFormData = new FormData();
-         checkOutFormData.append("user_id", checkOutData['user_id']);
-         checkOutFormData.append("user_type", checkOutData['user_type']);
-         checkOutFormData.append("address_id", checkOutData['address_id']);
-         checkOutFormData.append("usr_mob", checkOutData['usr_mob']);
-         checkOutFormData.append("subtotal", checkOutData['subtotal']);
-         checkOutFormData.append("shhipingCost", checkOutData['shhipingCost']);
-         checkOutFormData.append("coupon_id", checkOutData['coupon_id']);
-         checkOutFormData.append("total_cost", checkOutData['total_cost']);
+        checkOutFormData.append("user_id", checkOutData['user_id']);
+        checkOutFormData.append("user_type", checkOutData['user_type']);
+        checkOutFormData.append("address_id", checkOutData['address_id']);
+        checkOutFormData.append("usr_mob", checkOutData['usr_mob']);
+        checkOutFormData.append("subtotal", checkOutData['subtotal']);
+        checkOutFormData.append("shhipingCost", checkOutData['shhipingCost']);
+        checkOutFormData.append("coupon_id", checkOutData['coupon_id']);
+        checkOutFormData.append("total_cost", checkOutData['total_cost']);
 
-         checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
-         checkOutFormData.append("status", checkOutData['status']);
-         checkOutFormData.append("deliveryDate", checkOutData['deliveryDate']);
-         checkOutFormData.append("token",getState().data.token);
+        checkOutFormData.append("paymentOption", checkOutData['paymentOption']);
+        checkOutFormData.append("status", checkOutData['status']);
+        checkOutFormData.append("deliveryDate", checkOutData['deliveryDate']);
+        checkOutFormData.append("token",getState().data.token);
 
-         let post_req = {
-             method: 'POST',
-             body: checkOutFormData,
-             headers: {
-                 Accept: 'application/json',
-                 'Content-Type': 'multipart/form-data',
-             }
+        let post_req ={
+            method: 'POST',
+            body: checkOutFormData,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            }
         }
     
-    console.log(orderCreateUrl,post_req,checkOutData);
-
+    //console.log(orderCreateUrl,post_req,checkOutData);
     fetch(orderCreateUrl,post_req)
     .then(res =>{
         res.json()
@@ -1540,7 +1539,6 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                     }
 
                 RazorpayCheckout.open(options).then((data) => {
-
                     if(data.razorpay_payment_id !="")
                     {
                         // this.props.navigation.navigate("OrderSuccuess");
@@ -1600,7 +1598,6 @@ export const checkOut= (checkOutData) => (dispatch,getState) => {
                   });
 
             }else{
-
                 dispatch({ type : 'ERROR_CODE', payload : response.message});
                 showErrorMsg("Something went wrong ,Please try again later.","");
             }

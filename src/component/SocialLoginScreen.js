@@ -279,7 +279,7 @@ class SocialLoginScreen extends Component{
             await this.props.social_login(user_data);
       }
     
-      loginWithFacebook = () => {
+      loginWithFacebook = () =>{
         // Attempt a login using the Facebook login dialog asking for default permissions.
         LoginManager.logOut();
         LoginManager.logInWithPermissions(['public_profile']).then(

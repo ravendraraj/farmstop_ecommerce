@@ -147,7 +147,13 @@ const SingleProductDesc=(props)=>{
                         justifyContent:'center',
                         alignItems:'center',
                     }}>
-                        <TouchableOpacity onPress={()=>_onShare(prodDetails.long_description,replaceAllSpace(prod_variation_url+prodDetails.fimage))} style={{flexDirection:'row'}}>
+                        <TouchableOpacity onPress={()=>_onShare(
+                                prodDetails.long_description,
+                                replaceAllSpace(prod_variation_url+prodDetails.fimage),
+                                prodDetails.attribute_slug
+                            )}
+                            style={{flexDirection:'row'}}
+                        >
                             <Material style={{ marginRight:10}} 
                                 name={"share-variant"} 
                                 size={constants.vw(18)} 
@@ -175,36 +181,38 @@ const SingleProductDesc=(props)=>{
         },1000);
     }
 
-    const _onShare = async(content,imageUrl)=>{
+    const _onShare = async(content,imageUrl,attribute_slug)=>{
         props.dispatch({type:'LOADING'});
         let appUrl = "https://play.google.com/store/apps/details?id=com.farmstop&hl=it";
-        let webUrl = "https://www.farmstop.in/";
+        let webUrl = "https://www.farmstop.in/product/Organic-Vegetables/"+attribute_slug;
             
-        RNFetchBlob.fetch('GET',replaceAllSpace(imageUrl)).then(resp => {
-            props.dispatch({type:'ERROR_SUBMIT'});
-            let base64image = resp.data;
-            shareProduct('data:image/png;base64,' + base64image);
-        }).catch(err =>{
-            //errorHandler(err);
-            console.log(err);
-            props.dispatch({type:'ERROR_SUBMIT'});
-        });
+        // RNFetchBlob.fetch('GET',replaceAllSpace(imageUrl)).then(resp => {
+        //     props.dispatch({type:'ERROR_SUBMIT'});
+        //     let base64image = resp.data;
+        //     shareProduct('data:image/png;base64,' + base64image);
+        // }).catch(err =>{
+        //     //errorHandler(err);
+        //     console.log(err);
+        //     props.dispatch({type:'ERROR_SUBMIT'});
+        // });
 
-        const shareProduct=(base64image)=>{
+        //const shareProduct=(base64image)=>{
             let shareOptions = {
                 title: 'Farmstop',
-                url: base64image,
-                message: "Buy fresh organic vegetables ,fruits, veggies and etc. "+appUrl,
+                //url: base64image,
+                message: "Buy fresh organic vegetables ,fruits, veggies and etc. "+webUrl,
                 subject: 'https://www.farmstop.in/',
                 showAppsToView:true
-              };
+            };
 
             Share.open(shareOptions).then(res => {
                 console.log(res);
+                props.dispatch({type:'ERROR_SUBMIT'});
             }).catch(err => {
                 err && console.log(err);
+                 props.dispatch({type:'ERROR_SUBMIT'});
             });
-        };
+       // };
     }
     
     let prodDetails = props.data.single_product_detail;
@@ -248,7 +256,7 @@ const SingleProductDesc=(props)=>{
             <FastImageComponent
                 layout={styles.image_layout}
                 image_url={replaceAllSpace(prod_variation_url+props.data.single_product_detail.fimage)}
-                resizeImage={"contain"}
+                resizeImage={"stretch"}
             />
             <View style={{alignItems:'center',width:'100%',marginBottom:10,marginTop:10}}><ProductTitle title={prodDetails.attribute_name}/></View>
             <View style={{alginSelf:'center',padding:10}}>
